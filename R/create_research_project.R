@@ -42,13 +42,13 @@ create_research_project <- function(pkgname, license = "proprietary", git = TRUE
 	#setwd(pkgname) # This should be done already by use_research_project (?)
 
 	# Set the package license
-  if (license == "proprietary") use_proprietary_license()
-	else if (license == "mit") usethis::use_mit_license()
-	else if (license == "gpl3") usethis::use_gpl3_license()
-	else if (license == "lgpl") usethis::use_lgpl_license()
-	else if (license == "apl2") usethis::use_apl2_license()
-	else if (license == "cc0") usethis::use_cc0_license()
-	else if (license == "ccby") usethis::use_ccby_license()
+  if (identical(license, "proprietary")) use_proprietary_license()
+	else if (identical(license, "mit")) usethis::use_mit_license()
+	else if (identical(license, "gpl3")) usethis::use_gpl3_license()
+	else if (identical(license, "lgpl")) usethis::use_lgpl_license()
+	else if (identical(license, "apl2")) usethis::use_apl2_license()
+	else if (identical(license, "cc0")) usethis::use_cc0_license()
+	else if (identical(license, "ccby")) usethis::use_ccby_license()
 	else if (is.function(license)) license()
 	else if (!is.null(license)) stop("'", license, "' is not a recognised license type")
 

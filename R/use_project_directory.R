@@ -43,23 +43,28 @@ add_directories <- function() {
 #' This adds the template files (word-styles-reference-01.docx, vancouver.csl,
 #'     _drake.R, etc) to the appropriate directories.
 add_templates <- function() {
+	# Skeleton drake plan file
 	file.copy(system.file("templates", "_drake.R", package = "cmor.tools", mustWork = TRUE),
-						usethis::proj_path()) # skeleton drake plan file
-  file.copy(system.file("templates", "render_manuscript.R", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path("R")) # function(s) to render .Rmd manuscript
-  file.copy(system.file("templates", "formatting", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path("R")) # various output formatting functions
-  file.copy(system.file("templates", "infrastructure.R", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path("R")) # project infrastructure (to create 'results' project, replicate analyses, etc)
-  file.copy(system.file("templates", "00-packages.R", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path("code")) # core packages; add to this file when conducting analyses
+						usethis::proj_path())
+
+	# Manuscript templates and functions
   file.copy(system.file("templates", "manuscript.Rmd", package = "cmor.tools", mustWork = TRUE),
   					usethis::proj_path("code", "manuscripts")) # manuscript template - possibly include separate templates for figures/tables outputs as well
   file.copy(system.file("templates", "references.bib", package = "cmor.tools", mustWork = TRUE),
   					usethis::proj_path("code", "manuscripts")) # example bibtex references file
   file.copy(system.file("templates", "vancouver.csl", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path("code", "manuscripts"))
+  					usethis::proj_path("code", "manuscripts")) # CSL citation formatting (Vancouver style)
   file.copy(system.file("templates", "word-styles-reference-01.docx", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path("code", "manuscripts"))
+  					usethis::proj_path("code", "manuscripts")) # Reference .docx styles file
+  file.copy(system.file("templates", "render_manuscript.R", package = "cmor.tools", mustWork = TRUE),
+  					usethis::proj_path("R")) # function to render the manuscript to .docx
+  file.copy(system.file("templates", "formatting", package = "cmor.tools", mustWork = TRUE),
+  					usethis::proj_path("R")) # various output formatting functions
+
+  # Project infrastructure (to create 'results' project, replicate analyses, etc)
+  file.copy(system.file("templates", "infrastructure.R", package = "cmor.tools", mustWork = TRUE),
+  					usethis::proj_path("R")) # these are still under consideration
+  file.copy(system.file("templates", "00-packages.R", package = "cmor.tools", mustWork = TRUE),
+  					usethis::proj_path("code")) # core packages; add to this file when conducting analyses
 }
 
