@@ -1,11 +1,14 @@
 Package: cmor.tools
-Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: Tools for Conducting CMOR Research Projects
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Ross",
+           family = "Wilson",
+           role = c("aut", "cre"),
+           email = "ross.wilson@otago.ac.nz")
+Description: This package contains several tools for initialising a research
+    project folder, conducting analysis, and producing research outputs in a
+    consistent workflow, for CMOR research projects.
+License: file LICENSE
 Encoding: UTF-8
 LazyData: true
