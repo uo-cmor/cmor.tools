@@ -1,7 +1,7 @@
 Package: cmor.tools
 Title: Tools for Conducting CMOR Research Projects
 Version: 0.0.0.9000
-Authors@R: 
+Authors@R:
     person(given = "Ross",
            family = "Wilson",
            role = c("aut", "cre"),

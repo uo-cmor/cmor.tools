@@ -20,10 +20,84 @@ valid_package_name <- function (pkgname) {
 check_package_name <- function(pkgname) {
 	if (!valid_package_name(pkgname))
 		usethis::ui_stop(
-			c("'{pkgname}' is not a valid package name. It should:",
+			c("'{ui_value(pkgname)}' is not a valid package name. It should:",
 				"* Contain only ASCII letters, numbers, and '.'",
 				"* Have at least two characters",
 				"* Start with a letter",
 				"* Not end with '.'")
 		)
+}
+
+uses_git <- function(path = ".") {
+	!is.null(git2r::discover_repository(path, ceiling = 0))
+}
+
+uses_github <- function(path = ".") {
+	if (!uses_git(path)) return(FALSE)
+
+	r <- git2r::repository(path, discover = TRUE)
+	r_remote_urls <- git2r::remote_url(r)
+
+	any(grepl("github", r_remote_urls))
+}
+
+github_info <- function(path = ".", remote_name = NULL) {
+	if (!uses_github(path)) return(github_dummy)
+
+	r <- git2r::repository(path, discover = TRUE)
+	r_remote_urls <- grep("github", remote_urls(r), value = TRUE)
+	if (!is.null(remote_name) && !remote_name %in% names(r_remote_urls))
+		stop("no github-related remote named ", remote_name, " found")
+	remote_name <- c(remote_name, "origin", names(r_remote_urls))
+	x <- r_remote_urls[remote_name]
+	x <- x[!is.na(x)][1]
+
+	github_remote_parse(x)
+}
+
+github_dummy <- list(username = "<USERNAME>", repo = "<REPO>", fullname = "<USERNAME>/<REPO>")
+
+github_remote_parse <- function(x) {
+	if (length(x) == 0) return(github_dummy)
+	if (!grepl("github", x)) return(github_dummy)
+	if (grepl("^(https|git)", x)) re <- "github[^/:]*[/:]([^/]+)/(.*?)(?:\\.git)?$"
+	else stop("Unknown GitHub repo format", call. = FALSE)
+
+	m <- regexec(re, x)
+	match <- regmatches(x, m)[[1]]
+
+	list(username = match[2], repo = match[3], fullname = paste0(match[2], "/", match[3]))
+}
+
+remote_urls <- function(r) {
+	remotes <- git2r::remotes(r)
+
+	stats::setNames(git2r::remote_url(r, remotes), remotes)
+}
+
+restart_rstudio <- function(message = NULL) {
+	if (!in_rstudio(usethis::proj_get())) {
+		return(FALSE)
+	}
+	if (!interactive()) {
+		return(FALSE)
+	}
+	if (!is.null(message)) {
+		usethis::ui_todo(message)
+	}
+	if (!rstudioapi::hasFun("openProject")) {
+		return(FALSE)
+	}
+	if (usethis::ui_nope("Restart now?")) {
+		return(FALSE)
+	}
+	rstudioapi::openProject(usethis::proj_get())
+}
+
+in_rstudio <- function(base_path = usethis::proj_get()) {
+	if (!rstudioapi::isAvailable()) return(FALSE)
+	if (!rstudioapi::hasFun("getActiveProject")) return(FALSE)
+	proj <- rstudioapi::getActiveProject()
+	if (is.null(proj)) return(FALSE)
+	fs::path_real(proj) == fs::path_real(base_path)
 }

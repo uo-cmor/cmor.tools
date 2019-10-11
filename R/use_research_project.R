@@ -8,7 +8,7 @@
 #'     conventions.
 #'
 #' @export
-use_research_project() <- function(path) {
+use_research_package <- function(path, fields = NULL) {
 	name <- basename(path)
 
 	check_package_name(name)
@@ -16,15 +16,9 @@ use_research_project() <- function(path) {
 	# Provide welcome message at first start?
 
 	# Create a new package
-	usethis::create_package(path = path)
+	usethis::create_package(path = path, fields = fields, open = FALSE)
 
-	usethis::ui_done("The package {name} has been created")
-
-	usethis::ui_line("Next you need to:")
-	usethis::ui_todo("Edit the DESCRIPTION file")
-	#...
-
-	if(rstudioapi::isAvailable()) rstudioapi::navigateToFile("DESCRIPTION")
+	#if(rstudioapi::isAvailable()) rstudioapi::navigateToFile("DESCRIPTION")
 
 	invisible(TRUE)
 }

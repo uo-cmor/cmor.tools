@@ -10,41 +10,51 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.path = "README-"
 )
-# Please put your title here to include it in the file below.
+# Please put your project details here to include them in the file below.
 Title <- "Title of your paper goes here"
+Authors <- "Author list goes here"
+Year <- "Year of publication"
+Journal <- "Name of journal/publication; Volume/Issue/Page numbers"
+DOI <- "Citation DOI"
 ```
 
 # {{{ package }}}
 
 This repository contains the data and code for our paper:
 
-> Authors, (YYYY). _`r Title`_. Name of journal/book <https://doi.org/xxx/xxx>
-
-Our pre-print is online here:
-
-> Authors, (YYYY). _`r Title`_. Name of journal/book, Accessed `r format(Sys.Date(), "%d %b %Y")`. Online at <https://doi.org/xxx/xxx>
+_`r Title`_
 
 
 ### How to cite
 
+This repository contains work-in-progress. Please do not cite.
+
+<!-- Update and uncomment this section once the work is citable
+
 Please cite this compendium as:
 
-> Authors, (`r format(Sys.Date(), "%Y")`). _Compendium of R code and data for `r Title`_. Accessed `r format(Sys.Date(), "%d %b %Y")`. Online at <https://doi.org/xxx/xxx>
+> `r Authors`, (`r Year`). _`r Title`_. `Journal`. <https://doi.org/`r DOI`>
+
+-->
 
 ### How to download or install
 
-You can download the compendium as a zip from from this URL: <{{{url}}}/archive/master.zip>
+You can download the repository as a zip from from this URL: <{{{url}}}/archive/master.zip>
 
-Or you can install this compendium as an R package, {{{ package }}}, from GitHub with:
-
+Or you can install as an R package, {{{ package }}}, from GitHub with:
 
 ```{r gh-installation, eval = FALSE}
 # install.packages("devtools")
 remotes::install_github("{{{username}}}/{{{repo}}}")
 ```
 
+If you install the package, run `build_project(<path>)` to recreate the project folder as an R project, then `run_analysis()` to re-run the analyses and produce the final report.
+
+<!--
 
 ### Licenses
+
+Describe the licences as appropriate: e.g.
 
 **Text and figures :**  [CC-BY-4.0](http://creativecommons.org/licenses/by/4.0/)
 
@@ -52,6 +62,4 @@ remotes::install_github("{{{username}}}/{{{repo}}}")
 
 **Data :** [CC-0](http://creativecommons.org/publicdomain/zero/1.0/) attribution requested in reuse
 
-### Contributions
-
-We welcome contributions from everyone. Before you get started, please see our [contributor guidelines](CONTRIBUTING.md). Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
+-->

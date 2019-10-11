@@ -1,0 +1,24 @@
+source("code/00-packages.R") # Load required packages
+#source("code/00-fixed-parameters.R") # import fixed parameters
+
+# Use source() statements or code_to_plan() to construct plan sections
+#source("code/01-raw-data.R")
+#process_raw_data <- code_to_plan("code/02-process-data.R")
+
+# Set up futures if required
+plan(multiprocess)
+#plan(multiprocess(workers = availableCores() - 1))
+
+# Collate plan sections into complete analysis plan
+#plan <- bind_plans(
+#	import_raw_data,
+#	process_raw_data,
+#	estimate_results,
+#	render_manuscripts
+#)
+
+drake_config(
+	plan, jobs = 1L,
+	targets = "manuscript",
+	verbose = 2L
+)

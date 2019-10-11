@@ -1,0 +1,83 @@
+---
+title: 'Paper title'
+author:
+- Author list (one per line)
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: word_document
+abstract: |
+  **Abstract**
+  
+  **Background**
+  
+  **Aim**
+  
+  **Methods**
+  
+  **Results**
+  
+  **Conclusion**
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(  
+	collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  echo = FALSE,
+  comment = "#>"
+)
+
+# Load required libraries
+source("code/00-packages.R") # Load required packages
+sourceDirectory("R") # import required functions
+```
+
+```{r load-data, include=FALSE, echo=FALSE, cache=FALSE}
+# Load the previously stored results
+##Drake:
+#file_in("output/figure-1.png")
+#loadd(results)
+##Make:
+#load("inst/derived_data/results.Rdata")
+
+# Any other variables to be loaded/defined in here
+```
+
+# Introduction
+
+# Methods
+
+# Results
+
+```{r table-1}
+# kable(
+#   results,
+#   caption = "Table 1: Table caption"
+# )
+```
+
+> Table notes
+
+<br>
+
+![Figure 1: Figure caption](../../output/figure-1.png)
+
+> Figure notes
+
+<br>
+
+# Discussion
+
+# Conclusion
+
+# Funding
+
+# Conflicts of Interest
+
+None to declare.
+
+# References
+<!-- The following line ensures the references appear here for the MS Word or HTML output files, rather than right at the end of the document (this will not work for PDF files):  -->
+<div id="refs"></div>
+
+# Supplementary material

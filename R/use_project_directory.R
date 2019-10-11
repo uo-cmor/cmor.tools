@@ -5,9 +5,7 @@
 #'     format output, etc.
 #'
 #' @export
-use_project_directory <- function(raw_data_in_git = TRUE, data_in_git = FALSE) {
-	pkg <- as.package(".")
-
+use_project_directory <- function(pkg, raw_data_in_git = TRUE, data_in_git = FALSE) {
 	# Add required packages to Imports/Suggests
 	#usethis::use_package('pkgname')
 
@@ -15,15 +13,11 @@ use_project_directory <- function(raw_data_in_git = TRUE, data_in_git = FALSE) {
   add_directories()
 
   # Add template
-  add_templates()
+  add_templates(pkg = pkg)
 
   # Add extdata and/or extdata/raw_data to .gitignore
-  if(!data_in_git) usethis::use_git_ignore("extdata/*")
-  if(!raw_data_in_git) usethis::use_git_ignore("extdata/raw_data")
-  else usethis::use_git_ignore("!extdata/raw_data")
-
-  # Ignore code and output directories when building the project
-  usethis::use_build_ignore(c("code", "output"))
+  if(!data_in_git) usethis::use_git_ignore("inst/derived_data")
+  if(!raw_data_in_git) usethis::use_git_ignore("inst/raw_data")
 
   invisible(TRUE)
 }
@@ -32,39 +26,42 @@ use_project_directory <- function(raw_data_in_git = TRUE, data_in_git = FALSE) {
 #'
 #' This adds the directory structure
 add_directories <- function() {
-  usethis::use_directory("extdata/raw_data")
-	usethis::use_directory("code")
-	usethis::use_directory("R")
-	usethis::use_directory("output")
+  usethis::use_directory("inst/raw_data")
+	usethis::use_directory("inst/derived_data")
+	usethis::use_directory("inst/code")
+	usethis::use_directory("inst/reports")
+	usethis::use_directory("output", ignore = TRUE)
 }
 
 #' Add template files
 #'
 #' This adds the template files (word-styles-reference-01.docx, vancouver.csl,
 #'     _drake.R, etc) to the appropriate directories.
-add_templates <- function() {
+add_templates <- function(pkg) {
+	# Project-specific .Rprofile
+	file.copy(system.file("templates", ".Rprofile", package = "cmor.tools", mustWork = TRUE),
+						usethis::proj_path())
+
 	# Skeleton drake plan file
 	file.copy(system.file("templates", "_drake.R", package = "cmor.tools", mustWork = TRUE),
-						usethis::proj_path())
+						usethis::proj_path("inst"))
 
 	# Manuscript templates and functions
   file.copy(system.file("templates", "manuscript.Rmd", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path("code", "manuscripts")) # manuscript template - possibly include separate templates for figures/tables outputs as well
+  					usethis::proj_path("inst", "reports")) # manuscript template - possibly include separate templates for figures/tables outputs as well
   file.copy(system.file("templates", "references.bib", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path("code", "manuscripts")) # example bibtex references file
+  					usethis::proj_path("inst", "reports")) # example bibtex references file
   file.copy(system.file("templates", "vancouver.csl", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path("code", "manuscripts")) # CSL citation formatting (Vancouver style)
+  					usethis::proj_path("inst", "reports")) # CSL citation formatting (Vancouver style)
   file.copy(system.file("templates", "word-styles-reference-01.docx", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path("code", "manuscripts")) # Reference .docx styles file
-  file.copy(system.file("templates", "render_manuscript.R", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path("R")) # function to render the manuscript to .docx
-  file.copy(system.file("templates", "formatting", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path("R")) # various output formatting functions
+  					usethis::proj_path("inst", "reports")) # Reference .docx styles file
 
-  # Project infrastructure (to create 'results' project, replicate analyses, etc)
-  file.copy(system.file("templates", "infrastructure.R", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path("R")) # these are still under consideration
-  file.copy(system.file("templates", "00-packages.R", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path("code")) # core packages; add to this file when conducting analyses
+  # Template 'packages' file to load required packages (for _drake.R)
+  template <- system.file("templates", "packages", package = "cmor.tools", mustWork = TRUE)
+  template_out <- whisker::whisker.render(readLines(template), pkg)
+  writeLines(template_out, "inst/code/00-packages.R")
+
+  # file.copy(system.file("templates", "00-packages.R", package = "cmor.tools", mustWork = TRUE),
+  # 					usethis::proj_path("inst", "code")) # core packages; add to this file when conducting analyses
 }
 

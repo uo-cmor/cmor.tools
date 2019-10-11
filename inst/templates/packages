@@ -1,0 +1,22 @@
+suppressPackageStartupMessages(library(drake))
+suppressPackageStartupMessages(library(readxl))
+suppressPackageStartupMessages(library(plyr))
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(magrittr))
+suppressPackageStartupMessages(library(stringr))
+suppressPackageStartupMessages(library(purrr))
+suppressPackageStartupMessages(library(R.utils))
+suppressPackageStartupMessages(library(tidyr))
+suppressPackageStartupMessages(library(rlang))
+suppressPackageStartupMessages(library(future))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(scales))
+suppressPackageStartupMessages(library(forcats))
+suppressPackageStartupMessages(library(rmarkdown))
+suppressPackageStartupMessages(library(tibble))
+suppressPackageStartupMessages(library(knitr))
+
+# This should also load the project package itself
+suppressPackageStartupMessages(library({{{ package }}}))
+
+# Add any other required packages as above (or remove those if not needed)

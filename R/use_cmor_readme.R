@@ -5,8 +5,7 @@
 #'     be automatically added to \code{.Rbuildignore}.
 #'
 #' @export
-use_cmor_readme <- function() {
-	pkg <- as.package(".")
+use_cmor_readme <- function(pkg) {
 	template <- system.file("templates", "cmor-readme", package = "cmor.tools", mustWork = TRUE)
 
 	template_out <- whisker::whisker.render(readLines(template), pkg)

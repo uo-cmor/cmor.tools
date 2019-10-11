@@ -33,13 +33,18 @@
 #'     the git repository.
 #'
 #' @export
-create_research_project <- function(pkgname, license = "proprietary", git = TRUE, raw_data_in_git = TRUE, data_in_git = FALSE) {
+create_research_package <- function(pkgname, license = "proprietary", git = TRUE, raw_data_in_git = TRUE, data_in_git = FALSE, private = TRUE) {
 
-	# Create new project
-	use_research_project(pkgname)
+	# Create new package
+	use_research_package(pkgname)
 
-	# Move to the new project
-	#setwd(pkgname) # This should be done already by use_research_project (?)
+	# Move to the new package
+	oldwd <- setwd(pkgname)
+
+	pkg <- devtools::as.package(".")
+
+	# Create project directory and template files
+	use_project_directory(pkg, raw_data_in_git = raw_data_in_git, data_in_git = data_in_git)
 
 	# Set the package license
   if (identical(license, "proprietary")) use_proprietary_license()
@@ -52,15 +57,58 @@ create_research_project <- function(pkgname, license = "proprietary", git = TRUE
 	else if (is.function(license)) license()
 	else if (!is.null(license)) stop("'", license, "' is not a recognised license type")
 
-  # Create basic README file
-	use_cmor_readme()
+  if(interactive()) {
+  	usethis::proj_activate(pkgname)
+  	if (rstudioapi::isAvailable()) {
+  		fileConn <- file(".Rprofile")
+  		writeLines(
+  			c(
+  				"cat(crayon::bold('\\nThis project was created by cmor.tools.\\n'))",
+  				"cat('\\nTo complete project set-up, you need to:\\n')",
+  				"cat(crayon::red('*'), 'Edit the DESCRIPTION file\\n')",
+  				"cat(crayon::red('*'), 'Run `complete_setup()`\\n')",
+  				"suppressMessages(require(cmor.tools))",
+  				"options(usethis.protocol = 'ssh')",
+  				"invisible(file.copy(system.file('templates', '.Rprofile', package = 'cmor.tools', mustWork = TRUE), '.Rprofile', overwrite = TRUE))",
+  				""
+  			), fileConn
+  		)
+  		close(fileConn)
+  		usethis::ui_todo("Go there to complete project set-up")
+  		setwd(oldwd)
+  	}
+  	else {
+  		ui_line("Next you need to:")
+  		ui_todo("Edit the DESCRIPTION file")
+  		ui_todo("Run `complete_setup()` to complete the project set-up")
+  	}
+  }
+}
 
-	# Initialise git repository
-	usethis::use_git()
+complete_setup <- function(pkg = ".", git = TRUE, github = TRUE, raw_data_in_git = TRUE, data_in_git = FALSE, private = TRUE) {
+	if (git) {
+		# Initialise git repository
+		use_git()
 
-	# Create project directory and template files
-	use_project_directory(raw_data_in_git = raw_data_in_git, data_in_git = data_in_git)
+		if (github) {
+			# Connect repository to github
+			usethis::use_github(
+				private = private,
+				credentials = git2r::cred_ssh_key(publickey = git2r::ssh_path("id_rsa.pub"),
+																					privatekey = git2r::ssh_path("id_rsa"))
+			)
+		}
+	}
+
+	pkg <- devtools::as.package(pkg)
+	if (uses_github(pkg$path)) pkg <- append(pkg, github_info(pkg$path))
+	pkg$Rmd <- TRUE
+
+	# Create basic README file
+	use_cmor_readme(pkg)
 
 	# Install the package and its dependencies
-  remotes::install_local()
+	remotes::install_local(quiet = TRUE)
+
+	if (git) restart_rstudio("A restart of RStudio is required to activate the Git pane")
 }
