@@ -1,0 +1,69 @@
+#' Render Rmd manuscript to docx
+#'
+#' This function renders an Rmarkdown report to Word .docx file, in the
+#'     appropriate directory and with reference, csl, and bib files as
+#'     specified.
+#'
+#' @param rmd Path to the Rmarkdown file (relative to project root)
+#' @param out Path to the output docx file to be created
+#' @param reference_docx Path to the reference docx (styles) file
+#' @param csl Path to the CSL styles file
+#' @param bib Path the the BibTex bibliography file
+#'
+#' @export
+render_manuscript <- function(rmd = file.path("inst", "reports/manuscript.Rmd"),
+															out = file.path("output", basename(rmd)),
+															reference_docx = file.path("inst", "reports", "word-styles-reference-01.docx"),
+															csl = file.path("inst", "reports", "vancouver.csl"),
+															bib = file.path("inst", "reports", "references.bib")) {
+	rmarkdown::render(
+		rmd,
+		rmarkdown::word_document(
+			reference_docx = paste0("../../", reference_docx),
+			pandoc_args = list("--csl", paste0("../../", csl), "--bibliography", paste0("../../", bib))
+		),
+		output_file = out, output_dir = dirname(out), knit_root_dir = usethis::proj_path()
+	)
+}
+
+# Add various output formatting functions (based on scales::number() etc)
+
+#' Format numbers using `scales::number()`-type functions
+#'
+#' These functions replace/extend the `scales::number()-type` formatting
+#'     functions.
+#'
+#' @param x Numeric vector to format
+#' @param accuracy,scale,prefix,suffix,big.mark,decimal.mark,trim,... As in
+#'     `scales::number()`
+#'
+#' @name number-formatting
+NULL
+
+#' @rdname number-formatting
+#' @export
+number <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
+									 big.mark = "< >", decimal.mark = ",", trim = TRUE, ...) {
+	neg <- rep("", length(x))
+	neg[x < 0] <- "\u2212"
+
+	stringi::str_replace_all_regex(
+		paste0(
+			neg,
+			scales::number(abs(x), accuracy = accuracy, scale = scale, prefix = prefix, suffix = suffix,
+										 big.mark = big.mark, decimal.mark = decimal.mark, trim = trim, ...)
+		),
+		"< >", "\u202F"
+	)
+}
+
+#' @rdname number-formatting
+#' @export
+number_format <- function(accuracy = 1, scale = 1, prefix = "", suffix = "",
+													big.mark = "< >", decimal.mark = ",", trim = TRUE, ...) {
+	list(accuracy, scale, prefix, suffix, big.mark, decimal.mark, trim, ...)
+
+	function(x) number(x, accuracy = accuracy, scale = scale,
+										 prefix = prefix, suffix = suffix, big.mark = big.mark,
+										 decimal.mark = decimal.mark, trim = trim, ...)
+}
