@@ -11,16 +11,23 @@
 #' @param bib Path the the BibTex bibliography file
 #'
 #' @export
-render_manuscript <- function(rmd = file.path("inst", "reports/manuscript.Rmd"),
+render_manuscript <- function(rmd = file.path("inst", "reports", "manuscript.Rmd"),
 															out = file.path("output", basename(rmd)),
 															reference_docx = file.path("inst", "reports", "word-styles-reference-01.docx"),
 															csl = file.path("inst", "reports", "vancouver.csl"),
 															bib = file.path("inst", "reports", "references.bib")) {
+	if (is_package()) prefix <- "inst/" else prefix <- ""
+  if (is.null(rmd)) rmd <- paste0(prefix, "reports/manuscript.Rmd")
+  if (is.null(out)) out <- paste0("output/", basename(rmd))
+  if (is.null(reference_docx)) reference_docx <- paste0(prefix, "reports/word-styles-reference-01.docx")
+  if (is.null(csl)) csl <- paste0(prefix, "reports/vancouver.csl")
+  if (is.null(bib)) bib <- paste0(prefix, "reports/references.bib")
+
 	rmarkdown::render(
 		rmd,
 		rmarkdown::word_document(
-			reference_docx = paste0("../../", reference_docx),
-			pandoc_args = list("--csl", paste0("../../", csl), "--bibliography", paste0("../../", bib))
+			reference_docx = usethis::proj_path(reference_docx),
+			pandoc_args = list("--csl", usethis::proj_path(csl), "--bibliography", usethis::proj_path(bib))
 		),
 		output_file = out, output_dir = dirname(out), knit_root_dir = usethis::proj_path()
 	)

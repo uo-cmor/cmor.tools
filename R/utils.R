@@ -69,6 +69,32 @@ github_remote_parse <- function(x) {
 	list(username = match[2], repo = match[3], fullname = paste0(match[2], "/", match[3]))
 }
 
+check_github_token <- function (auth_token = usethis::github_token(), allow_empty = FALSE) {
+	if (allow_empty && isTRUE(auth_token == "")) {
+		return(invisible(auth_token))
+	}
+	local_stop <- function(msg) {
+		usethis::ui_stop(
+			c(msg, "See {usethis::ui_code('browse_github_token()')} for help storing a token as an environment variable.")
+		)
+	}
+	if (!is_string(auth_token) || is.na(auth_token)) {
+		local_stop("GitHub {usethis::ui_code('auth_token')} must be a single string.")
+	}
+	if (isTRUE(auth_token == "")) {
+		local_stop("No GitHub {usethis::ui_code('auth_token')} is available.")
+	}
+	user <- github_user(auth_token)
+	if (is.null(user)) {
+		local_stop("GitHub {usethis::ui_code('auth_token')} is invalid.")
+	}
+	invisible(auth_token)
+}
+
+github_user <- function(auth_token = usethis::github_token()) {
+	suppressMessages(tryCatch(gh::gh_whoami(auth_token), error = function(e) NULL))
+}
+
 remote_urls <- function(r) {
 	remotes <- git2r::remotes(r)
 
@@ -100,4 +126,11 @@ in_rstudio <- function(base_path = usethis::proj_get()) {
 	proj <- rstudioapi::getActiveProject()
 	if (is.null(proj)) return(FALSE)
 	fs::path_real(proj) == fs::path_real(base_path)
+}
+
+is_string <- function(x) length(x) == 1 && is.character(x)
+
+is_package <- function(path) {
+	res <- tryCatch(rprojroot::find_package_root_file(path = path), error = function(e) NULL)
+	!is.null(res)
 }

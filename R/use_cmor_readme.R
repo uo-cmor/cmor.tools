@@ -5,21 +5,22 @@
 #'     be automatically added to \code{.Rbuildignore}.
 #'
 #' @export
-use_cmor_readme <- function(pkg) {
+use_cmor_readme <- function(data) {
 	template <- system.file("templates", "cmor-readme", package = "cmor.tools", mustWork = TRUE)
 
-	template_out <- whisker::whisker.render(readLines(template), pkg)
+	template_out <- whisker::whisker.render(readLines(template), data)
 	writeLines(template_out, "README.Rmd")
 
 	usethis::use_build_ignore("README.Rmd")
 
-	usethis::ui_todo("Edit the README.Rmd file")
+	usethis::ui_done("Basic README file created")
+	usethis::ui_todo("Edit the README.Rmd file to provide an introduction to the project")
 
 	if(rstudioapi::isAvailable()) rstudioapi::navigateToFile("README.Rmd")
 
 	usethis::use_build_ignore("^README-.*\\.png$", escape = FALSE)
 
-	usethis::ui_info("Remember to render README.Rmd to README.md for GitHub.")
+	usethis::ui_todo("Remember to render README.Rmd to README.md for GitHub.")
 
 	invisible(TRUE)
 }

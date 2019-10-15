@@ -8,15 +8,16 @@
 #'     conventions.
 #'
 #' @export
-use_research_package <- function(path, fields = NULL) {
+use_research_project <- function(path, package, fields = NULL) {
 	name <- basename(path)
 
-	check_package_name(name)
+	if (package) check_package_name(name)
 
 	# Provide welcome message at first start?
 
 	# Create a new package
-	usethis::create_package(path = path, fields = fields, open = FALSE)
+	if (package) usethis::create_package(path = path, fields = fields, open = FALSE)
+	else usethis::create_project(path = path, open = FALSE)
 
 	#if(rstudioapi::isAvailable()) rstudioapi::navigateToFile("DESCRIPTION")
 
