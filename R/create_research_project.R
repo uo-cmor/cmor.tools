@@ -70,6 +70,7 @@ create_research_project <- function(path, package = FALSE, license = NULL,
   	usethis::proj_activate(path)
   	if (rstudioapi::isAvailable()) {
   		usethis::ui_line("creating temporary .Rprofile")
+  		file.copy(usethis::proj_path(".Rprofile"), usethis::proj_path("oldprofile"), overwrite = TRUE)
   		fileConn <- file(usethis::proj_path(".Rprofile"))
   		writeLines(
   			c(
@@ -84,7 +85,8 @@ create_research_project <- function(path, package = FALSE, license = NULL,
   				paste0("options(cmor.tools.git_rawdata = ", raw_data_in_git, ")"),
   				paste0("options(cmor.tools.github = ", github, ")"),
   				paste0("options(cmor.tools.github_private = ", private, ")"),
-  				"invisible(file.copy(system.file('templates', '.Rprofile', package = 'cmor.tools', mustWork = TRUE), '.Rprofile', overwrite = TRUE))",
+  				"invisible(file.copy('oldprofile', '.Rprofile', overwrite = TRUE))",
+  				"invisible(file.remove('oldprofile'))",
   				""
   			), fileConn
   		)
