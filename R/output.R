@@ -11,11 +11,7 @@
 #' @param bib Path the the BibTex bibliography file
 #'
 #' @export
-render_manuscript <- function(rmd = file.path("inst", "reports", "manuscript.Rmd"),
-															out = file.path("output", basename(rmd)),
-															reference_docx = file.path("inst", "reports", "word-styles-reference-01.docx"),
-															csl = file.path("inst", "reports", "vancouver.csl"),
-															bib = file.path("inst", "reports", "references.bib")) {
+render_manuscript <- function(rmd = NULL, out = NULL, reference_docx = NULL, csl = NULL, bib = NULL) {
 	if (is_package()) prefix <- "inst/" else prefix <- ""
   if (is.null(rmd)) rmd <- paste0(prefix, "reports/manuscript.Rmd")
   if (is.null(out)) out <- paste0("output/", basename(rmd))
