@@ -50,7 +50,7 @@ number <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
 	neg <- rep("", length(x))
 	neg[x < 0] <- "\u2212"
 
-	stringi::str_replace_all_regex(
+	stringi::stri_replace_all_regex(
 		paste0(
 			neg,
 			scales::number(abs(x), accuracy = accuracy, scale = scale, prefix = prefix, suffix = suffix,
