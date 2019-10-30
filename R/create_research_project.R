@@ -37,7 +37,7 @@
 #'     excluded from the git repository.
 #'
 #' @export
-create_research_project <- function(path, package = FALSE, license = NULL,
+create_research_project <- function(path, package = FALSE, license = NULL, workflow = "drake",
 																		git = TRUE, raw_data_in_git = TRUE, data_in_git = FALSE,
 																		github = TRUE, private = TRUE) {
 
@@ -50,7 +50,8 @@ create_research_project <- function(path, package = FALSE, license = NULL,
 	name <- basename(path)
 
 	# Create project directory and template files
-	use_project_directory(name, package, git = git, raw_data_in_git = raw_data_in_git, data_in_git = data_in_git)
+	use_project_directory(name, package,
+												workflow = workflow, git = git, raw_data_in_git = raw_data_in_git, data_in_git = data_in_git)
 
 	# Set the package license
 	if (package) {
@@ -152,13 +153,6 @@ complete_setup <- function(
 		data <- append(data, github_info(project))
 		data <- append(data, list(url = gh_info$html_url))
 	}
-
-	# pkg <- devtools::as.package(project)
-	# if (uses_github(pkg$path)) pkg <- append(pkg, github_info(data$path))
-	# pkg$Rmd <- TRUE
-	# pkg$is_package <-
-	# 	file.exists(rprojroot::find_package_root_file("DESCRIPTION", path = project)) &&
-	# 	any(grepl("^Package:", readLines(rprojroot::find_package_root_file("DESCRIPTION", path = project))))
 
 	# Create basic README file
 	use_cmor_readme(data)

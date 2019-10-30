@@ -7,7 +7,7 @@
 #' @param name
 #'
 #' @export
-use_project_directory <- function(name, package, git = TRUE, raw_data_in_git = TRUE, data_in_git = FALSE) {
+use_project_directory <- function(name, package, workflow = "drake", git = TRUE, raw_data_in_git = TRUE, data_in_git = FALSE) {
 	# Add required packages to Imports/Suggests
 	#usethis::use_package('pkgname')
 
@@ -15,7 +15,7 @@ use_project_directory <- function(name, package, git = TRUE, raw_data_in_git = T
   add_directories(package)
 
   # Add template
-  add_templates(package)
+  add_templates(package, workflow = workflow)
 
   # Add extdata and/or extdata/raw_data to .gitignore
   if (git) {
@@ -45,7 +45,7 @@ add_directories <- function(package) {
 #'
 #' This adds the template files (word-styles-reference-01.docx, vancouver.csl,
 #'     _drake.R, etc) to the appropriate directories.
-add_templates <- function(package) {
+add_templates <- function(package, workflow = "drake") {
 	if (package) prefix = "inst/" else prefix = ""
 
 	# Project-specific .Rprofile
@@ -53,10 +53,21 @@ add_templates <- function(package) {
 	template_out <- whisker::whisker.render(readLines(template), list(is_package = package))
 	writeLines(template_out, usethis::proj_path(".Rprofile"))
 
-	# Skeleton drake plan file
-	template <- system.file("templates", "plan", package = "cmor.tools", mustWork = TRUE)
-	template_out <- whisker::whisker.render(readLines(template), list(is_package = package))
-	writeLines(template_out, usethis::proj_path(prefix, "_drake.R"))
+	if (workflow == "drake") {
+		# Skeleton drake plan file
+		template <- system.file("templates", "plan", package = "cmor.tools", mustWork = TRUE)
+		template_out <- whisker::whisker.render(readLines(template), list(is_package = package))
+		writeLines(template_out, usethis::proj_path(prefix, "_drake.R"))
+	} else if (workflow == "make") {
+		# Skeleton Makefile
+		template <- system.file("templates", "makefile-template", package = "cmor.tools", mustWork = TRUE)
+		template_out <- whisker::whisker.render(readLines(template), list(is_package = package))
+		writeLines(template_out, usethis::proj_path(prefix, "Makefile"))
+		if (package) {
+			file.copy(system.file("templates", "Makefile-root", package = "cmor.tools", mustWork = TRUE),
+													 usethis::proj_path("Makefile"))
+		}
+	}
 
 	# Manuscript templates and functions
   file.copy(system.file("templates", "manuscript.Rmd", package = "cmor.tools", mustWork = TRUE),

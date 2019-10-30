@@ -1,0 +1,66 @@
+#### Directories ####
+
+srcdir = .{{#is_package}}/inst{{/is_package}}
+
+rawdatadir = $(srcdir)/raw_data
+datadir = $(srcdir)/derived_data
+codedir = $(srcdir)/code
+scriptdir = $(srcdir)/R
+reportsdir = $(srcdir)/reports
+
+#### End directory specification ####
+
+
+#### Variable definitions ####
+
+WORDSTYLES = $(reportsdir)/word-styles-reference
+BIB = $(reportsdir)/references.bib
+CSL = $(reportsdir)/vancouver.csl
+
+VPATH = $(rawdatadir) $(datadir) $(codedir) $(scriptdir) $(reportsdir)
+
+#EXTERNAL_DATA := $(addprefix $(rawdatadir)/,<filenames>)
+#RAW_DATA := $(addprefix $(datadir)/,<filenames>)
+#CLEAN_DATA := $(addprefix $(datadir)/,<filenames>)
+#ANALYSES := $(addprefix $(datadir)/,<filenames>)
+#FIGURES := $(addprefix $(reportsdir)/,<filenames>)
+#REPORTS := $(addprefix $(reportsdir)/,tables.docx figures.docx manuscript.docx)
+
+all: $(REPORTS)
+
+clean:
+	rm -f $(CLEAN_DATA) $(ANALYSES) $(FIGURES) $(REPORTS)
+
+.PHONY: all clean
+
+#### End variable definitions ####
+
+
+#### Recipes ####
+
+# Read raw data from files
+#$(datadir)/raw.Rdata: 01-read-raw-data.R $(EXTERNAL_DATA) data-import.R; Rscript $<
+# Add others as necessary
+
+# Process/clean raw data
+#$(datadir)/clean.rda: 02-process-data.R $(RAW_DATA) data-processing.R; Rscript $<
+# Add others as necessary
+
+# Run statistical analyses
+#$(datadir)/analysis.Rdata: 03-run-analyses.R $(CLEAN_DATA) analyses.R; Rscript $<
+# Add others as necessary
+
+# Generate figures
+#$(reportsdir)/figure-1.png: 04_01-generate-figure-1.R $(ANALYSES); Rscript $<
+# Add others as necessary
+
+# Collate figures into output file
+#$(reportsdir)/figures.docx: 05-render-figures.R figures.Rmd $(FIGURES) $(WORDSTYLES)-figures.docx; Rscript $<
+
+# Generate tables output file
+#$(reportsdir)/tables.docx: 06-render-tables.R tables.Rmd $(WORDSTYLES)-tables.docx; Rscript $<
+
+# Generate manuscript output file
+#$(reportsdir)/manuscript.docx: 07-render-manuscript.R manuscript.Rmd $(WORDSTYLES)-01.docx $(BIB) $(CSL); Rscript $<
+
+#### End recipes ####
