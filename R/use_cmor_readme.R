@@ -11,14 +11,14 @@ use_cmor_readme <- function(data) {
 	template_out <- whisker::whisker.render(readLines(template), data)
 	writeLines(template_out, "README.Rmd")
 
-	usethis::use_build_ignore("README.Rmd")
+	if (data$is_package) usethis::use_build_ignore("README.Rmd")
 
 	usethis::ui_done("Basic README file created")
 	usethis::ui_todo("Edit the README.Rmd file to provide an introduction to the project")
 
 	if(rstudioapi::isAvailable()) rstudioapi::navigateToFile("README.Rmd")
 
-	usethis::use_build_ignore("^README-.*\\.png$", escape = FALSE)
+	if (data$is_package) usethis::use_build_ignore("^README-.*\\.png$", escape = FALSE)
 
 	usethis::ui_todo("Remember to render README.Rmd to README.md for GitHub.")
 
