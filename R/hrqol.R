@@ -10,13 +10,117 @@
 #'
 #' @export
 sf6d_profile <- function(..., version = 2, dimension = "list") {
+	if (length(version) != 1 || !(version %in% c(1L, 2L))) stop ("'version' must be 1 or 2")
+	if (length(dimension) != 1 || !(dimension %in% c("list", "PF", "RL", "SF", "PAIN", "MH", "VIT"))) stop(
+		paste0("'dimension' must be 'list' (return all SF-6D dimensions in a list) or one of the SF-6D dimension names ",
+					 "('PF', 'RL', 'SF', 'PAIN', 'MH', 'VIT')")
+	)
+
+	sf12_vars <- check_sf12(..., version = version)
+
+	if (dimension == "PF") return(4 - sf12_vars$Q2)
+	if (dimension == "RL") {
+		RLp <- switch(version, 2 - sf12_vars$Q5, as.integer(sf12_vars$Q5 < 5))
+		RLe <- switch(version, 2 - sf12_vars$Q6, as.integer(sf12_vars$Q6 < 5))
+		return(1 + RLp + 2 * RLe)
+	}
+	if (dimension == "SF") return(switch(version, 6 - (sf12_vars$Q12 - (sf12_vars$Q12 > 2)), 6 - sf12_vars$Q12))
+	if (dimension == "PAIN") return(sf12_vars$Q8)
+	if (dimension == "MH") return(switch(version, 6 - (sf12_vars$Q11 - (sf12_vars$Q11 > 2)), 6 - sf12_vars$Q11))
+	if (dimension == "VIT") return(switch(version, sf12_vars$Q10 - (sf12_vars$Q10 > 2), sf12_vars$Q10))
+
+	PF <- 4 - sf12_vars$Q2
+	RLp <- switch(version, 2 - sf12_vars$Q5, as.integer(sf12_vars$Q5 < 5))
+	RLe <- switch(version, 2 - sf12_vars$Q6, as.integer(sf12_vars$Q6 < 5))
+	RL <- 1 + RLp + 2 * RLe
+	SF <- switch(version, 6 - (sf12_vars$Q12 - (sf12_vars$Q12 > 2)), 6 - sf12_vars$Q12)
+	PAIN <- sf12_vars$Q8
+	MH <- switch(version, 6 - (sf12_vars$Q11 - (sf12_vars$Q11 > 2)), 6 - sf12_vars$Q11)
+	VIT <- switch(version, sf12_vars$Q10 - (sf12_vars$Q10 > 2), sf12_vars$Q10)
+
+	if (dimension == "list") list(PF = PF, RL = RL, SF = SF, PAIN = PAIN, MH = MH, VIT = VIT)
+}
+
+#' SF-6D utility values
+#'
+#' Calculate SF-6D (SF-12) utility values using Brazier & Roberts (2004) algorithm
+#'
+#' @param PF,RL,SF,PAIN,MH,VIT SF-6D profile
+#' @param values Not used
+#'
+#' @export
+sf6d_utility <- function(PF, RL, SF, PAIN, MH, VIT, values = "uk") {
+	if (values != "uk") stop ("Only the original Brazier and Roberts (2004) value set is currently implemented")
+
+	1 - (
+		dplyr::recode(PF, 0, 0, 0.045) +
+			dplyr::recode(RL, 0, 0.063, 0.063, 0.063) +
+			dplyr::recode(SF, 0, 0.063, 0.066, 0.081, 0.093) +
+			dplyr::recode(PAIN, 0, 0, 0.042, 0.077, 0.137) +
+			dplyr::recode(MH, 0, 0.059, 0.059, 0.113, 0.134) +
+			dplyr::recode(VIT, 0, 0.078, 0.078, 0.078, 0.106) +
+			dplyr::if_else(PF == 3 | RL >= 3 | SF >= 4 | PAIN >= 4 | MH >= 4 | VIT == 5, 0.077, 0)
+	)
+}
+
+#' SF-12 component summary scores
+#'
+#' Calculate SF-12 PCS and MCS component summary scores from SF-12 question-level responses
+#'
+#' @param ... Vectors containing SF-12 question reponses; should be named as \code{\{Q1, Q2, ..., Q12\}},
+#'     \code{\{Q1, Q2a, ..., Q7\}}, or lower case equivalents.
+#'
+#' @export
+sf12_scores <- function(..., version = 2, dimension = "list") {
+	if (length(version) != 1 || !(version %in% c(1L, 2L))) stop ("'version' must be 1 or 2")
+	if (length(dimension) != 1 || !(dimension %in% c("list", "PCS", "MCS"))) stop(
+		paste0("'dimension' must be one of 'list' (return both PCS and MCS values in a list), 'PCS', or 'MCS'")
+	)
+
+	sf12_vars <- check_sf12(..., version = version)
+
+	if (version == 1) stop ("Only version 2 scoring is implemented at this stage")
+
+	if (version == 2) {
+		PF <- (sf12_vars$Q2 + sf12_vars$Q3 - 2) / 4 * 100
+		RP <- (sf12_vars$Q4 + sf12_vars$Q5 - 2) / 8 * 100
+		BP <- (sf12_vars$Q8 - 1) / 4 * 100
+		GH <- (dplyr::recode(sf12_vars$Q1, 5, 4.4, 3.4, 2, 1) - 1) / 4 * 100
+		VT <- (6 - sf12_vars$Q10 - 1) / 4 * 100
+		SF <- (sf12_vars$Q12 - 1) / 4 * 100
+		RE <- (sf12_vars$Q6 + sf12_vars$Q7 - 2) / 8 * 100
+		MH <- (6 - sf12_vars$Q9 + sf12_vars$Q11 - 2) / 8 * 100
+
+		PFz <- (PF - 81.18122) / 29.10558
+		RPz <- (RP - 80.52856) / 27.13526
+		BPz <- (BP - 81.74015) / 24.53019
+		GHz <- (GH - 72.19795) / 23.19041
+		VTz <- (VT - 55.59090) / 24.84380
+		SFz <- (SF - 83.73973) / 24.75775
+		REz <- (RE - 86.41051) / 22.35543
+		MHz <- (MH - 70.18217) / 20.50597
+
+		if (dimension %in% c("list", "PCS")) {
+			PHYS <- (PFz * 0.42402 + RPz * 0.35119 + BPz * 0.31754 + GHz * 0.24954 + VTz * 0.02877 + SFz * -0.00753
+							 + REz * -0.19206 + MHz * -0.22069)
+		  PCS <- 50 + PHYS * 10
+		  if (dimension == "PCS") return(PCS)
+		}
+		if (dimension %in% c("list", "MCS")) {
+			MENT <- (PFz * -0.22999 + RPz * -0.12329 + BPz * -0.09731 + GHz * -0.01571 + VTz * 0.23534 + SFz * 0.26876
+						 + REz * 0.43407 + MHz * 0.48581)
+			MCS <- 50 + MENT * 10
+			if (dimension == "MCS") return(MCS)
+		}
+
+		list(PCS = PCS, MCS = MCS)
+	}
+}
+
+check_sf12 <- function(..., version = 2) {
 	sf12_vars <- list(...)
 
 	if (length(version) != 1 || !(version %in% c(1L, 2L))) stop ("'version' must be 1 or 2")
-	if (length(dimension) != 1 || !(dimension %in% c("list", "PF", "RL", "SF", "PAIN", "MH", "VIT"))) stop(
-		paste0("'dimension' must be one of 'list' (return all SF-6D dimensions in a list) or one of the SF-6D dimension",
-					 "names ('PF', 'RL', 'SF', 'PAIN', 'MH', 'VIT')")
-	)
 
 	if (
 		all((c("Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10", "Q11", "Q12") %in% names(sf12_vars)) |
@@ -60,7 +164,7 @@ sf6d_profile <- function(..., version = 2, dimension = "list") {
 		Q11 <- check_args(Q6c = sf12_vars$Q6c, q6c = sf12_vars$q6c, Q6C = sf12_vars$Q6C, q6C = sf12_vars$q6C)
 		Q12 <- check_args(Q7 = sf12_vars$Q7, q7 = sf12_vars$q7)
 	} else {
-    stop ("Invalid SF-12 question numbers")
+		stop ("Invalid SF-12 question numbers")
 	}
 
 	num <- vapply(list(Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9, Q10, Q11, Q12), is.numeric, TRUE)
@@ -183,36 +287,5 @@ sf6d_profile <- function(..., version = 2, dimension = "list") {
 		Q12 <- as.integer(factor(Q12, levels = label$Q12))
 	}
 
-	PF <- 4 - Q2
-	RLp <- switch(version, 2 - Q5, as.integer(Q5 < 5))
-	RLe <- switch(version, 2 - Q6, as.integer(Q6 < 5))
-	RL <- 1 + RLp + 2 * RLe
-	SF <- switch(version, 6 - (Q12 - (Q12 > 2)), 6 - Q12)
-	PAIN <- Q8
-	MH <- switch(version, 6 - (Q11 - (Q11 > 2)), 6 - Q11)
-	VIT <- switch(version, Q10 - (Q10 > 2), Q10)
-
-	if (dimension == "list") list(PF = PF, RL = RL, SF = SF, PAIN = PAIN, MH = MH, VIT = VIT)
-}
-
-#' SF-6D utility values
-#'
-#' Calculate SF-6D (SF-12) utility values using Brazier & Roberts (2004) algorithm
-#'
-#' @param PF,RL,SF,PAIN,MH,VIT SF-6D profile
-#' @param values Not used
-#'
-#' @export
-sf6d_utility <- function(PF, RL, SF, PAIN, MH, VIT, values = "uk") {
-	if (values != "uk") stop ("Only the original Brazier and Roberts (2004) value set is currently implemented")
-
-	1 - (
-		dplyr::recode(PF, 0, 0, 0.045) +
-			dplyr::recode(RL, 0, 0.063, 0.063, 0.063) +
-			dplyr::recode(SF, 0, 0.063, 0.066, 0.081, 0.093) +
-			dplyr::recode(PAIN, 0, 0, 0.042, 0.077, 0.137) +
-			dplyr::recode(MH, 0, 0.059, 0.059, 0.113, 0.134) +
-			dplyr::recode(VIT, 0, 0.078, 0.078, 0.078, 0.106) +
-			dplyr::if_else(PF == 3 | RL >= 3 | SF >= 4 | PAIN >= 4 | MH >= 4 | VIT == 5, 0.077, 0)
-	)
+	list(Q1 = Q1, Q2 = Q2, Q3 = Q3, Q4 = Q4, Q5 = Q5, Q6 = Q6, Q7 = Q7, Q8 = Q8, Q9 = Q9, Q10 = Q10, Q11 = Q11, Q12 = Q12)
 }
