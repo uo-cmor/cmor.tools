@@ -84,7 +84,7 @@ sf12_scores <- function(..., version = 2, dimension = "list") {
 	if (version == 2) {
 		PF <- (sf12_vars$Q2 + sf12_vars$Q3 - 2) / 4 * 100
 		RP <- (sf12_vars$Q4 + sf12_vars$Q5 - 2) / 8 * 100
-		BP <- (sf12_vars$Q8 - 1) / 4 * 100
+		BP <- (6 - sf12_vars$Q8 - 1) / 4 * 100
 		GH <- (dplyr::recode(sf12_vars$Q1, 5, 4.4, 3.4, 2, 1) - 1) / 4 * 100
 		VT <- (6 - sf12_vars$Q10 - 1) / 4 * 100
 		SF <- (sf12_vars$Q12 - 1) / 4 * 100
