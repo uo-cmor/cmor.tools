@@ -46,7 +46,7 @@ NULL
 #' @rdname number-formatting
 #' @export
 number <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
-									 big.mark = "< >", decimal.mark = ",", trim = TRUE, ...) {
+									 big.mark = "< >", decimal.mark = ".", trim = TRUE, ...) {
 	neg <- rep("", length(x))
 	neg[x < 0] <- "\u2212"
 
@@ -63,7 +63,7 @@ number <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
 #' @rdname number-formatting
 #' @export
 number_format <- function(accuracy = 1, scale = 1, prefix = "", suffix = "",
-													big.mark = "< >", decimal.mark = ",", trim = TRUE, ...) {
+													big.mark = "< >", decimal.mark = ".", trim = TRUE, ...) {
 	list(accuracy, scale, prefix, suffix, big.mark, decimal.mark, trim, ...)
 
 	function(x) number(x, accuracy = accuracy, scale = scale,
