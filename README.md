@@ -13,7 +13,7 @@ research project folder, undertake analysis, and generate output reports
 
 ## Installation
 
-You can install the cmor.tools from [GitHub](https://github.com) with:
+You can install cmor.tools from [GitHub](https://github.com) with:
 
 ``` r
 #install.packages("remotes")
