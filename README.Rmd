@@ -21,7 +21,7 @@ The goal of cmor.tools is to provide standardised tools to initialise a research
 
 ## Installation
 
-You can install the cmor.tools from [GitHub](https://github.com) with:
+You can install cmor.tools from [GitHub](https://github.com) with:
 
 ``` r
 #install.packages("remotes")
