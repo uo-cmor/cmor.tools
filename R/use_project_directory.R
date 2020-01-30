@@ -78,6 +78,8 @@ add_templates <- function(package, workflow = "drake") {
   					usethis::proj_path(prefix, "reports")) # CSL citation formatting (Vancouver style)
   file.copy(system.file("templates", "word-styles-reference-01.docx", package = "cmor.tools", mustWork = TRUE),
   					usethis::proj_path(prefix, "reports")) # Reference .docx styles file
+  file.copy(system.file("templates", "word-styles-reference-med-care.docx", package = "cmor.tools", mustWork = TRUE),
+  					usethis::proj_path(prefix, "reports")) # Reference .docx styles file for Medical Care journal
 
   # Template 'packages' file to load required packages (for _drake.R)
   template <- system.file("templates", "packages", package = "cmor.tools", mustWork = TRUE)
