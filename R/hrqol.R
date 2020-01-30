@@ -82,14 +82,15 @@ sf12_scores <- function(..., version = 2, dimension = "list") {
 	if (version == 1) stop ("Only version 2 scoring is implemented at this stage")
 
 	if (version == 2) {
-		PF <- (sf12_vars$Q2 + sf12_vars$Q3 - 2) / 4 * 100
-		RP <- (sf12_vars$Q4 + sf12_vars$Q5 - 2) / 8 * 100
+		PF <- (dplyr::coalesce(sf12_vars$Q2, sf12_vars$Q3) + dplyr::coalesce(sf12_vars$Q3, sf12_vars$Q2) - 2) / 4 * 100
+		RP <- (dplyr::coalesce(sf12_vars$Q4, sf12_vars$Q5) + dplyr::coalesce(sf12_vars$Q5, sf12_vars$Q4) - 2) / 8 * 100
 		BP <- (6 - sf12_vars$Q8 - 1) / 4 * 100
 		GH <- (dplyr::recode(sf12_vars$Q1, 5, 4.4, 3.4, 2, 1) - 1) / 4 * 100
 		VT <- (6 - sf12_vars$Q10 - 1) / 4 * 100
 		SF <- (sf12_vars$Q12 - 1) / 4 * 100
-		RE <- (sf12_vars$Q6 + sf12_vars$Q7 - 2) / 8 * 100
-		MH <- (6 - sf12_vars$Q9 + sf12_vars$Q11 - 2) / 8 * 100
+		RE <- (dplyr::coalesce(sf12_vars$Q6, sf12_vars$Q7) + dplyr::coalesce(sf12_vars$Q7, sf12_vars$Q6) - 2) / 8 * 100
+		MH <- (dplyr::coalesce(6 - sf12_vars$Q9, sf12_vars$Q11)
+					 + dplyr::coalesce(sf12_vars$Q11, 6 - sf12_vars$Q9) - 2) / 8 * 100
 
 		PFz <- (PF - 81.18122) / 29.10558
 		RPz <- (RP - 80.52856) / 27.13526
