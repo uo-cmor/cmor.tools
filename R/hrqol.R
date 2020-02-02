@@ -90,7 +90,7 @@ sf12_scores <- function(..., version = 2, dimension = "list") {
 		SF <- (sf12_vars$Q12 - 1) / 4 * 100
 		RE <- (dplyr::coalesce(sf12_vars$Q6, sf12_vars$Q7) + dplyr::coalesce(sf12_vars$Q7, sf12_vars$Q6) - 2) / 8 * 100
 		MH <- (dplyr::coalesce(6L - sf12_vars$Q9, sf12_vars$Q11)
-					 + dplyr::coalesce(sf12_vars$Q11, 6 - sf12_vars$Q9) - 2) / 8 * 100
+					 + dplyr::coalesce(sf12_vars$Q11, 6L - sf12_vars$Q9) - 2) / 8 * 100
 
 		PFz <- (PF - 81.18122) / 29.10558
 		RPz <- (RP - 80.52856) / 27.13526
