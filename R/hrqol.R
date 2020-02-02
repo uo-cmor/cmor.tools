@@ -89,7 +89,7 @@ sf12_scores <- function(..., version = 2, dimension = "list") {
 		VT <- (6 - sf12_vars$Q10 - 1) / 4 * 100
 		SF <- (sf12_vars$Q12 - 1) / 4 * 100
 		RE <- (dplyr::coalesce(sf12_vars$Q6, sf12_vars$Q7) + dplyr::coalesce(sf12_vars$Q7, sf12_vars$Q6) - 2) / 8 * 100
-		MH <- (dplyr::coalesce(6 - sf12_vars$Q9, sf12_vars$Q11)
+		MH <- (dplyr::coalesce(6L - sf12_vars$Q9, sf12_vars$Q11)
 					 + dplyr::coalesce(sf12_vars$Q11, 6 - sf12_vars$Q9) - 2) / 8 * 100
 
 		PFz <- (PF - 81.18122) / 29.10558
@@ -288,5 +288,16 @@ check_sf12 <- function(..., version = 2) {
 		Q12 <- as.integer(factor(Q12, levels = label$Q12))
 	}
 
-	list(Q1 = Q1, Q2 = Q2, Q3 = Q3, Q4 = Q4, Q5 = Q5, Q6 = Q6, Q7 = Q7, Q8 = Q8, Q9 = Q9, Q10 = Q10, Q11 = Q11, Q12 = Q12)
+	list(Q1 = as.integer(Q1),
+			 Q2 = as.integer(Q2),
+			 Q3 = as.integer(Q3),
+			 Q4 = as.integer(Q4),
+			 Q5 = as.integer(Q5),
+			 Q6 = as.integer(Q6),
+			 Q7 = as.integer(Q7),
+			 Q8 = as.integer(Q8),
+			 Q9 = as.integer(Q9),
+			 Q10 = as.integer(Q10),
+			 Q11 = as.integer(Q11),
+			 Q12 = as.integer(Q12))
 }
