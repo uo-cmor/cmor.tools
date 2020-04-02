@@ -16,7 +16,7 @@ valid_package_name <- function (pkgname) {
 #' @description A wrapper around \code{\link{valid_package_name}} that returns
 #'     an error with an informative message if the package name is not valid.
 #'
-#' @param pkgname
+#' @param pkgname Character string
 check_package_name <- function(pkgname) {
 	if (!valid_package_name(pkgname))
 		usethis::ui_stop(

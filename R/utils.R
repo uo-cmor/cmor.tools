@@ -1,12 +1,3 @@
-#' Replace NULLs with a default value
-#'
-#' This is just \code{rlang::`%||%`}.
-#'
-#' @param x,y If \code{x} is \code{NULL} will return \code{y}, otherwise returns \code{x}
-#'
-#' @export
-`%||%` <- function(x, y) if (is.null(x)) y else x
-
 #' Ensure only one non-missing value is supplied in a list of arguments
 #'
 #' @param ... Arguments to be checked. Only one of these should be non-\code{NULL}.
@@ -24,3 +15,9 @@ check_args <- function(...) {
 
 	vars[!miss][[1]]
 }
+
+#' @importFrom magrittr %>%
+NULL
+
+lq <- function(x, ...) quantile(x, probs = 0.25, ...)
+uq <- function(x, ...) quantile(x, probs = 0.75, ...)

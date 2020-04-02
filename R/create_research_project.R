@@ -96,9 +96,9 @@ create_research_project <- function(path, package = FALSE, license = NULL, workf
   		setwd(oldwd)
   	}
   	else {
-  		ui_line("Next you need to:")
-  		if (package) ui_todo("Edit the DESCRIPTION file")
-  		ui_todo("Run `complete_setup()` to complete the project set-up")
+  		usethis::ui_line("Next you need to:")
+  		if (package) usethis::ui_todo("Edit the DESCRIPTION file")
+  		usethis::ui_todo("Run `complete_setup()` to complete the project set-up")
   	}
   }
 }

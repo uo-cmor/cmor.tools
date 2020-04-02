@@ -29,7 +29,38 @@ render_manuscript <- function(rmd = NULL, out = NULL, reference_docx = NULL, csl
 	)
 }
 
-# Add various output formatting functions (based on scales::number() etc)
+###################################
+### Output formatting functions ###
+###################################
+
+#' Results formatting for tables and reports
+#'
+#' These functions are simple wrappers around `paste()` and `number()` to
+#'     format results for printing.
+#'
+#' @param mean,sd,n,proportion Numeric vectors
+#' @param ... Passed to `number()`
+#'
+#' @name output-formatting
+NULL
+
+#' @rdname output-formatting
+#'
+#' @export
+mean_sd <- function(mean, sd, ...) {
+	paste0(number(mean, ...), ' (', number(sd, ...), ')')
+}
+
+#' @rdname output-formatting
+#'
+#' @export
+n_percent <- function(n, proportion, ...) {
+	paste0(number(n, accuracy = 1), ' (', number(proportion, scale = 100, suffix = '%', ...), ')')
+}
+
+##################################################################.
+### Number formatting functions (based on scales::number() etc) ###
+###################################################################
 
 #' Format numbers using `scales::number()`-type functions
 #'
