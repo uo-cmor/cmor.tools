@@ -31,8 +31,9 @@
 #'     total column (default is 'Entire sample').
 #'
 #' @export
-create_descriptive_table <- function(df, continuous, discrete, output = c(names(continuous), names(discrete)),
-																		 by = NULL, value_continuous = mean_sd(.mean, .sd, accuracy = 0.1),
+create_descriptive_table <- function(df, continuous = NULL, discrete = NULL, multiresponse = NULL,
+																		 output = c(names(continuous), names(discrete)), by = NULL,
+																		 value_continuous = mean_sd(.mean, .sd, accuracy = 0.1),
 																		 value_discrete = n_percent(.n, .proportion), total = !is.null(by)) {
 	value_continuous <- rlang::enquo(value_continuous)
 	value_discrete <- rlang::enquo(value_discrete)
@@ -48,11 +49,18 @@ create_descriptive_table <- function(df, continuous, discrete, output = c(names(
 																														dplyr::coalesce(names(discrete), discrete))
 	else names(discrete) <- discrete
 
+	for (x in multiresponse) {
+		if (is_named(x)) names(x) <- dplyr::if_else(names(x) == '', x, dplyr::coalesce(names(x), x))
+		else names(x) <- x
+	}
+
 	continuous_tables <- purrr::imap(continuous,
 																	 ~continuous_characteristics_table(df, by, .x, .y, value_continuous, total))
 	discrete_tables <- purrr::imap(discrete,	~discrete_characteristics_table(df, by, .x, .y, value_discrete, total))
+	multiresponse_tables <- purrr::imap(multiresponse,
+																			~multiresponse_characteristics_table(df, by, .x, .y, value_discrete, total))
 
-	dplyr::bind_rows(c(continuous_tables, discrete_tables)[output])
+	dplyr::bind_rows(c(continuous_tables, discrete_tables, multiresponse_tables)[output])
 }
 
 continuous_characteristics_table <- function(df, by, variable, name, value, total) {
@@ -81,8 +89,8 @@ discrete_characteristics_table <- function(df, by, variable, name, value, total)
 		dplyr::summarise(.n = n()) %>%
 		tidyr::drop_na() %>%
 		dplyr::mutate(.proportion = .n / sum(.n),
-					 value = !!value,
-					 'Patient characteristic' = paste0('\u2003', as.character(`Patient characteristic`))) %>%
+									value = !!value,
+									'Patient characteristic' = paste0('\u2003', as.character(`Patient characteristic`))) %>%
 		dplyr::ungroup() %>%
 		dplyr::select(-.n, -.proportion)
 	if (!is.null(by)) out <- tidyr::pivot_wider(out, id_cols = 'Patient characteristic', names_from = !!by)
@@ -95,9 +103,32 @@ discrete_characteristics_table <- function(df, by, variable, name, value, total)
 			tidyr::drop_na() %>%
 			dplyr::mutate(.proportion = .n / sum(.n)) %>%
 			dplyr::ungroup() %>%
-			dplyr::transmute('Entire sample' = !!value) %>%
-			dplyr::add_row('Entire sample' = NA_character_, .after = 0)
+			dplyr::transmute(!!total := !!value) %>%
+			dplyr::add_row(!!total := NA_character_, .after = 0)
 	)
 
 	out
+}
+
+multiresponse_characteristics_table <- function(df, by, variables, name, value, total) {
+	imap_dfr(
+		variables,
+		function(variable, label) {
+			out <- dplyr::group_by_at(df, dplyr::vars(!!by)) %>%
+				dplyr::summarise_at(dplyr::vars(!!variable), list(.n = sum, .proportion = mean), na.rm = TRUE) %>%
+				dplyr::mutate(value = !!value) %>%
+				dplyr::select(-.n, -.proportion)
+			if (!is.null(by)) out <- tidyr::pivot_wider(out, names_from = !!by)
+			if (!is.null(total)) out <- dplyr::bind_cols(
+				out,
+				dplyr::summarise_at(df, dplyr::vars(!!variable), list(.n = sum, .proportion = mean), na.rm = TRUE) %>%
+					dplyr::transmute(!!total := !!value)
+			)
+
+			out %>%
+				dplyr::mutate('Patient characteristic' = paste0('\u2003', !!label)) %>%
+				dplyr::select('Patient characteristic', dplyr::everything())
+		}
+	) %>%
+		dplyr::add_row('Patient characteristic' := !!name, .after = 0)
 }

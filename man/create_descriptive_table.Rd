@@ -6,8 +6,9 @@
 \usage{
 create_descriptive_table(
   df,
-  continuous,
-  discrete,
+  continuous = NULL,
+  discrete = NULL,
+  multiresponse = NULL,
   output = c(names(continuous), names(discrete)),
   by = NULL,
   value_continuous = mean_sd(.mean, .sd, accuracy = 0.1),
