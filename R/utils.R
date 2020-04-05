@@ -33,3 +33,17 @@ calculate_ci <- function(conf.level = 0.95) {
 
 	c((1 - conf.level) / 2, 1 - (1 - conf.level) / 2)
 }
+
+#' Does object have names?
+#'
+#' Similar to `rlang::is_named()`, but allows missing values for some names
+#'
+#' @param x An object to test
+#'
+#' @export
+has_names <- function(x) {
+	nms <- names(x)
+	if (rlang::is_null(nms)) return(FALSE)
+	if (all(nms == "" | is.na(nms))) return(FALSE)
+	TRUE
+}

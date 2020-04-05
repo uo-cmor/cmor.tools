@@ -41,18 +41,20 @@ create_descriptive_table <- function(df, continuous = NULL, discrete = NULL, mul
 	if (isTRUE(total)) total <- 'Entire sample'
 	if (isFALSE(total)) total <- NULL
 
-	if (is_named(continuous)) names(continuous) <- dplyr::if_else(names(continuous) == '', continuous,
-																																dplyr::coalesce(names(continuous), continuous))
+	if (has_names(continuous)) names(continuous) <- dplyr::if_else(names(continuous) == '', unname(continuous),
+																																dplyr::coalesce(names(continuous), unname(continuous)))
 	else names(continuous) <- continuous
 
-	if (is_named(discrete)) names(discrete) <- dplyr::if_else(names(discrete) == '', discrete,
-																														dplyr::coalesce(names(discrete), discrete))
+	if (has_names(discrete)) names(discrete) <- dplyr::if_else(names(discrete) == '', unname(discrete),
+																														dplyr::coalesce(names(discrete), unname(discrete)))
 	else names(discrete) <- discrete
 
 	for (x in multiresponse) {
-		if (is_named(x)) names(x) <- dplyr::if_else(names(x) == '', x, dplyr::coalesce(names(x), x))
+		if (has_names(x)) names(x) <- dplyr::if_else(names(x) == '', unname(x), dplyr::coalesce(names(x), unname(x)))
 		else names(x) <- x
 	}
+
+	variable_names <- c(names(continuous), names(discrete), names(multiresponse))
 
 	continuous_tables <- purrr::imap(continuous,
 																	 ~continuous_characteristics_table(df, by, .x, .y, value_continuous, total))
@@ -60,7 +62,9 @@ create_descriptive_table <- function(df, continuous = NULL, discrete = NULL, mul
 	multiresponse_tables <- purrr::imap(multiresponse,
 																			~multiresponse_characteristics_table(df, by, .x, .y, value_discrete, total))
 
-	dplyr::bind_rows(c(continuous_tables, discrete_tables, multiresponse_tables)[output])
+	header_rows <- purrr::map(setNames(nm = setdiff(output, variable_names)), make_header_row)
+
+	dplyr::bind_rows(c(continuous_tables, discrete_tables, multiresponse_tables, header_rows)[output])
 }
 
 continuous_characteristics_table <- function(df, by, variable, name, value, total) {
@@ -132,3 +136,5 @@ multiresponse_characteristics_table <- function(df, by, variables, name, value, 
 	) %>%
 		dplyr::add_row('Patient characteristic' := !!name, .after = 0)
 }
+
+make_header_row <- function(x) tibble::tibble('Patient characteristic' = !!x)
