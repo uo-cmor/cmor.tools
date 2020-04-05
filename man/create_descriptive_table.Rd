@@ -34,13 +34,14 @@ the sample. Default is to report for the entire sample.}
 
 \item{value_continuous}{(optional) An expression describing how to format
 the outcome values for continuous variables. Can refer to
-mean/sd/min/lq/median/uq/max as `.mean`, `.sd`, etc. Default is to
-report mean (SD) to one decimanl place.}
+mean/sd/min/lq/median/uq/max as `.mean`, `.sd`, etc, and the name of the
+variable being formatted as `.variable`. Default is to report mean (SD)
+to one decimanl place.}
 
 \item{value_discrete}{(optional) An expression describing how to format the
 outcome values for discrete variables. Can refer to n/proportion as
-`.n`, `.proportion`. Default is to report n (percentage) to zero decimal
-places.}
+`.n`, `.proportion`, and the name of the variable being formatted as
+`.variable`. Default is to report n (percentage) to zero decimal places.}
 
 \item{total}{(optional) Logical value; should a 'total' (full sample) column
 be included? Default is `TRUE` if `by` is specified, `FALSE` otherwise.

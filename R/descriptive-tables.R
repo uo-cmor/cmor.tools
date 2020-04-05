@@ -19,12 +19,13 @@
 #'     the sample. Default is to report for the entire sample.
 #' @param value_continuous (optional) An expression describing how to format
 #'     the outcome values for continuous variables. Can refer to
-#'     mean/sd/min/lq/median/uq/max as `.mean`, `.sd`, etc. Default is to
-#'     report mean (SD) to one decimanl place.
+#'     mean/sd/min/lq/median/uq/max as `.mean`, `.sd`, etc, and the name of the
+#'     variable being formatted as `.variable`. Default is to report mean (SD)
+#'     to one decimanl place.
 #' @param value_discrete (optional) An expression describing how to format the
 #'     outcome values for discrete variables. Can refer to n/proportion as
-#'     `.n`, `.proportion`. Default is to report n (percentage) to zero decimal
-#'     places.
+#'     `.n`, `.proportion`, and the name of the variable being formatted as
+#'     `.variable`. Default is to report n (percentage) to zero decimal places.
 #' @param total (optional) Logical value; should a 'total' (full sample) column
 #'     be included? Default is `TRUE` if `by` is specified, `FALSE` otherwise.
 #'     Can also be a character string giving the column name to use for the
@@ -72,14 +73,15 @@ continuous_characteristics_table <- function(df, by, variable, name, value, tota
 		dplyr::summarise_at(dplyr::vars(!!variable),
 												list(.mean = mean, .sd = sd, .min = min, .lq = lq, .median = median, .uq = uq, .max = max),
 												na.rm = TRUE) %>%
-		dplyr::mutate(value = !!value) %>%
-		dplyr::select(-.mean, -.sd, -.min, -.lq, -.median, -.uq, -.max)
+		dplyr::mutate(.variable = !!variable, value = !!value) %>%
+		dplyr::select(-.mean, -.sd, -.min, -.lq, -.median, -.uq, -.max, -.variable)
 	if (!is.null(by)) out <- tidyr::pivot_wider(out, names_from = !!by)
 	if (!is.null(total)) out <- dplyr::bind_cols(
 		out,
 		dplyr::summarise_at(df, dplyr::vars(!!variable),
 												list(.mean = mean, .sd = sd, .min = min, .lq = lq, .median = median, .uq = uq, .max = max),
 												na.rm = TRUE) %>%
+			dplyr::mutate(.variable = !!variable) %>%
 			dplyr::transmute(!!total := !!value)
 	)
 	out %>%
@@ -92,11 +94,10 @@ discrete_characteristics_table <- function(df, by, variable, name, value, total)
 		dplyr::group_by_at(dplyr::vars(!!by, 'Patient characteristic' = !!variable)) %>%
 		dplyr::summarise(.n = n()) %>%
 		tidyr::drop_na() %>%
-		dplyr::mutate(.proportion = .n / sum(.n),
-									value = !!value,
+		dplyr::mutate(.proportion = .n / sum(.n), .variable = !!variable, value = !!value,
 									'Patient characteristic' = paste0('\u2003', as.character(`Patient characteristic`))) %>%
 		dplyr::ungroup() %>%
-		dplyr::select(-.n, -.proportion)
+		dplyr::select(-.n, -.proportion, -.variable)
 	if (!is.null(by)) out <- tidyr::pivot_wider(out, id_cols = 'Patient characteristic', names_from = !!by)
 	out <- out %>% dplyr::add_row('Patient characteristic' = !!name, .after = 0)
 	if (!is.null(total)) out <- dplyr::bind_cols(
@@ -105,7 +106,7 @@ discrete_characteristics_table <- function(df, by, variable, name, value, total)
 			dplyr::group_by_at(dplyr::vars(!!variable)) %>%
 			dplyr::summarise(.n = n()) %>%
 			tidyr::drop_na() %>%
-			dplyr::mutate(.proportion = .n / sum(.n)) %>%
+			dplyr::mutate(.proportion = .n / sum(.n), .variable = !!variable) %>%
 			dplyr::ungroup() %>%
 			dplyr::transmute(!!total := !!value) %>%
 			dplyr::add_row(!!total := NA_character_, .after = 0)
@@ -120,12 +121,13 @@ multiresponse_characteristics_table <- function(df, by, variables, name, value, 
 		function(variable, label) {
 			out <- dplyr::group_by_at(df, dplyr::vars(!!by)) %>%
 				dplyr::summarise_at(dplyr::vars(!!variable), list(.n = sum, .proportion = mean), na.rm = TRUE) %>%
-				dplyr::mutate(value = !!value) %>%
-				dplyr::select(-.n, -.proportion)
+				dplyr::mutate(.variable = !!variable, value = !!value) %>%
+				dplyr::select(-.n, -.proportion, -.variable)
 			if (!is.null(by)) out <- tidyr::pivot_wider(out, names_from = !!by)
 			if (!is.null(total)) out <- dplyr::bind_cols(
 				out,
 				dplyr::summarise_at(df, dplyr::vars(!!variable), list(.n = sum, .proportion = mean), na.rm = TRUE) %>%
+					dplyr::mutate(.variable = !!variable) %>%
 					dplyr::transmute(!!total := !!value)
 			)
 
