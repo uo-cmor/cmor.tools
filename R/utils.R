@@ -21,3 +21,15 @@ NULL
 
 lq <- function(x, ...) quantile(x, probs = 0.25, ...)
 uq <- function(x, ...) quantile(x, probs = 0.75, ...)
+
+
+#' Compute confidence interval bounds from confidence level
+#'
+#' @param conf.level Confidence level, expressed as a proportion in (0, 1); default is 0.95.
+#'
+#' @export
+calculate_ci <- function(conf.level = 0.95) {
+	stopifnot(is.numeric(conf.level), length(conf.level) == 1, conf.level > 0 & conf.level < 1)
+
+	c((1 - conf.level) / 2, 1 - (1 - conf.level) / 2)
+}
