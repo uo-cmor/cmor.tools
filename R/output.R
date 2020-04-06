@@ -13,11 +13,11 @@
 #' @export
 render_manuscript <- function(rmd = NULL, out = NULL, reference_docx = NULL, csl = NULL, bib = NULL) {
 	if (is_package()) prefix <- "inst/" else prefix <- ""
-  if (is.null(rmd)) rmd <- paste0(prefix, "reports/manuscript.Rmd")
-  if (is.null(out)) out <- paste0("output/", basename(rmd))
-  if (is.null(reference_docx)) reference_docx <- paste0(prefix, "reports/word-styles-reference-01.docx")
-  if (is.null(csl)) csl <- paste0(prefix, "reports/vancouver.csl")
-  if (is.null(bib)) bib <- paste0(prefix, "reports/references.bib")
+	if (is.null(rmd)) rmd <- paste0(prefix, "reports/manuscript.Rmd")
+	if (is.null(out)) out <- paste0("output/", basename(rmd))
+	if (is.null(reference_docx)) reference_docx <- paste0(prefix, "reports/word-styles-reference-01.docx")
+	if (is.null(csl)) csl <- paste0(prefix, "reports/vancouver.csl")
+	if (is.null(bib)) bib <- paste0(prefix, "reports/references.bib")
 
 	rmarkdown::render(
 		rmd,
@@ -69,7 +69,7 @@ n_percent <- function(n, proportion, ...) {
 #'
 #' @param x Numeric vector to format
 #' @param accuracy,scale,prefix,suffix,big.mark,decimal.mark,trim,... As in
-#'     `scales::number()`
+#'     \code{scales::number()}
 #'
 #' @name number-formatting
 NULL
@@ -100,4 +100,57 @@ number_format <- function(accuracy = 1, scale = 1, prefix = "", suffix = "",
 	function(x) number(x, accuracy = accuracy, scale = scale,
 										 prefix = prefix, suffix = suffix, big.mark = big.mark,
 										 decimal.mark = decimal.mark, trim = trim, ...)
+}
+
+#' @rdname number-formatting
+#' @export
+percent <- function(x, accuracy = 1, scale = 100, prefix = "", suffix = "%",
+										big.mark = "< >", decimal.mark = ".", trim = TRUE, ...) {
+	neg <- rep("", length(x))
+	neg[x < 0] <- "\u2212"
+
+	stringi::stri_replace_all_regex(
+		paste0(
+			neg,
+			scales::number(abs(x), accuracy = accuracy, scale = scale, prefix = prefix, suffix = suffix,
+										 big.mark = big.mark, decimal.mark = decimal.mark, trim = trim, ...)
+		),
+		"< >", "\u202F"
+	)
+}
+
+#' @rdname number-formatting
+#' @export
+percent_format <- function(accuracy = 1, scale = 100, prefix = "", suffix = "%",
+													 big.mark = "< >", decimal.mark = ".", trim = TRUE, ...) {
+	list(accuracy, scale, prefix, suffix, big.mark, decimal.mark, trim, ...)
+
+	function(x) percent(x, accuracy = accuracy, scale = scale,
+											prefix = prefix, suffix = suffix, big.mark = big.mark,
+											decimal.mark = decimal.mark, trim = trim, ...)
+}
+
+#' @rdname number-formatting
+#' @export
+comma <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
+									big.mark = ",", decimal.mark = ".", trim = TRUE, ...) {
+	neg <- rep("", length(x))
+	neg[x < 0] <- "\u2212"
+
+	paste0(
+		neg,
+		scales::number(abs(x), accuracy = accuracy, scale = scale, prefix = prefix, suffix = suffix,
+									 big.mark = big.mark, decimal.mark = decimal.mark, trim = trim, ...)
+	)
+}
+
+#' @rdname number-formatting
+#' @export
+comma_format <- function(accuracy = 1, scale = 1, prefix = "", suffix = "",
+												 big.mark = ",", decimal.mark = ".", trim = TRUE, ...) {
+	list(accuracy, scale, prefix, suffix, big.mark, decimal.mark, trim, ...)
+
+	function(x) comma(x, accuracy = accuracy, scale = scale,
+										prefix = prefix, suffix = suffix, big.mark = big.mark,
+										decimal.mark = decimal.mark, trim = trim, ...)
 }
