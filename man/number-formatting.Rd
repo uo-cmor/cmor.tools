@@ -4,6 +4,10 @@
 \alias{number-formatting}
 \alias{number}
 \alias{number_format}
+\alias{percent}
+\alias{percent_format}
+\alias{comma}
+\alias{comma_format}
 \title{Format numbers using `scales::number()`-type functions}
 \usage{
 number(
@@ -28,12 +32,58 @@ number_format(
   trim = TRUE,
   ...
 )
+
+percent(
+  x,
+  accuracy = 1,
+  scale = 100,
+  prefix = "",
+  suffix = "\%",
+  big.mark = "< >",
+  decimal.mark = ".",
+  trim = TRUE,
+  ...
+)
+
+percent_format(
+  accuracy = 1,
+  scale = 100,
+  prefix = "",
+  suffix = "\%",
+  big.mark = "< >",
+  decimal.mark = ".",
+  trim = TRUE,
+  ...
+)
+
+comma(
+  x,
+  accuracy = 1,
+  scale = 1,
+  prefix = "",
+  suffix = "",
+  big.mark = ",",
+  decimal.mark = ".",
+  trim = TRUE,
+  ...
+)
+
+comma_format(
+  accuracy = 1,
+  scale = 1,
+  prefix = "",
+  suffix = "",
+  big.mark = ",",
+  decimal.mark = ".",
+  trim = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{Numeric vector to format}
 
 \item{accuracy, scale, prefix, suffix, big.mark, decimal.mark, trim, ...}{As in
-`scales::number()`}
+\code{scales::number()}}
 }
 \description{
 These functions replace/extend the `scales::number()-type` formatting
