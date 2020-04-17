@@ -38,7 +38,8 @@ render_manuscript <- function(rmd = NULL, out = NULL, reference_docx = NULL, csl
 #' These functions are simple wrappers around `paste()` and `number()` to
 #'     format results for printing.
 #'
-#' @param mean,sd,n,proportion Numeric vectors
+#' @param mean,sd,n,proportion,est,low,high Numeric vectors
+#' @param sep Separator between lower and upper bounds of the CI; default is \code{' to '}.
 #' @param ... Passed to `number()`
 #'
 #' @name output-formatting
@@ -56,6 +57,13 @@ mean_sd <- function(mean, sd, ...) {
 #' @export
 n_percent <- function(n, proportion, ...) {
 	paste0(number(n, accuracy = 1), ' (', number(proportion, scale = 100, suffix = '%', ...), ')')
+}
+
+#' @rdname output-formatting
+#'
+#' @export
+est_ci <- function(est, low, high, sep = ' to ', ...) {
+	paste0(number(est, ...), ' (', number(low, ...), sep, number(high, ...), ')')
 }
 
 ##################################################################.
