@@ -1,24 +1,48 @@
-source("code/00-packages.R") # Load required packages
-#source("code/00-fixed-parameters.R") # import fixed parameters
+######################
+### Initial set-up ###
+######################
 
-# Use source() statements or code_to_plan() to construct plan sections
-#source("code/01-raw-data.R")
-#process_raw_data <- code_to_plan("code/02-process-data.R")
+source("R/load-packages.R") # Load required packages
+#source("R/define-parameters.R") # Define fixed parameters, if used
+sourceDirectory('R')
 
-# Set up futures if required
-plan(multiprocess)
-#plan(multiprocess(workers = availableCores() - 1))
+targets <- NULL
+verbose <- 2
+use_parallel <- TRUE
+max_cores <- Inf
 
-# Collate plan sections into complete analysis plan
-#plan <- bind_plans(
-#	import_raw_data,
-#	process_raw_data,
-#	estimate_results,
-#	render_manuscripts
-#)
+#############################
+### Futures (if required) ###
+#############################
+
+if (Sys.getenv("RSTUDIO") != "1" && use_parallel) {
+	n_cores <- min(availableCores() - 1, max_cores)
+  plan(multiprocess(workers = n_cores))
+	jobs <- n_cores
+	parallelism <- 'future'
+} else {
+	jobs <- 1
+	parallelism <- 'loop'
+}
+
+###################
+### Define plan ###
+###################
+
+plan <- drake_plan(
+# 	data = read_raw_data(),
+# 	clean = process_data(),
+# 	results = analyse_data(),
+# 	output = render_manuscript(knitr_in(!!file_output_rmd), file_out(!!file_output_docx),
+# 														 file_in(!!file_word_styles), file_in(!!file_csl), file_in(!!file_bib))
+)
+
+##################################
+### Create drake_config object ###
+##################################
 
 drake_config(
-	plan, jobs = 1L,
-	targets = "manuscript",
-	verbose = 2L
+	plan, parallelism = parallelism, jobs = jobs,
+	targets = targets,
+	verbose = verbose
 )

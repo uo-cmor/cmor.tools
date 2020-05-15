@@ -26,10 +26,11 @@ knitr::opts_chunk$set(
   echo = FALSE,
   comment = "#>"
 )
+options(knitr.kable.NA = "")
 
 # Load required libraries
-source("code/00-packages.R") # Load required packages
-sourceDirectory("R") # import required functions
+source("R/load-packages.R") # Load required packages
+#sourceDirectory("R") # import required functions - for Makefile only
 ```
 
 ```{r load-data, include=FALSE, echo=FALSE, cache=FALSE}

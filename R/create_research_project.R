@@ -40,6 +40,7 @@
 create_research_project <- function(path, package = FALSE, license = NULL, workflow = "drake",
 																		git = TRUE, raw_data_in_git = TRUE, data_in_git = FALSE,
 																		github = TRUE, private = TRUE) {
+	if (package) stop('package = TRUE is not supported in this version of cmor.tools')
 
 	# Create new package
 	use_research_project(path, package)
@@ -123,6 +124,8 @@ create_research_project <- function(path, package = FALSE, license = NULL, workf
 #'     excluded from the git repository.
 #' @param private Logical (default = \code{TRUE}). Should the GitHub repo be
 #'     private or public? Ignored if \code{github = FALSE}.
+#'
+#' @export
 complete_setup <- function(
 	project = getwd(), git = getOption("cmor.tools.git"), raw_data_in_git = getOption("cmor.tools.git_rawdata"),
 	data_in_git = getOption("cmor.tools.git_data"), github = getOption("cmor.tools.github"),

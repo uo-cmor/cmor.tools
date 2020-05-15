@@ -32,12 +32,12 @@ use_project_directory <- function(name, package, workflow = "drake", git = TRUE,
 #'
 #' This adds the directory structure
 add_directories <- function(package) {
-	if (package) prefix = "inst/" else prefix = ""
+	if (package) prefix <- "inst/" else prefix <- ""
 
   usethis::use_directory(paste0(prefix, "raw_data"))
 	usethis::use_directory(paste0(prefix, "derived_data"))
-	usethis::use_directory(paste0(prefix, "code"))
 	usethis::use_directory(paste0(prefix, "reports"))
+	usethis::use_directory(paste0(prefix, "R"))
 	usethis::use_directory("output", ignore = TRUE)
 }
 
@@ -85,6 +85,12 @@ add_templates <- function(package, workflow = "drake") {
   template <- system.file("templates", "packages", package = "cmor.tools", mustWork = TRUE)
   template_out <- whisker::whisker.render(readLines(template),
   																				list(is_package = package, package = basename(usethis::proj_path())))
-  writeLines(template_out, usethis::proj_path(prefix, "code", "00-packages.R"))
+  writeLines(template_out, usethis::proj_path(prefix, "R", "load-packages.R"))
+
+  # Template 'define-parameters' file to define fixed parameters of the analysis
+  template <- system.file("templates", "define-parameters", package = "cmor.tools", mustWork = TRUE)
+  template_out <- whisker::whisker.render(readLines(template),
+  																				list(is_package = package, package = basename(usethis::proj_path())))
+  writeLines(template_out, usethis::proj_path(prefix, "R", "define-parameters.R"))
 }
 
