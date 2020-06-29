@@ -4,14 +4,11 @@
 \alias{complete_setup}
 \title{Finish project set-up using the CMOR research project templates}
 \usage{
-complete_setup(
-  project = getwd(),
-  git = getOption("cmor.tools.git"),
+complete_setup(project = getwd(), git = getOption("cmor.tools.git"),
   raw_data_in_git = getOption("cmor.tools.git_rawdata"),
   data_in_git = getOption("cmor.tools.git_data"),
   github = getOption("cmor.tools.github"),
-  private = getOption("cmor.tools.github_private")
-)
+  private = getOption("cmor.tools.github_private"))
 }
 \arguments{
 \item{project}{Path to the project folder. Default is to use the current

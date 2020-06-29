@@ -14,8 +14,9 @@
 #'       form}
 #'       \item{\code{"mit"}, \code{"gpl3"}, \code{"lgpl"}, "\code{"apl2"},
 #'       \code{"cc0"}, \code{"ccby"}}{Open source licenses; will use the
-#'       corresponding function from the \code{\link[usethis]{usethis}} package,
-#'       e.g. \code{\link[usethis]{use_mit_license}}}
+#'       corresponding function from the
+#'       \code{\link[usethis:usethis-package]{usethis}} package,
+#'       e.g. \code{\link[usethis:licenses]{use_mit_license}}}
 #'       \item{A function}{Use the provided function to create and attach a
 #'       license}
 #'       \item{\code{NA}}{Do not attach any license}

@@ -4,17 +4,10 @@
 \alias{create_descriptive_table}
 \title{Format descriptive statistics tables}
 \usage{
-create_descriptive_table(
-  df,
-  continuous = NULL,
-  discrete = NULL,
-  multiresponse = NULL,
-  output = c(names(continuous), names(discrete)),
-  by = NULL,
-  value_continuous = mean_sd(.mean, .sd, accuracy = 0.1),
-  value_discrete = n_percent(.n, .proportion),
-  total = !is.null(by)
-)
+create_descriptive_table(df, continuous = NULL, discrete = NULL,
+  multiresponse = NULL, output = c(names(continuous), names(discrete)),
+  by = NULL, value_continuous = mean_sd(.mean, .sd, accuracy = 0.1),
+  value_discrete = n_percent(.n, .proportion), total = !is.null(by))
 }
 \arguments{
 \item{df}{A data frame containing the variables to describe.}
