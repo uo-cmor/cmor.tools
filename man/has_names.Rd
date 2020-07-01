@@ -10,5 +10,5 @@ has_names(x)
 \item{x}{An object to test}
 }
 \description{
-Similar to `rlang::is_named()`, but allows missing values for some names
+Similar to \code{rlang::is_named()}, but allows missing values for some names
 }

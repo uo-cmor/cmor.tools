@@ -8,5 +8,5 @@ use_proprietary_license()
 }
 \description{
 This function creates a LICENSE file indicating that the package is not open
-    source and not for citation, and attaches it to the current package.
+source and not for citation, and attaches it to the current package.
 }

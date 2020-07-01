@@ -13,5 +13,5 @@ conventions.}
 }
 \description{
 This function wraps usethis::create_package() to create a new R package to
-    hold the data, code, and output for a research project.
+hold the data, code, and output for a research project.
 }

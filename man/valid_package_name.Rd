@@ -11,6 +11,6 @@ valid_package_name(pkgname)
 }
 \description{
 Checks that a package name meets R package name requirements: it
-    consists only of letters, numbers, and periods, starts with a letter, and
-    does not end with a period.
+consists only of letters, numbers, and periods, starts with a letter, and
+does not end with a period.
 }

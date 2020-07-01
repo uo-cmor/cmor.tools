@@ -1,6 +1,6 @@
-suppressMessages(require(devtools))
-suppressMessages(require(usethis))
-suppressMessages(require(cmor.tools))
+#suppressMessages(require(devtools))
+#suppressMessages(require(usethis))
+#suppressMessages(require(cmor.tools))
 suppressMessages(require(drake))
 
 options(

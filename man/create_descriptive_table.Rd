@@ -4,10 +4,17 @@
 \alias{create_descriptive_table}
 \title{Format descriptive statistics tables}
 \usage{
-create_descriptive_table(df, continuous = NULL, discrete = NULL,
-  multiresponse = NULL, output = c(names(continuous), names(discrete)),
-  by = NULL, value_continuous = mean_sd(.mean, .sd, accuracy = 0.1),
-  value_discrete = n_percent(.n, .proportion), total = !is.null(by))
+create_descriptive_table(
+  df,
+  continuous = NULL,
+  discrete = NULL,
+  multiresponse = NULL,
+  output = c(names(continuous), names(discrete)),
+  by = NULL,
+  value_continuous = mean_sd(.mean, .sd, accuracy = 0.1),
+  value_discrete = n_percent(.n, .proportion),
+  total = !is.null(by)
+)
 }
 \arguments{
 \item{df}{A data frame containing the variables to describe.}
@@ -19,25 +26,25 @@ in the first column of the table.}
 
 \item{output}{(optional) Character vector of variables to include in the
 table (and their order). Elements should be the names of elements of
-`continuous` or `discrete`. Default is to report all variables from
-`continuous` followed by `discrete`.}
+\code{continuous} or \code{discrete}. Default is to report all variables from
+\code{continuous} followed by \code{discrete}.}
 
 \item{by}{(optional) A grouping variable (as a character string) to split
 the sample. Default is to report for the entire sample.}
 
 \item{value_continuous}{(optional) An expression describing how to format
 the outcome values for continuous variables. Can refer to
-mean/sd/min/lq/median/uq/max as `.mean`, `.sd`, etc, and the name of the
-variable being formatted as `.variable`. Default is to report mean (SD)
+mean/sd/min/lq/median/uq/max as \code{.mean}, \code{.sd}, etc, and the name of the
+variable being formatted as \code{.variable}. Default is to report mean (SD)
 to one decimanl place.}
 
 \item{value_discrete}{(optional) An expression describing how to format the
 outcome values for discrete variables. Can refer to n/proportion as
-`.n`, `.proportion`, and the name of the variable being formatted as
-`.variable`. Default is to report n (percentage) to zero decimal places.}
+\code{.n}, \code{.proportion}, and the name of the variable being formatted as
+\code{.variable}. Default is to report n (percentage) to zero decimal places.}
 
 \item{total}{(optional) Logical value; should a 'total' (full sample) column
-be included? Default is `TRUE` if `by` is specified, `FALSE` otherwise.
+be included? Default is \code{TRUE} if \code{by} is specified, \code{FALSE} otherwise.
 Can also be a character string giving the column name to use for the
 total column (default is 'Entire sample').}
 }

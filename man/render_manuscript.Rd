@@ -4,8 +4,13 @@
 \alias{render_manuscript}
 \title{Render Rmd manuscript to docx}
 \usage{
-render_manuscript(rmd = NULL, out = NULL, reference_docx = NULL,
-  csl = NULL, bib = NULL)
+render_manuscript(
+  rmd = NULL,
+  out = NULL,
+  reference_docx = NULL,
+  csl = NULL,
+  bib = NULL
+)
 }
 \arguments{
 \item{rmd}{Path to the Rmarkdown file (relative to project root)}
@@ -20,6 +25,6 @@ render_manuscript(rmd = NULL, out = NULL, reference_docx = NULL,
 }
 \description{
 This function renders an Rmarkdown report to Word .docx file, in the
-    appropriate directory and with reference, csl, and bib files as
-    specified.
+appropriate directory and with reference, csl, and bib files as
+specified.
 }

@@ -4,12 +4,23 @@
 \alias{create_research_project}
 \title{Create a research project using the CMOR project templates}
 \usage{
-create_research_project(path, package = FALSE, license = NULL,
-  workflow = "drake", git = TRUE, raw_data_in_git = TRUE,
-  data_in_git = FALSE, github = TRUE, private = TRUE)
+create_research_project(
+  path,
+  title,
+  description = NULL,
+  package = FALSE,
+  license = NULL,
+  workflow = "drake",
+  git = TRUE,
+  raw_data_in_git = TRUE,
+  data_in_git = FALSE,
+  output_in_git = FALSE,
+  github = TRUE,
+  private = TRUE
+)
 }
 \arguments{
-\item{path}{Path to the new project. If `package = TRUE`, the last component
+\item{path}{Path to the new project. If \code{package = TRUE}, the last component
 of the path will be used as the package name, and must follow standard R
 package naming conventions.}
 
@@ -31,26 +42,26 @@ excluded from the git repository.}
 }
 \description{
 These function creates an R project or package, adds a basic README,
-    initialises our standard research project directory structure and
-    template files, and creates a git repository with an initial commit.
+initialises our standard research project directory structure and
+template files, and creates a git repository with an initial commit.
 }
 \section{License}{
 
 If \code{package = TRUE}, you can optionally set a license that will be
-    attached to the new package. This should be specified as a character
-    string or function from the following options:
-    \describe{
-      \item{\code{"proprietary"}}{This is the default license, to be used for
-      projects that are not intended to be shared publicly in their working
-      form}
-      \item{\code{"mit"}, \code{"gpl3"}, \code{"lgpl"}, "\code{"apl2"},
-      \code{"cc0"}, \code{"ccby"}}{Open source licenses; will use the
-      corresponding function from the
-      \code{\link[usethis:usethis-package]{usethis}} package,
-      e.g. \code{\link[usethis:licenses]{use_mit_license}}}
-      \item{A function}{Use the provided function to create and attach a
-      license}
-      \item{\code{NA}}{Do not attach any license}
-    }
+attached to the new package. This should be specified as a character
+string or function from the following options:
+\describe{
+\item{\code{"proprietary"}}{This is the default license, to be used for
+projects that are not intended to be shared publicly in their working
+form}
+\item{\code{"mit"}, \code{"gpl3"}, \code{"lgpl"}, "\code{"apl2"},
+\code{"cc0"}, \code{"ccby"}}{Open source licenses; will use the
+corresponding function from the
+\code{\link[usethis:usethis-package]{usethis}} package,
+e.g. \code{\link[usethis:licenses]{use_mit_license}}}
+\item{A function}{Use the provided function to create and attach a
+license}
+\item{\code{NA}}{Do not attach any license}
+}
 }
 

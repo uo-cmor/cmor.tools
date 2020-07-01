@@ -38,12 +38,14 @@
 #'     excluded from the git repository.
 #'
 #' @export
-create_research_project <- function(path, package = FALSE, license = NULL, workflow = "drake",
-																		git = TRUE, raw_data_in_git = TRUE, data_in_git = FALSE,
+create_research_project <- function(path, title, description = NULL,
+																		package = FALSE, license = NULL, workflow = "drake",
+																		git = TRUE, raw_data_in_git = TRUE, data_in_git = FALSE, output_in_git = FALSE,
 																		github = TRUE, private = TRUE) {
 	if (package) stop('package = TRUE is not supported in this version of cmor.tools')
 
 	# Create new package
+	if (missing(title)) title <- basename(path)
 	use_research_project(path, package)
 
 	# Move to the new package
@@ -52,8 +54,8 @@ create_research_project <- function(path, package = FALSE, license = NULL, workf
 	name <- basename(path)
 
 	# Create project directory and template files
-	use_project_directory(name, package,
-												workflow = workflow, git = git, raw_data_in_git = raw_data_in_git, data_in_git = data_in_git)
+	use_project_directory(name, package, workflow = workflow, git = git,
+												raw_data_in_git = raw_data_in_git, data_in_git = data_in_git, output_in_git = output_in_git)
 
 	# Set the package license
 	if (package) {
@@ -72,35 +74,33 @@ create_research_project <- function(path, package = FALSE, license = NULL, workf
   if(interactive()) {
   	usethis::proj_activate(path)
   	if (rstudioapi::isAvailable()) {
-  		usethis::ui_line("creating temporary .Rprofile")
-  		file.copy(usethis::proj_path(".Rprofile"), usethis::proj_path("oldprofile"), overwrite = TRUE)
-  		fileConn <- file(usethis::proj_path(".Rprofile"))
   		writeLines(
   			c(
-  				"cat(crayon::bold('\\nThis project was created by cmor.tools.\\n'))",
+  				readLines(fs::path_home_r(".Rprofile")),
+  				"cat(crayon::bold('\\nThis project was created by `cmor.tools::create_research_project()`.\\n'))",
   				"cat('\\nTo complete project set-up, you need to:\\n')",
   				if (package) "cat(crayon::red('*'), 'Edit the DESCRIPTION file\\n')",
-  				"cat(crayon::red('*'), 'Run `complete_setup()`\\n')",
+  				"cat(crayon::red('*'), 'Run `complete_setup(title = <title>, description = <description>)`\\n')",
   				"suppressMessages(require(cmor.tools))",
-  				"options(usethis.protocol = 'ssh')",
   				paste0("options(cmor.tools.git = ", git, ")"),
   				paste0("options(cmor.tools.git_data = ", data_in_git, ")"),
   				paste0("options(cmor.tools.git_rawdata = ", raw_data_in_git, ")"),
+  				paste0("options(cmor.tools.git_output = ", output_in_git, ")"),
   				paste0("options(cmor.tools.github = ", github, ")"),
   				paste0("options(cmor.tools.github_private = ", private, ")"),
-  				"invisible(file.copy('oldprofile', '.Rprofile', overwrite = TRUE))",
-  				"invisible(file.remove('oldprofile'))",
+  				"invisible(file.remove('.Rprofile'))",
   				""
-  			), fileConn
+  			), usethis::proj_path(".Rprofile")
   		)
-  		close(fileConn)
   		usethis::ui_todo("Go there to complete project set-up")
   		setwd(oldwd)
   	}
   	else {
   		usethis::ui_line("Next you need to:")
   		if (package) usethis::ui_todo("Edit the DESCRIPTION file")
-  		usethis::ui_todo("Run `complete_setup()` to complete the project set-up")
+  		usethis::ui_todo(
+  			"Run `complete_setup(title = <title>, description = <description>)` to complete the project set-up"
+  		)
   	}
   }
 }
@@ -113,6 +113,10 @@ create_research_project <- function(path, package = FALSE, license = NULL, workf
 #'
 #' @param project Path to the project folder. Default is to use the current
 #'     working directory.
+#' @param title (Optional) If non-null, will overwrite the default title
+#'     (package name) in the DESCRIPTION file.
+#' @param description (Optional) If non-null, will be added as the
+#'     \code{description} field in the DESCRIPTION file.
 #' @param git Logical (default = \code{TRUE}). Whether to create a git
 #'     repository.
 #' @param github Logical (default = \code{TRUE}). Whether to create a GitHub
@@ -123,25 +127,36 @@ create_research_project <- function(path, package = FALSE, license = NULL, workf
 #'     \code{data/} directory (but not the \code{data/raw_data/} subdirectory,
 #'     unless \code{raw_data_in_git} is also set to \code{FALSE}) will be
 #'     excluded from the git repository.
+#' @param output_in_git Logical. If \code{FALSE} (the default), the
+#'     \code{output} folder will be excluded from the git repository.
 #' @param private Logical (default = \code{TRUE}). Should the GitHub repo be
 #'     private or public? Ignored if \code{github = FALSE}.
 #'
 #' @export
 complete_setup <- function(
-	project = getwd(), git = getOption("cmor.tools.git"), raw_data_in_git = getOption("cmor.tools.git_rawdata"),
-	data_in_git = getOption("cmor.tools.git_data"), github = getOption("cmor.tools.github"),
-	private = getOption("cmor.tools.github_private")) {
+	title = NULL, description = NULL, project = getwd(),
+	git = getOption("cmor.tools.git"), raw_data_in_git = getOption("cmor.tools.git_rawdata"),
+	data_in_git = getOption("cmor.tools.git_data"), output_in_git = getOption("cmor.tools.git_output"),
+	github = getOption("cmor.tools.github"), private = getOption("cmor.tools.github_private")
+) {
+	if (!file.exists("DESCRIPTION")) {
+		projname <- basename(project)
+		if (is.null(title)) title <- projname
+		use_description(
+			list(Project = projname, Title = title, Description = description,
+					 Package = NULL, Version = NULL, License = NULL, LazyData = NULL),
+			check_name = FALSE
+		)
+	}
+
 	if (git) {
 		# Initialise git repository
 		use_git()
 
 		if (github) {
+			usethis::use_git_credentials(git2r::cred_ssh_key())
 			# Connect repository to github
-			usethis::use_github(
-				private = private,
-				credentials = git2r::cred_ssh_key(publickey = git2r::ssh_path("id_rsa.pub"),
-																					privatekey = git2r::ssh_path("id_rsa"))
-			)
+			usethis::use_github(private = private)
 		}
 	}
 
@@ -161,5 +176,8 @@ complete_setup <- function(
 	# Create basic README file
 	use_cmor_readme(data)
 
-	if (git) restart_rstudio("A restart of RStudio is required to activate the Git pane")
+	if (git) {
+		usethis::ui_todo("A restart of RStudio is required to activate the Git pane")
+		usethis::ui_todo("You can do this by calling `openProject()`")
+	}
 }

@@ -7,7 +7,8 @@
 #' @param name
 #'
 #' @export
-use_project_directory <- function(name, package, workflow = "drake", git = TRUE, raw_data_in_git = TRUE, data_in_git = FALSE) {
+use_project_directory <- function(name, package, workflow = "drake", git = TRUE,
+																	raw_data_in_git = TRUE, data_in_git = FALSE, output_in_git = FALSE) {
 	# Add required packages to Imports/Suggests
 	#usethis::use_package('pkgname')
 
@@ -23,6 +24,9 @@ use_project_directory <- function(name, package, workflow = "drake", git = TRUE,
 
   	if(!data_in_git) usethis::use_git_ignore(paste0(prefix, "derived_data"))
   	if(!raw_data_in_git) usethis::use_git_ignore(paste0(prefix, "raw_data"))
+  	if(!output_in_git) usethis::use_git_ignore(paste0(prefix, "output"))
+
+  	usethis::git_vaccinate()
   }
 
   invisible(TRUE)
@@ -38,7 +42,8 @@ add_directories <- function(package) {
 	usethis::use_directory(paste0(prefix, "derived_data"))
 	usethis::use_directory(paste0(prefix, "reports"))
 	usethis::use_directory(paste0(prefix, "R"))
-	usethis::use_directory("output", ignore = TRUE)
+	usethis::use_directory("output")
+	usethis::use_directory("output/figures")
 }
 
 #' Add template files
@@ -48,16 +53,13 @@ add_directories <- function(package) {
 add_templates <- function(package, workflow = "drake") {
 	if (package) prefix = "inst/" else prefix = ""
 
-	# Project-specific .Rprofile
-	template <- system.file("templates", "rprofile", package = "cmor.tools", mustWork = TRUE)
-	template_out <- whisker::whisker.render(readLines(template), list(is_package = package))
-	writeLines(template_out, usethis::proj_path(".Rprofile"))
-
 	if (workflow == "drake") {
-		# Skeleton drake plan file
-		template <- system.file("templates", "plan", package = "cmor.tools", mustWork = TRUE)
+		# Skeleton _drake & plan files
+		template <- system.file("templates", "drake", package = "cmor.tools", mustWork = TRUE)
 		template_out <- whisker::whisker.render(readLines(template), list(is_package = package))
 		writeLines(template_out, usethis::proj_path(prefix, "_drake.R"))
+		file.copy(system.file("templates", "plan", package = "cmor.tools", mustWork = TRUE),
+							usethis::proj_path(prefix, "R", "plan.R"))
 	} else if (workflow == "make") {
 		# Skeleton Makefile
 		template <- system.file("templates", "makefile-template", package = "cmor.tools", mustWork = TRUE)
@@ -79,18 +81,18 @@ add_templates <- function(package, workflow = "drake") {
   file.copy(system.file("templates", "word-styles-reference-01.docx", package = "cmor.tools", mustWork = TRUE),
   					usethis::proj_path(prefix, "reports")) # Reference .docx styles file
   file.copy(system.file("templates", "word-styles-reference-med-care.docx", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path(prefix, "reports")) # Reference .docx styles file for Medical Care journal
+  					usethis::proj_path(prefix, "reports")) # Reference .docx styles file for Medical Care
 
   # Template 'packages' file to load required packages (for _drake.R)
   template <- system.file("templates", "packages", package = "cmor.tools", mustWork = TRUE)
   template_out <- whisker::whisker.render(readLines(template),
   																				list(is_package = package, package = basename(usethis::proj_path())))
-  writeLines(template_out, usethis::proj_path(prefix, "R", "load-packages.R"))
+  writeLines(template_out, usethis::proj_path(prefix, "packages.R"))
 
-  # Template 'define-parameters' file to define fixed parameters of the analysis
+  # Template 'parameters' file to define fixed parameters of the analysis
   template <- system.file("templates", "define-parameters", package = "cmor.tools", mustWork = TRUE)
   template_out <- whisker::whisker.render(readLines(template),
   																				list(is_package = package, package = basename(usethis::proj_path())))
-  writeLines(template_out, usethis::proj_path(prefix, "R", "define-parameters.R"))
+  writeLines(template_out, usethis::proj_path(prefix, "parameters.R"))
 }
 

@@ -11,5 +11,5 @@ check_package_name(pkgname)
 }
 \description{
 A wrapper around \code{\link{valid_package_name}} that returns
-    an error with an informative message if the package name is not valid.
+an error with an informative message if the package name is not valid.
 }

@@ -8,5 +8,5 @@ add_templates(package, workflow = "drake")
 }
 \description{
 This adds the template files (word-styles-reference-01.docx, vancouver.csl,
-    _drake.R, etc) to the appropriate directories.
+_drake.R, etc) to the appropriate directories.
 }

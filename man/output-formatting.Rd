@@ -16,11 +16,11 @@ est_ci(est, low, high, sep = " to ", ...)
 \arguments{
 \item{mean, sd, n, proportion, est, low, high}{Numeric vectors}
 
-\item{...}{Passed to `number()`}
+\item{...}{Passed to \code{number()}}
 
 \item{sep}{Separator between lower and upper bounds of the CI; default is \code{' to '}.}
 }
 \description{
-These functions are simple wrappers around `paste()` and `number()` to
-    format results for printing.
+These functions are simple wrappers around \code{paste()} and \code{number()} to
+format results for printing.
 }

@@ -8,6 +8,6 @@ use_cmor_readme(data)
 }
 \description{
 This function creates a skeleton README.Rmd file with basic project
-    information for a CMOR research project package. \code{README.Rmd} will
-    be automatically added to \code{.Rbuildignore}.
+information for a CMOR research project package. \code{README.Rmd} will
+be automatically added to \code{.Rbuildignore}.
 }

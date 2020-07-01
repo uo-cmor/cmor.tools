@@ -4,13 +4,25 @@
 \alias{complete_setup}
 \title{Finish project set-up using the CMOR research project templates}
 \usage{
-complete_setup(project = getwd(), git = getOption("cmor.tools.git"),
+complete_setup(
+  title = NULL,
+  description = NULL,
+  project = getwd(),
+  git = getOption("cmor.tools.git"),
   raw_data_in_git = getOption("cmor.tools.git_rawdata"),
   data_in_git = getOption("cmor.tools.git_data"),
+  output_in_git = getOption("cmor.tools.git_output"),
   github = getOption("cmor.tools.github"),
-  private = getOption("cmor.tools.github_private"))
+  private = getOption("cmor.tools.github_private")
+)
 }
 \arguments{
+\item{title}{(Optional) If non-null, will overwrite the default title
+(package name) in the DESCRIPTION file.}
+
+\item{description}{(Optional) If non-null, will be added as the
+\code{description} field in the DESCRIPTION file.}
+
 \item{project}{Path to the project folder. Default is to use the current
 working directory.}
 
@@ -25,6 +37,9 @@ repository.}
 unless \code{raw_data_in_git} is also set to \code{FALSE}) will be
 excluded from the git repository.}
 
+\item{output_in_git}{Logical. If \code{FALSE} (the default), the
+\code{output} folder will be excluded from the git repository.}
+
 \item{github}{Logical (default = \code{TRUE}). Whether to create a GitHub
 repository.}
 
@@ -33,6 +48,6 @@ private or public? Ignored if \code{github = FALSE}.}
 }
 \description{
 This function should be used in the newly-created project after
-    \code{create_research_project()} to create a git repository, connect to
-    github, and add a basic project README.
+\code{create_research_project()} to create a git repository, connect to
+github, and add a basic project README.
 }

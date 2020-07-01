@@ -15,9 +15,11 @@ use_research_project <- function(path, package, fields = NULL) {
 
 	# Provide welcome message at first start?
 
-	# Create a new package
+	# Create a new package/project
 	if (package) usethis::create_package(path = path, fields = fields, open = FALSE)
-	else usethis::create_project(path = path, open = FALSE)
+	else {
+		usethis::create_project(path = path, open = FALSE)
+	}
 
 	#if(rstudioapi::isAvailable()) rstudioapi::navigateToFile("DESCRIPTION")
 
