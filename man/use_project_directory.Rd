@@ -10,7 +10,8 @@ use_project_directory(
   workflow = "drake",
   git = TRUE,
   raw_data_in_git = TRUE,
-  data_in_git = FALSE
+  data_in_git = FALSE,
+  output_in_git = FALSE
 )
 }
 \arguments{

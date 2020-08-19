@@ -6,12 +6,15 @@
 \usage{
 create_research_project(
   path,
+  title,
+  description = NULL,
   package = FALSE,
   license = NULL,
   workflow = "drake",
   git = TRUE,
   raw_data_in_git = TRUE,
   data_in_git = FALSE,
+  output_in_git = FALSE,
   github = TRUE,
   private = TRUE
 )
