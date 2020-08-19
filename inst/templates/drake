@@ -2,9 +2,18 @@
 ### Initial set-up ###
 ######################
 
-source("packages.R") # Load required packages
-#source("parameters.R") # Define fixed parameters, if used
-sourceDirectory('R')
+# Load required packages
+source("{{#is_package}}inst/{{/is_package}}packages.R")
+
+# Define fixed parameters, if used
+#source("{{#is_package}}inst/{{/is_package}}parameters.R")
+
+# Load plan and functions
+sourceDirectory("{{#is_package}}inst/{{/is_package}}R")
+
+#####################################################################
+### Plan config parameters -- set these before running `r_make()` ###
+#####################################################################
 
 targets <- NULL
 verbose <- 2
@@ -24,18 +33,6 @@ if (Sys.getenv("RSTUDIO") != "1" && use_parallel) {
 	jobs <- 1
 	parallelism <- 'loop'
 }
-
-###################
-### Define plan ###
-###################
-
-plan <- drake_plan(
-# 	data = read_raw_data(),
-# 	clean = process_data(),
-# 	results = analyse_data(),
-# 	output = render_manuscript(knitr_in(!!file_output_rmd), file_out(!!file_output_docx),
-# 														 file_in(!!file_word_styles), file_in(!!file_csl), file_in(!!file_bib))
-)
 
 ##################################
 ### Create drake_config object ###

@@ -10,24 +10,74 @@
 \alias{comma_format}
 \title{Format numbers using `scales::number()`-type functions}
 \usage{
-number(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
-  big.mark = "< >", decimal.mark = ".", trim = TRUE, ...)
+number(
+  x,
+  accuracy = 1,
+  scale = 1,
+  prefix = "",
+  suffix = "",
+  big.mark = "< >",
+  decimal.mark = ".",
+  trim = TRUE,
+  ...
+)
 
-number_format(accuracy = 1, scale = 1, prefix = "", suffix = "",
-  big.mark = "< >", decimal.mark = ".", trim = TRUE, ...)
+number_format(
+  accuracy = 1,
+  scale = 1,
+  prefix = "",
+  suffix = "",
+  big.mark = "< >",
+  decimal.mark = ".",
+  trim = TRUE,
+  ...
+)
 
-percent(x, accuracy = 1, scale = 100, prefix = "", suffix = "\%",
-  big.mark = "< >", decimal.mark = ".", trim = TRUE, ...)
+percent(
+  x,
+  accuracy = 1,
+  scale = 100,
+  prefix = "",
+  suffix = "\%",
+  big.mark = "< >",
+  decimal.mark = ".",
+  trim = TRUE,
+  ...
+)
 
-percent_format(accuracy = 1, scale = 100, prefix = "",
-  suffix = "\%", big.mark = "< >", decimal.mark = ".", trim = TRUE,
-  ...)
+percent_format(
+  accuracy = 1,
+  scale = 100,
+  prefix = "",
+  suffix = "\%",
+  big.mark = "< >",
+  decimal.mark = ".",
+  trim = TRUE,
+  ...
+)
 
-comma(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
-  big.mark = ",", decimal.mark = ".", trim = TRUE, ...)
+comma(
+  x,
+  accuracy = 1,
+  scale = 1,
+  prefix = "",
+  suffix = "",
+  big.mark = ",",
+  decimal.mark = ".",
+  trim = TRUE,
+  ...
+)
 
-comma_format(accuracy = 1, scale = 1, prefix = "", suffix = "",
-  big.mark = ",", decimal.mark = ".", trim = TRUE, ...)
+comma_format(
+  accuracy = 1,
+  scale = 1,
+  prefix = "",
+  suffix = "",
+  big.mark = ",",
+  decimal.mark = ".",
+  trim = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{Numeric vector to format}

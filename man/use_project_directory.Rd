@@ -4,8 +4,14 @@
 \alias{use_project_directory}
 \title{Create the directory structure for a CMOR research project}
 \usage{
-use_project_directory(name, package, workflow = "drake", git = TRUE,
-  raw_data_in_git = TRUE, data_in_git = FALSE)
+use_project_directory(
+  name,
+  package,
+  workflow = "drake",
+  git = TRUE,
+  raw_data_in_git = TRUE,
+  data_in_git = FALSE
+)
 }
 \arguments{
 \item{name}{}

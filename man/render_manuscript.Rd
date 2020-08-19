@@ -4,8 +4,13 @@
 \alias{render_manuscript}
 \title{Render Rmd manuscript to docx}
 \usage{
-render_manuscript(rmd = NULL, out = NULL, reference_docx = NULL,
-  csl = NULL, bib = NULL)
+render_manuscript(
+  rmd = NULL,
+  out = NULL,
+  reference_docx = NULL,
+  csl = NULL,
+  bib = NULL
+)
 }
 \arguments{
 \item{rmd}{Path to the Rmarkdown file (relative to project root)}

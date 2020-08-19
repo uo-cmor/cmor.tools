@@ -4,9 +4,17 @@
 \alias{create_research_project}
 \title{Create a research project using the CMOR project templates}
 \usage{
-create_research_project(path, package = FALSE, license = NULL,
-  workflow = "drake", git = TRUE, raw_data_in_git = TRUE,
-  data_in_git = FALSE, github = TRUE, private = TRUE)
+create_research_project(
+  path,
+  package = FALSE,
+  license = NULL,
+  workflow = "drake",
+  git = TRUE,
+  raw_data_in_git = TRUE,
+  data_in_git = FALSE,
+  github = TRUE,
+  private = TRUE
+)
 }
 \arguments{
 \item{path}{Path to the new project. If `package = TRUE`, the last component

@@ -57,6 +57,10 @@ add_templates <- function(package, workflow = "drake") {
 		# Skeleton drake plan file
 		template <- system.file("templates", "plan", package = "cmor.tools", mustWork = TRUE)
 		template_out <- whisker::whisker.render(readLines(template), list(is_package = package))
+		writeLines(template_out, usethis::proj_path(prefix, "R", "_plan.R"))
+		# _drake.R config file
+		template <- system.file("templates", "drake", package = "cmor.tools", mustWork = TRUE)
+		template_out <- whisker::whisker.render(readLines(template), list(is_package = package))
 		writeLines(template_out, usethis::proj_path(prefix, "_drake.R"))
 	} else if (workflow == "make") {
 		# Skeleton Makefile
@@ -85,12 +89,12 @@ add_templates <- function(package, workflow = "drake") {
   template <- system.file("templates", "packages", package = "cmor.tools", mustWork = TRUE)
   template_out <- whisker::whisker.render(readLines(template),
   																				list(is_package = package, package = basename(usethis::proj_path())))
-  writeLines(template_out, usethis::proj_path(prefix, "R", "load-packages.R"))
+  writeLines(template_out, usethis::proj_path(prefix, "packages.R"))
 
   # Template 'define-parameters' file to define fixed parameters of the analysis
-  template <- system.file("templates", "define-parameters", package = "cmor.tools", mustWork = TRUE)
+  template <- system.file("templates", "parameters", package = "cmor.tools", mustWork = TRUE)
   template_out <- whisker::whisker.render(readLines(template),
   																				list(is_package = package, package = basename(usethis::proj_path())))
-  writeLines(template_out, usethis::proj_path(prefix, "R", "define-parameters.R"))
+  writeLines(template_out, usethis::proj_path(prefix, "parameters.R"))
 }
 
