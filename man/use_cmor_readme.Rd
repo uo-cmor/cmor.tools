@@ -6,6 +6,9 @@
 \usage{
 use_cmor_readme(data)
 }
+\arguments{
+\item{data}{List of variables used by \code{cmor-readme} template.}
+}
 \description{
 This function creates a skeleton README.Rmd file with basic project
     information for a CMOR research project package. \code{README.Rmd} will

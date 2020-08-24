@@ -25,9 +25,14 @@
 #' @param path Path to the new project. If `package = TRUE`, the last component
 #'     of the path will be used as the package name, and must follow standard R
 #'     package naming conventions.
+#' @param title Title of the research project (used for the DESCRIPTION file).
+#' @param description Short description of the research project (used for the
+#'     DESCRIPTION file).
 #' @param package Logical (default = \code{FALSE}). Whether the project should
 #'     be created as an R package.
 #' @param license The type of license to attach to the package. See details.
+#' @param workflow Either \code{"drake"} or \code{"make"}, to create
+#'     corresponding workflow template files.
 #' @param git Logical (default = \code{TRUE}). Whether to create a git
 #'     repository.
 #' @param raw_data_in_git Logical (default = \code{TRUE}). If FALSE, data in the
@@ -36,6 +41,13 @@
 #'     \code{data/} directory (but not the \code{data/raw_data/} subdirectory,
 #'     unless \code{raw_data_in_git} is also set to \code{FALSE}) will be
 #'     excluded from the git repository.
+#' @param output_in_git Logical. If \code{FALSE} (the default), data in the
+#'     \code{output/} directory will be excluded from the git repository.
+#' @param github Logical. If \code{TRUE} (the default), create a GitHub
+#'     repository and push the initial commit to GitHub.
+#' @param private Logical. If \code{TRUE} (the default), a private GitHub
+#'     repository will be created; otherwise, the repository will be publicly
+#'     accessible. Ignored if \code{github = FALSE}.
 #'
 #' @export
 create_research_project <- function(path, title, description = NULL,
@@ -51,10 +63,9 @@ create_research_project <- function(path, title, description = NULL,
 	# Move to the new package
 	oldwd <- getwd()
 	usethis::proj_set(path)
-	name <- basename(path)
 
 	# Create project directory and template files
-	use_project_directory(name, package, workflow = workflow, git = git,
+	use_project_directory(package, workflow = workflow, git = git,
 												raw_data_in_git = raw_data_in_git, data_in_git = data_in_git, output_in_git = output_in_git)
 
 	# Set the package license
@@ -69,7 +80,7 @@ create_research_project <- function(path, title, description = NULL,
 		else if (identical(license, "ccby")) usethis::use_ccby_license()
 		else if (is.function(license)) license()
 		else if (!is.na(license)) stop("'", license, "' is not a recognised license type")
-	} else if (!is.null(license)) ui_warn("Ignoring argument {ui_code(license)} for non-package projects")
+	} else if (!is.null(license)) usethis::ui_warn("Ignoring argument {ui_code(license)} for non-package projects")
 
   if(interactive()) {
   	usethis::proj_activate(path)
@@ -111,6 +122,9 @@ create_research_project <- function(path, title, description = NULL,
 #'     \code{create_research_project()} to create a git repository, connect to
 #'     github, and add a basic project README.
 #'
+#' @param title Title of the research project (used for the DESCRIPTION file).
+#' @param description Short description of the research project (used for the
+#'     DESCRIPTION file).
 #' @param project Path to the project folder. Default is to use the current
 #'     working directory.
 #' @param title (Optional) If non-null, will overwrite the default title
@@ -142,7 +156,7 @@ complete_setup <- function(
 	if (!file.exists("DESCRIPTION")) {
 		projname <- basename(project)
 		if (is.null(title)) title <- projname
-		use_description(
+		usethis::use_description(
 			list(Project = projname, Title = title, Description = description,
 					 Package = NULL, Version = NULL, License = NULL, LazyData = NULL),
 			check_name = FALSE

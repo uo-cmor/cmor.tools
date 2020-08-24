@@ -4,6 +4,8 @@
 #'     information for a CMOR research project package. \code{README.Rmd} will
 #'     be automatically added to \code{.Rbuildignore}.
 #'
+#' @param data List of variables used by \code{cmor-readme} template.
+#'
 #' @export
 use_cmor_readme <- function(data) {
 	template <- system.file("templates", "cmor-readme", package = "cmor.tools", mustWork = TRUE)

@@ -10,6 +10,12 @@ use_research_project(path, package, fields = NULL)
 \item{path}{Path to the new package. The last component of the path will
 be used as the package name, and must follow standard R package naming
 conventions.}
+
+\item{package}{Logical (default = \code{FALSE}). Whether the project should
+be created as an R package.}
+
+\item{fields}{Named list of fields to add to the DESCRIPTION file. See
+\code{\link[usethis]{create_package}} for details.}
 }
 \description{
 This function wraps usethis::create_package() to create a new R package to

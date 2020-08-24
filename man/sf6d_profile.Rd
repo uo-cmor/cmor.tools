@@ -7,8 +7,16 @@
 sf6d_profile(..., version = 2, dimension = "list")
 }
 \arguments{
-\item{...}{Vectors containing SF-12 question reponses; should be named as \code{\{Q1, Q2, ..., Q12\}},
-\code{\{Q1, Q2a, ..., Q7\}}, or lower case equivalents.}
+\item{...}{Vectors containing SF-12 question reponses; should be named as
+\code{\{Q1, Q2, ..., Q12\}}, \code{\{Q1, Q2a, ..., Q7\}}, or lower case
+equivalents.}
+
+\item{version}{Which version (1 or 2) of the SF-12 are the data based on?}
+
+\item{dimension}{One of \code{"PF"}, \code{"RL"}, \code{"SF"},
+\code{"PAIN"}, \code{"MH"}, or \code{"VIT"} to return the corresponding
+scores, or \code{"list"} (the default) to return a list with all
+dimension scores.}
 }
 \description{
 Construct SF-6D profile from SF-12 question-level responses

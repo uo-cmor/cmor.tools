@@ -11,6 +11,10 @@
 #'     variables for which to calculate descriptive statistics. Can be named,
 #'     in which case the provided names will be used in place of variable names
 #'     in the first column of the table.
+#' @param multiresponse List of character vectors, each specifying the
+#'     individual variables making up a combined multiple-response variable.
+#'     Should be named, with the names giving the variable names to be used
+#'     for the combined variables.
 #' @param output (optional) Character vector of variables to include in the
 #'     table (and their order). Elements should be the names of elements of
 #'     `continuous` or `discrete`. Default is to report all variables from
@@ -74,7 +78,7 @@ continuous_characteristics_table <- function(df, by, variable, name, value, tota
 												list(.mean = mean, .sd = sd, .min = min, .lq = lq, .median = median, .uq = uq, .max = max),
 												na.rm = TRUE) %>%
 		dplyr::mutate(.variable = !!variable, value = !!value) %>%
-		dplyr::select(-.mean, -.sd, -.min, -.lq, -.median, -.uq, -.max, -.variable)
+		dplyr::select(!dplyr::any_of(c(".mean", ".sd", ".min", ".lq", ".median", ".uq", ".max", ".variable")))
 	if (!is.null(by)) out <- tidyr::pivot_wider(out, names_from = !!by)
 	if (!is.null(total)) out <- dplyr::bind_cols(
 		out,
@@ -86,25 +90,25 @@ continuous_characteristics_table <- function(df, by, variable, name, value, tota
 	)
 	out %>%
 		dplyr::mutate('Patient characteristic' = !!name) %>%
-		dplyr::select('Patient characteristic', dplyr::everything())
+		dplyr::select(dplyr::all_of('Patient characteristic'), dplyr::everything())
 }
 
 discrete_characteristics_table <- function(df, by, variable, name, value, total) {
 	out <- tidyr::drop_na(df, !!by, !!variable) %>%
 		dplyr::group_by_at(dplyr::vars(!!by, 'Patient characteristic' = !!variable)) %>%
-		dplyr::summarise(.n = n()) %>%
+		dplyr::summarise(.n = dplyr::n()) %>%
 		tidyr::drop_na() %>%
 		dplyr::mutate(.proportion = .n / sum(.n), .variable = !!variable, value = !!value,
 									'Patient characteristic' = paste0('\u200B\u2003', as.character(`Patient characteristic`))) %>%
 		dplyr::ungroup() %>%
-		dplyr::select(-.n, -.proportion, -.variable)
+		dplyr::select(!dplyr::any_of(c(".n", ".proportion",  ".variable")))
 	if (!is.null(by)) out <- tidyr::pivot_wider(out, id_cols = 'Patient characteristic', names_from = !!by)
 	out <- out %>% dplyr::add_row('Patient characteristic' = !!name, .after = 0)
 	if (!is.null(total)) out <- dplyr::bind_cols(
 		out,
 		tidyr::drop_na(df, !!by, !!variable) %>%
 			dplyr::group_by_at(dplyr::vars(!!variable)) %>%
-			dplyr::summarise(.n = n()) %>%
+			dplyr::summarise(.n = dplyr::n()) %>%
 			tidyr::drop_na() %>%
 			dplyr::mutate(.proportion = .n / sum(.n), .variable = !!variable) %>%
 			dplyr::ungroup() %>%
@@ -116,13 +120,13 @@ discrete_characteristics_table <- function(df, by, variable, name, value, total)
 }
 
 multiresponse_characteristics_table <- function(df, by, variables, name, value, total) {
-	imap_dfr(
+	purrr::imap_dfr(
 		variables,
 		function(variable, label) {
 			out <- dplyr::group_by_at(df, dplyr::vars(!!by)) %>%
 				dplyr::summarise_at(dplyr::vars(!!variable), list(.n = sum, .proportion = mean), na.rm = TRUE) %>%
 				dplyr::mutate(.variable = !!variable, value = !!value) %>%
-				dplyr::select(-.n, -.proportion, -.variable)
+				dplyr::select(!dplyr::any_of(c(".n", ".proportion",  ".variable")))
 			if (!is.null(by)) out <- tidyr::pivot_wider(out, names_from = !!by)
 			if (!is.null(total)) out <- dplyr::bind_cols(
 				out,
@@ -133,7 +137,7 @@ multiresponse_characteristics_table <- function(df, by, variables, name, value, 
 
 			out %>%
 				dplyr::mutate('Patient characteristic' = paste0('\u200B\u2003', !!label)) %>%
-				dplyr::select('Patient characteristic', dplyr::everything())
+				dplyr::select(dplyr::all_of('Patient characteristic'), dplyr::everything())
 		}
 	) %>%
 		dplyr::add_row('Patient characteristic' := !!name, .after = 0)

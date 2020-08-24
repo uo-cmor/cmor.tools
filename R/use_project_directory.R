@@ -4,10 +4,23 @@
 #'     outputs for a research project package, and various template files to
 #'     format output, etc.
 #'
-#' @param name
+#' @param package Logical (default = \code{FALSE}). Whether the project should
+#'     be created as an R package.
+#' @param workflow Either \code{"drake"} or \code{"make"}, to create
+#'     corresponding workflow template files.
+#' @param git Logical (default = \code{TRUE}). Whether to create a git
+#'     repository.
+#' @param raw_data_in_git Logical (default = \code{TRUE}). If FALSE, data in the
+#'     \code{data/raw_data/} directory will be excluded from the git repository.
+#' @param data_in_git Logical. If \code{FALSE} (the default), data in the
+#'     \code{data/} directory (but not the \code{data/raw_data/} subdirectory,
+#'     unless \code{raw_data_in_git} is also set to \code{FALSE}) will be
+#'     excluded from the git repository.
+#' @param output_in_git Logical. If \code{FALSE} (the default), data in the
+#'     \code{output/} directory will be excluded from the git repository.
 #'
 #' @export
-use_project_directory <- function(name, package, workflow = "drake", git = TRUE,
+use_project_directory <- function(package, workflow = "drake", git = TRUE,
 																	raw_data_in_git = TRUE, data_in_git = FALSE, output_in_git = FALSE) {
 	# Add required packages to Imports/Suggests
 	#usethis::use_package('pkgname')
@@ -32,9 +45,8 @@ use_project_directory <- function(name, package, workflow = "drake", git = TRUE,
   invisible(TRUE)
 }
 
-#' Add directories and sub-directories
-#'
-#' This adds the directory structure
+# Add directories and sub-directories
+## This adds the directory structure
 add_directories <- function(package) {
 	if (package) prefix <- "inst/" else prefix <- ""
 
@@ -46,10 +58,9 @@ add_directories <- function(package) {
 	usethis::use_directory("output/figures")
 }
 
-#' Add template files
-#'
-#' This adds the template files (word-styles-reference-01.docx, vancouver.csl,
-#'     _drake.R, etc) to the appropriate directories.
+# Add template files
+## This adds the template files (word-styles-reference-01.docx, vancouver.csl,
+##     _drake.R, etc) to the appropriate directories.
 add_templates <- function(package, workflow = "drake") {
 	if (package) prefix = "inst/" else prefix = ""
 

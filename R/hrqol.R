@@ -5,8 +5,14 @@
 #'
 #' Construct SF-6D profile from SF-12 question-level responses
 #'
-#' @param ... Vectors containing SF-12 question reponses; should be named as \code{\{Q1, Q2, ..., Q12\}},
-#'     \code{\{Q1, Q2a, ..., Q7\}}, or lower case equivalents.
+#' @param ... Vectors containing SF-12 question reponses; should be named as
+#'     \code{\{Q1, Q2, ..., Q12\}}, \code{\{Q1, Q2a, ..., Q7\}}, or lower case
+#'     equivalents.
+#' @param version Which version (1 or 2) of the SF-12 are the data based on?
+#' @param dimension One of \code{"PF"}, \code{"RL"}, \code{"SF"},
+#'     \code{"PAIN"}, \code{"MH"}, or \code{"VIT"} to return the corresponding
+#'     scores, or \code{"list"} (the default) to return a list with all
+#'     dimension scores.
 #'
 #' @export
 sf6d_profile <- function(..., version = 2, dimension = "list") {
@@ -65,10 +71,16 @@ sf6d_utility <- function(PF, RL, SF, PAIN, MH, VIT, values = "uk") {
 
 #' SF-12 component summary scores
 #'
-#' Calculate SF-12 PCS and MCS component summary scores from SF-12 question-level responses
+#' Calculate SF-12 PCS and MCS component summary scores from SF-12
+#'     question-level responses
 #'
-#' @param ... Vectors containing SF-12 question reponses; should be named as \code{\{Q1, Q2, ..., Q12\}},
-#'     \code{\{Q1, Q2a, ..., Q7\}}, or lower case equivalents.
+#' @param ... Vectors containing SF-12 question reponses; should be named as
+#'     \code{\{Q1, Q2, ..., Q12\}}, \code{\{Q1, Q2a, ..., Q7\}}, or lower case
+#'     equivalents.
+#' @param version Which version (1 or 2) of the SF-12 are the data based on?
+#' @param dimension One of \code{"PCS"} or \code{"MCS"} to return the
+#'     corresponding score, or \code{"list"} (the default) to return a list
+#'     with both elements.
 #'
 #' @export
 sf12_scores <- function(..., version = 2, dimension = "list") {

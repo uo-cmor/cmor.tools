@@ -19,6 +19,12 @@ check_args <- function(...) {
 #' @importFrom magrittr %>%
 NULL
 
+#' @importFrom stats median quantile sd setNames
+NULL
+
+#' @importFrom rlang :=
+NULL
+
 lq <- function(x, ...) quantile(x, probs = 0.25, ...)
 uq <- function(x, ...) quantile(x, probs = 0.75, ...)
 

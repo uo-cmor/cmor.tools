@@ -24,6 +24,11 @@ variables for which to calculate descriptive statistics. Can be named,
 in which case the provided names will be used in place of variable names
 in the first column of the table.}
 
+\item{multiresponse}{List of character vectors, each specifying the
+individual variables making up a combined multiple-response variable.
+Should be named, with the names giving the variable names to be used
+for the combined variables.}
+
 \item{output}{(optional) Character vector of variables to include in the
 table (and their order). Elements should be the names of elements of
 `continuous` or `discrete`. Default is to report all variables from

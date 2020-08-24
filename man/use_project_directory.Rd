@@ -5,7 +5,6 @@
 \title{Create the directory structure for a CMOR research project}
 \usage{
 use_project_directory(
-  name,
   package,
   workflow = "drake",
   git = TRUE,
@@ -15,7 +14,25 @@ use_project_directory(
 )
 }
 \arguments{
-\item{name}{}
+\item{package}{Logical (default = \code{FALSE}). Whether the project should
+be created as an R package.}
+
+\item{workflow}{Either \code{"drake"} or \code{"make"}, to create
+corresponding workflow template files.}
+
+\item{git}{Logical (default = \code{TRUE}). Whether to create a git
+repository.}
+
+\item{raw_data_in_git}{Logical (default = \code{TRUE}). If FALSE, data in the
+\code{data/raw_data/} directory will be excluded from the git repository.}
+
+\item{data_in_git}{Logical. If \code{FALSE} (the default), data in the
+\code{data/} directory (but not the \code{data/raw_data/} subdirectory,
+unless \code{raw_data_in_git} is also set to \code{FALSE}) will be
+excluded from the git repository.}
+
+\item{output_in_git}{Logical. If \code{FALSE} (the default), data in the
+\code{output/} directory will be excluded from the git repository.}
 }
 \description{
 This function will create a directory structure to hold the data, code, and

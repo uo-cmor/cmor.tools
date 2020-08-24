@@ -7,9 +7,17 @@
 sf12_scores(..., version = 2, dimension = "list")
 }
 \arguments{
-\item{...}{Vectors containing SF-12 question reponses; should be named as \code{\{Q1, Q2, ..., Q12\}},
-\code{\{Q1, Q2a, ..., Q7\}}, or lower case equivalents.}
+\item{...}{Vectors containing SF-12 question reponses; should be named as
+\code{\{Q1, Q2, ..., Q12\}}, \code{\{Q1, Q2a, ..., Q7\}}, or lower case
+equivalents.}
+
+\item{version}{Which version (1 or 2) of the SF-12 are the data based on?}
+
+\item{dimension}{One of \code{"PCS"} or \code{"MCS"} to return the
+corresponding score, or \code{"list"} (the default) to return a list
+with both elements.}
 }
 \description{
-Calculate SF-12 PCS and MCS component summary scores from SF-12 question-level responses
+Calculate SF-12 PCS and MCS component summary scores from SF-12
+    question-level responses
 }

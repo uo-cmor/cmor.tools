@@ -24,10 +24,18 @@ create_research_project(
 of the path will be used as the package name, and must follow standard R
 package naming conventions.}
 
+\item{title}{Title of the research project (used for the DESCRIPTION file).}
+
+\item{description}{Short description of the research project (used for the
+DESCRIPTION file).}
+
 \item{package}{Logical (default = \code{FALSE}). Whether the project should
 be created as an R package.}
 
 \item{license}{The type of license to attach to the package. See details.}
+
+\item{workflow}{Either \code{"drake"} or \code{"make"}, to create
+corresponding workflow template files.}
 
 \item{git}{Logical (default = \code{TRUE}). Whether to create a git
 repository.}
@@ -39,6 +47,16 @@ repository.}
 \code{data/} directory (but not the \code{data/raw_data/} subdirectory,
 unless \code{raw_data_in_git} is also set to \code{FALSE}) will be
 excluded from the git repository.}
+
+\item{output_in_git}{Logical. If \code{FALSE} (the default), data in the
+\code{output/} directory will be excluded from the git repository.}
+
+\item{github}{Logical. If \code{TRUE} (the default), create a GitHub
+repository and push the initial commit to GitHub.}
+
+\item{private}{Logical. If \code{TRUE} (the default), a private GitHub
+repository will be created; otherwise, the repository will be publicly
+accessible. Ignored if \code{github = FALSE}.}
 }
 \description{
 These function creates an R project or package, adds a basic README,
