@@ -87,7 +87,7 @@ NULL
 number <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
 									 big.mark = "< >", decimal.mark = ".", trim = TRUE, ...) {
 	neg <- rep("", length(x))
-	neg[x < 0] <- "\u2212"
+	neg[x < 0] <- "&minus;"
 
 	stringi::stri_replace_all_regex(
 		paste0(
@@ -95,7 +95,7 @@ number <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
 			scales::number(abs(x), accuracy = accuracy, scale = scale, prefix = prefix, suffix = suffix,
 										 big.mark = big.mark, decimal.mark = decimal.mark, trim = trim, ...)
 		),
-		"< >", "\u202F"
+		"< >", "&#x202F;"
 	)
 }
 
@@ -115,7 +115,7 @@ number_format <- function(accuracy = 1, scale = 1, prefix = "", suffix = "",
 percent <- function(x, accuracy = 1, scale = 100, prefix = "", suffix = "%",
 										big.mark = "< >", decimal.mark = ".", trim = TRUE, ...) {
 	neg <- rep("", length(x))
-	neg[x < 0] <- "\u2212"
+	neg[x < 0] <- "&minus;"
 
 	stringi::stri_replace_all_regex(
 		paste0(
@@ -123,7 +123,7 @@ percent <- function(x, accuracy = 1, scale = 100, prefix = "", suffix = "%",
 			scales::number(abs(x), accuracy = accuracy, scale = scale, prefix = prefix, suffix = suffix,
 										 big.mark = big.mark, decimal.mark = decimal.mark, trim = trim, ...)
 		),
-		"< >", "\u202F"
+		"< >", "&#x202F;"
 	)
 }
 
@@ -143,7 +143,7 @@ percent_format <- function(accuracy = 1, scale = 100, prefix = "", suffix = "%",
 comma <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
 									big.mark = ",", decimal.mark = ".", trim = TRUE, ...) {
 	neg <- rep("", length(x))
-	neg[x < 0] <- "\u2212"
+	neg[x < 0] <- "&minus;"
 
 	paste0(
 		neg,

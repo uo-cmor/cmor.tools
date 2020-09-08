@@ -99,7 +99,7 @@ discrete_characteristics_table <- function(df, by, variable, name, value, total)
 		dplyr::summarise(.n = dplyr::n()) %>%
 		tidyr::drop_na() %>%
 		dplyr::mutate(.proportion = .n / sum(.n), .variable = !!variable, value = !!value,
-									'Patient characteristic' = paste0('\u200B\u2003', as.character(`Patient characteristic`))) %>%
+									'Patient characteristic' = paste0('&emsp;', as.character(`Patient characteristic`))) %>%
 		dplyr::ungroup() %>%
 		dplyr::select(!dplyr::any_of(c(".n", ".proportion",  ".variable")))
 	if (!is.null(by)) out <- tidyr::pivot_wider(out, id_cols = 'Patient characteristic', names_from = !!by)
@@ -136,7 +136,7 @@ multiresponse_characteristics_table <- function(df, by, variables, name, value, 
 			)
 
 			out %>%
-				dplyr::mutate('Patient characteristic' = paste0('\u200B\u2003', !!label)) %>%
+				dplyr::mutate('Patient characteristic' = paste0('&emsp;', !!label)) %>%
 				dplyr::select(dplyr::all_of('Patient characteristic'), dplyr::everything())
 		}
 	) %>%
