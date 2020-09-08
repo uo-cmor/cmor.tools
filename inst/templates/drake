@@ -5,8 +5,8 @@
 # Load required packages
 source("{{#is_package}}inst/{{/is_package}}packages.R")
 
-# Define fixed parameters, if used
-#source("{{#is_package}}inst/{{/is_package}}parameters.R")
+# Define fixed parameters
+source("{{#is_package}}inst/{{/is_package}}parameters.R")
 
 # Load plan and functions
 sourceDirectory("{{#is_package}}inst/{{/is_package}}R")
