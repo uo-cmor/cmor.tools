@@ -68,13 +68,9 @@ add_templates <- function(package, workflow = "drake") {
 		# Skeleton _drake & plan files
 		template <- system.file("templates", "drake", package = "cmor.tools", mustWork = TRUE)
 		template_out <- whisker::whisker.render(readLines(template), list(is_package = package))
-		writeLines(template_out, usethis::proj_path(prefix, "R", "_plan.R"))
-		# _drake.R config file
-		template <- system.file("templates", "drake", package = "cmor.tools", mustWork = TRUE)
-		template_out <- whisker::whisker.render(readLines(template), list(is_package = package))
 		writeLines(template_out, usethis::proj_path(prefix, "_drake.R"))
 		file.copy(system.file("templates", "plan", package = "cmor.tools", mustWork = TRUE),
-							usethis::proj_path(prefix, "R", "plan.R"))
+							usethis::proj_path(prefix, "R", "_plan.R"))
 	} else if (workflow == "make") {
 		# Skeleton Makefile
 		template <- system.file("templates", "makefile-template", package = "cmor.tools", mustWork = TRUE)
