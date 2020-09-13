@@ -122,15 +122,8 @@ create_research_project <- function(path, title, description = NULL,
 #'     \code{create_research_project()} to create a git repository, connect to
 #'     github, and add a basic project README.
 #'
-#' @param title Title of the research project (used for the DESCRIPTION file).
-#' @param description Short description of the research project (used for the
-#'     DESCRIPTION file).
 #' @param project Path to the project folder. Default is to use the current
 #'     working directory.
-#' @param title (Optional) If non-null, will overwrite the default title
-#'     (package name) in the DESCRIPTION file.
-#' @param description (Optional) If non-null, will be added as the
-#'     \code{description} field in the DESCRIPTION file.
 #' @param git Logical (default = \code{TRUE}). Whether to create a git
 #'     repository.
 #' @param github Logical (default = \code{TRUE}). Whether to create a GitHub
@@ -148,21 +141,11 @@ create_research_project <- function(path, title, description = NULL,
 #'
 #' @export
 complete_setup <- function(
-	title = NULL, description = NULL, project = getwd(),
+	project = getwd(),
 	git = getOption("cmor.tools.git"), raw_data_in_git = getOption("cmor.tools.git_rawdata"),
 	data_in_git = getOption("cmor.tools.git_data"), output_in_git = getOption("cmor.tools.git_output"),
 	github = getOption("cmor.tools.github"), private = getOption("cmor.tools.github_private")
 ) {
-	if (!file.exists("DESCRIPTION")) {
-		projname <- basename(project)
-		if (is.null(title)) title <- projname
-		usethis::use_description(
-			list(Project = projname, Title = title, Description = description,
-					 Package = NULL, Version = NULL, License = NULL, LazyData = NULL),
-			check_name = FALSE
-		)
-	}
-
 	if (git) {
 		# Initialise git repository
 		use_git()

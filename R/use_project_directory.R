@@ -35,9 +35,9 @@ use_project_directory <- function(package, workflow = "drake", git = TRUE,
   if (git) {
   	if (package) prefix <- "inst/" else prefix <- ""
 
-  	if(!data_in_git) usethis::use_git_ignore(paste0(prefix, "derived_data"))
-  	if(!raw_data_in_git) usethis::use_git_ignore(paste0(prefix, "raw_data"))
-  	if(!output_in_git) usethis::use_git_ignore(paste0(prefix, "output"))
+  	if (!data_in_git) usethis::use_git_ignore(paste0(prefix, "derived_data"))
+  	if (!raw_data_in_git) usethis::use_git_ignore(paste0(prefix, "raw_data"))
+  	if (!output_in_git) usethis::use_git_ignore(paste0(prefix, "output"))
 
   	usethis::git_vaccinate()
   }
