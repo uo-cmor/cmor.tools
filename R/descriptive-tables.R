@@ -36,36 +36,45 @@
 #'     total column (default is 'Entire sample').
 #'
 #' @export
-create_descriptive_table <- function(df, continuous = NULL, discrete = NULL, multiresponse = NULL,
-																		 output = c(names(continuous), names(discrete)), by = NULL,
-																		 value_continuous = mean_sd(.mean, .sd, accuracy = 0.1),
-																		 value_discrete = n_percent(.n, .proportion), total = !is.null(by)) {
+create_descriptive_table <- function(
+	df, continuous = NULL, discrete = NULL, multiresponse = NULL,
+	output = c(names(continuous), names(discrete)), by = NULL,
+	value_continuous = mean_sd(.mean, .sd, accuracy = 0.1),
+	value_discrete = n_percent(.n, .proportion), total = !is.null(by)
+) {
 	value_continuous <- rlang::enquo(value_continuous)
 	value_discrete <- rlang::enquo(value_discrete)
 
 	if (isTRUE(total)) total <- 'Entire sample'
 	if (isFALSE(total)) total <- NULL
 
-	if (has_names(continuous)) names(continuous) <- dplyr::if_else(names(continuous) == '', unname(continuous),
-																																dplyr::coalesce(names(continuous), unname(continuous)))
+	if (has_names(continuous)) names(continuous) <-
+		dplyr::if_else(names(continuous) == '', unname(continuous),
+									 dplyr::coalesce(names(continuous), unname(continuous)))
 	else names(continuous) <- continuous
 
-	if (has_names(discrete)) names(discrete) <- dplyr::if_else(names(discrete) == '', unname(discrete),
-																														dplyr::coalesce(names(discrete), unname(discrete)))
+	if (has_names(discrete)) names(discrete) <-
+		dplyr::if_else(names(discrete) == '', unname(discrete),
+									 dplyr::coalesce(names(discrete), unname(discrete)))
 	else names(discrete) <- discrete
 
 	for (x in multiresponse) {
-		if (has_names(x)) names(x) <- dplyr::if_else(names(x) == '', unname(x), dplyr::coalesce(names(x), unname(x)))
+		if (has_names(x)) names(x) <- dplyr::if_else(names(x) == '', unname(x),
+																								 dplyr::coalesce(names(x), unname(x)))
 		else names(x) <- x
 	}
 
 	variable_names <- c(names(continuous), names(discrete), names(multiresponse))
 
-	continuous_tables <- purrr::imap(continuous,
-																	 ~continuous_characteristics_table(df, by, .x, .y, value_continuous, total))
-	discrete_tables <- purrr::imap(discrete,	~discrete_characteristics_table(df, by, .x, .y, value_discrete, total))
-	multiresponse_tables <- purrr::imap(multiresponse,
-																			~multiresponse_characteristics_table(df, by, .x, .y, value_discrete, total))
+	continuous_tables <- purrr::imap(
+		continuous, ~continuous_characteristics_table(df, by, .x, .y, value_continuous, total)
+	)
+	discrete_tables <- purrr::imap(
+		discrete, ~discrete_characteristics_table(df, by, .x, .y, value_discrete, total)
+	)
+	multiresponse_tables <- purrr::imap(
+		multiresponse, ~multiresponse_characteristics_table(df, by, .x, .y, value_discrete, total)
+	)
 
 	header_rows <- purrr::map(setNames(nm = setdiff(output, variable_names)), make_header_row)
 
@@ -74,17 +83,22 @@ create_descriptive_table <- function(df, continuous = NULL, discrete = NULL, mul
 
 continuous_characteristics_table <- function(df, by, variable, name, value, total) {
 	out <- dplyr::group_by_at(df, dplyr::vars(!!by)) %>%
-		dplyr::summarise_at(dplyr::vars(!!variable),
-												list(.mean = mean, .sd = sd, .min = min, .lq = lq, .median = median, .uq = uq, .max = max),
-												na.rm = TRUE) %>%
+		dplyr::summarise_at(
+			dplyr::vars(!!variable),
+			list(.mean = mean, .sd = sd, .min = min, .lq = lq, .median = median, .uq = uq, .max = max),
+			na.rm = TRUE
+		) %>%
 		dplyr::mutate(.variable = !!variable, value = !!value) %>%
-		dplyr::select(!dplyr::any_of(c(".mean", ".sd", ".min", ".lq", ".median", ".uq", ".max", ".variable")))
+		dplyr::select(!dplyr::any_of(c(".mean", ".sd", ".min", ".lq", ".median", ".uq", ".max",
+																	 ".variable")))
 	if (!is.null(by)) out <- tidyr::pivot_wider(out, names_from = !!by)
 	if (!is.null(total)) out <- dplyr::bind_cols(
 		out,
-		dplyr::summarise_at(df, dplyr::vars(!!variable),
-												list(.mean = mean, .sd = sd, .min = min, .lq = lq, .median = median, .uq = uq, .max = max),
-												na.rm = TRUE) %>%
+		dplyr::summarise_at(
+			df, dplyr::vars(!!variable),
+			list(.mean = mean, .sd = sd, .min = min, .lq = lq, .median = median, .uq = uq, .max = max),
+			na.rm = TRUE
+		) %>%
 			dplyr::mutate(.variable = !!variable) %>%
 			dplyr::transmute(!!total := !!value)
 	)
@@ -98,11 +112,14 @@ discrete_characteristics_table <- function(df, by, variable, name, value, total)
 		dplyr::group_by_at(dplyr::vars(!!by, 'Patient characteristic' = !!variable)) %>%
 		dplyr::summarise(.n = dplyr::n()) %>%
 		tidyr::drop_na() %>%
-		dplyr::mutate(.proportion = .n / sum(.n), .variable = !!variable, value = !!value,
-									'Patient characteristic' = paste0('&emsp;', as.character(`Patient characteristic`))) %>%
+		dplyr::mutate(
+			.proportion = .n / sum(.n), .variable = !!variable, value = !!value,
+			'Patient characteristic' = paste0('&emsp;', as.character(`Patient characteristic`))
+		) %>%
 		dplyr::ungroup() %>%
 		dplyr::select(!dplyr::any_of(c(".n", ".proportion",  ".variable")))
-	if (!is.null(by)) out <- tidyr::pivot_wider(out, id_cols = 'Patient characteristic', names_from = !!by)
+	if (!is.null(by)) out <- tidyr::pivot_wider(out, id_cols = 'Patient characteristic',
+																							names_from = !!by)
 	out <- out %>% dplyr::add_row('Patient characteristic' = !!name, .after = 0)
 	if (!is.null(total)) out <- dplyr::bind_cols(
 		out,
@@ -124,13 +141,15 @@ multiresponse_characteristics_table <- function(df, by, variables, name, value, 
 		variables,
 		function(variable, label) {
 			out <- dplyr::group_by_at(df, dplyr::vars(!!by)) %>%
-				dplyr::summarise_at(dplyr::vars(!!variable), list(.n = sum, .proportion = mean), na.rm = TRUE) %>%
+				dplyr::summarise_at(dplyr::vars(!!variable), list(.n = sum, .proportion = mean),
+														na.rm = TRUE) %>%
 				dplyr::mutate(.variable = !!variable, value = !!value) %>%
 				dplyr::select(!dplyr::any_of(c(".n", ".proportion",  ".variable")))
 			if (!is.null(by)) out <- tidyr::pivot_wider(out, names_from = !!by)
 			if (!is.null(total)) out <- dplyr::bind_cols(
 				out,
-				dplyr::summarise_at(df, dplyr::vars(!!variable), list(.n = sum, .proportion = mean), na.rm = TRUE) %>%
+				dplyr::summarise_at(df, dplyr::vars(!!variable), list(.n = sum, .proportion = mean),
+														na.rm = TRUE) %>%
 					dplyr::mutate(.variable = !!variable) %>%
 					dplyr::transmute(!!total := !!value)
 			)
