@@ -19,6 +19,7 @@ number(
   big.mark = "< >",
   decimal.mark = ".",
   trim = TRUE,
+  html = TRUE,
   ...
 )
 
@@ -30,6 +31,7 @@ number_format(
   big.mark = "< >",
   decimal.mark = ".",
   trim = TRUE,
+  html = TRUE,
   ...
 )
 
@@ -42,6 +44,7 @@ percent(
   big.mark = "< >",
   decimal.mark = ".",
   trim = TRUE,
+  html = TRUE,
   ...
 )
 
@@ -53,6 +56,7 @@ percent_format(
   big.mark = "< >",
   decimal.mark = ".",
   trim = TRUE,
+  html = TRUE,
   ...
 )
 
@@ -65,6 +69,7 @@ comma(
   big.mark = ",",
   decimal.mark = ".",
   trim = TRUE,
+  html = TRUE,
   ...
 )
 
@@ -76,6 +81,7 @@ comma_format(
   big.mark = ",",
   decimal.mark = ".",
   trim = TRUE,
+  html = TRUE,
   ...
 )
 }
@@ -84,6 +90,9 @@ comma_format(
 
 \item{accuracy, scale, prefix, suffix, big.mark, decimal.mark, trim, ...}{As in
 \code{scales::number()}}
+
+\item{html}{Logical scalar. Whether to include formatting marks (minus
+signs) as HTML strings (the default) or unicode.}
 }
 \description{
 These functions replace/extend the `scales::number()-type` formatting

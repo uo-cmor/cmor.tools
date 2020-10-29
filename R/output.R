@@ -66,7 +66,7 @@ est_ci <- function(est, low, high, sep = ' to ', ...) {
 	paste0(number(est, ...), ' (', number(low, ...), sep, number(high, ...), ')')
 }
 
-##################################################################.
+###################################################################
 ### Number formatting functions (based on scales::number() etc) ###
 ###################################################################
 
@@ -78,6 +78,8 @@ est_ci <- function(est, low, high, sep = ' to ', ...) {
 #' @param x Numeric vector to format
 #' @param accuracy,scale,prefix,suffix,big.mark,decimal.mark,trim,... As in
 #'     \code{scales::number()}
+#' @param html Logical scalar. Whether to include formatting marks (minus
+#'     signs) as HTML strings (the default) or unicode.
 #'
 #' @name number-formatting
 NULL
@@ -85,9 +87,12 @@ NULL
 #' @rdname number-formatting
 #' @export
 number <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
-									 big.mark = "< >", decimal.mark = ".", trim = TRUE, ...) {
+									 big.mark = "< >", decimal.mark = ".", trim = TRUE, html = TRUE, ...) {
+	minus <- if (html) "&minus;" else "\u2212"
 	neg <- rep("", length(x))
-	neg[x < 0] <- "&minus;"
+	neg[x < 0] <- minus
+
+	narrow_space <- if (html) "&#x202F;" else "\u202F"
 
 	stringi::stri_replace_all_regex(
 		paste0(
@@ -95,27 +100,30 @@ number <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
 			scales::number(abs(x), accuracy = accuracy, scale = scale, prefix = prefix, suffix = suffix,
 										 big.mark = big.mark, decimal.mark = decimal.mark, trim = trim, ...)
 		),
-		"< >", "&#x202F;"
+		"< >", narrow_space
 	)
 }
 
 #' @rdname number-formatting
 #' @export
 number_format <- function(accuracy = 1, scale = 1, prefix = "", suffix = "",
-													big.mark = "< >", decimal.mark = ".", trim = TRUE, ...) {
-	list(accuracy, scale, prefix, suffix, big.mark, decimal.mark, trim, ...)
+													big.mark = "< >", decimal.mark = ".", trim = TRUE, html = TRUE, ...) {
+	list(accuracy, scale, prefix, suffix, big.mark, decimal.mark, trim, html, ...)
 
 	function(x) number(x, accuracy = accuracy, scale = scale,
 										 prefix = prefix, suffix = suffix, big.mark = big.mark,
-										 decimal.mark = decimal.mark, trim = trim, ...)
+										 decimal.mark = decimal.mark, trim = trim, html = html, ...)
 }
 
 #' @rdname number-formatting
 #' @export
 percent <- function(x, accuracy = 1, scale = 100, prefix = "", suffix = "%",
-										big.mark = "< >", decimal.mark = ".", trim = TRUE, ...) {
+										big.mark = "< >", decimal.mark = ".", trim = TRUE, html = TRUE, ...) {
+	minus <- if (html) "&minus;" else "\u2212"
 	neg <- rep("", length(x))
-	neg[x < 0] <- "&minus;"
+	neg[x < 0] <- minus
+
+	narrow_space <- if (html) "&#x202F;" else "\u202F"
 
 	stringi::stri_replace_all_regex(
 		paste0(
@@ -123,27 +131,28 @@ percent <- function(x, accuracy = 1, scale = 100, prefix = "", suffix = "%",
 			scales::number(abs(x), accuracy = accuracy, scale = scale, prefix = prefix, suffix = suffix,
 										 big.mark = big.mark, decimal.mark = decimal.mark, trim = trim, ...)
 		),
-		"< >", "&#x202F;"
+		"< >", narrow_space
 	)
 }
 
 #' @rdname number-formatting
 #' @export
 percent_format <- function(accuracy = 1, scale = 100, prefix = "", suffix = "%",
-													 big.mark = "< >", decimal.mark = ".", trim = TRUE, ...) {
-	list(accuracy, scale, prefix, suffix, big.mark, decimal.mark, trim, ...)
+													 big.mark = "< >", decimal.mark = ".", trim = TRUE, html = TRUE, ...) {
+	list(accuracy, scale, prefix, suffix, big.mark, decimal.mark, trim, html, ...)
 
 	function(x) percent(x, accuracy = accuracy, scale = scale,
 											prefix = prefix, suffix = suffix, big.mark = big.mark,
-											decimal.mark = decimal.mark, trim = trim, ...)
+											decimal.mark = decimal.mark, trim = trim, html = html, ...)
 }
 
 #' @rdname number-formatting
 #' @export
 comma <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
-									big.mark = ",", decimal.mark = ".", trim = TRUE, ...) {
+									big.mark = ",", decimal.mark = ".", trim = TRUE, html = TRUE, ...) {
+	minus <- if (html) "&minus;" else "\u2212"
 	neg <- rep("", length(x))
-	neg[x < 0] <- "&minus;"
+	neg[x < 0] <- minus
 
 	paste0(
 		neg,
@@ -155,10 +164,10 @@ comma <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
 #' @rdname number-formatting
 #' @export
 comma_format <- function(accuracy = 1, scale = 1, prefix = "", suffix = "",
-												 big.mark = ",", decimal.mark = ".", trim = TRUE, ...) {
-	list(accuracy, scale, prefix, suffix, big.mark, decimal.mark, trim, ...)
+												 big.mark = ",", decimal.mark = ".", trim = TRUE, html = TRUE, ...) {
+	list(accuracy, scale, prefix, suffix, big.mark, decimal.mark, trim, html, ...)
 
 	function(x) comma(x, accuracy = accuracy, scale = scale,
 										prefix = prefix, suffix = suffix, big.mark = big.mark,
-										decimal.mark = decimal.mark, trim = trim, ...)
+										decimal.mark = decimal.mark, trim = trim, html = html, ...)
 }
