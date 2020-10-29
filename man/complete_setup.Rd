@@ -5,8 +5,6 @@
 \title{Finish project set-up using the CMOR research project templates}
 \usage{
 complete_setup(
-  title = NULL,
-  description = NULL,
   project = getwd(),
   git = getOption("cmor.tools.git"),
   raw_data_in_git = getOption("cmor.tools.git_rawdata"),
@@ -17,12 +15,6 @@ complete_setup(
 )
 }
 \arguments{
-\item{title}{(Optional) If non-null, will overwrite the default title
-(package name) in the DESCRIPTION file.}
-
-\item{description}{(Optional) If non-null, will be added as the
-\code{description} field in the DESCRIPTION file.}
-
 \item{project}{Path to the project folder. Default is to use the current
 working directory.}
 
