@@ -33,11 +33,15 @@ use_project_directory <- function(package, workflow = "drake", git = TRUE,
 
   # Add extdata and/or extdata/raw_data to .gitignore
   if (git) {
-  	if (package) prefix <- "inst/" else prefix <- ""
+  	if (package) prefix <- "/inst/" else prefix <- "/"
 
-  	if (!data_in_git) usethis::use_git_ignore(paste0(prefix, "derived_data"))
-  	if (!raw_data_in_git) usethis::use_git_ignore(paste0(prefix, "raw_data"))
-  	if (!output_in_git) usethis::use_git_ignore(paste0(prefix, "output"))
+  	if (!data_in_git) usethis::use_git_ignore(c(paste0(prefix, "derived_data/*"),
+  																							paste0("!", prefix, "derived_data/derived_data")))
+  	if (!raw_data_in_git) usethis::use_git_ignore(c(paste0(prefix, "raw_data/*"),
+  																									paste0("!", prefix, "raw_data/raw_data")))
+  	if (!output_in_git) usethis::use_git_ignore(c(paste0(prefix, "output/*"),
+  																								paste0("!", prefix, "output/output"),
+  																								paste0("!", prefix, "output/figures/figures")))
 
   	usethis::git_vaccinate()
   }
@@ -80,6 +84,8 @@ add_templates <- function(package, workflow = "drake") {
 			file.copy(system.file("templates", "Makefile-root", package = "cmor.tools", mustWork = TRUE),
 													 usethis::proj_path("Makefile"))
 		}
+		file.copy(system.file("templates", "R", package = "cmor.tools", mustWork = TRUE),
+							usethis::proj_path(prefix, "R", "R"))
 	}
 
 	# Manuscript templates and functions
@@ -100,10 +106,20 @@ add_templates <- function(package, workflow = "drake") {
   																				list(is_package = package, package = basename(usethis::proj_path())))
   writeLines(template_out, usethis::proj_path(prefix, "packages.R"))
 
-  # Template 'define-parameters' file to define fixed parameters of the analysis
+  # Template 'parameters' file to define fixed parameters of the analysis
   template <- system.file("templates", "parameters", package = "cmor.tools", mustWork = TRUE)
   template_out <- whisker::whisker.render(readLines(template),
   																				list(is_package = package, package = basename(usethis::proj_path())))
   writeLines(template_out, usethis::proj_path(prefix, "parameters.R"))
+
+  # Placefolder files in output and data folders (so they are added to Git repo)
+  file.copy(system.file("templates", "output", package = "cmor.tools", mustWork = TRUE),
+  					usethis::proj_path(prefix, "output", "output"))
+  file.copy(system.file("templates", "figures", package = "cmor.tools", mustWork = TRUE),
+  					usethis::proj_path(prefix, "output", "figures", "figures"))
+  file.copy(system.file("templates", "raw_data", package = "cmor.tools", mustWork = TRUE),
+  					usethis::proj_path(prefix, "raw_data", "raw_data"))
+  file.copy(system.file("templates", "derived_data", package = "cmor.tools", mustWork = TRUE),
+  					usethis::proj_path(prefix, "derived_data", "derived_data"))
 }
 
