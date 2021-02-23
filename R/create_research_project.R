@@ -50,10 +50,11 @@
 #'     accessible. Ignored if \code{github = FALSE}.
 #'
 #' @export
-create_research_project <- function(path, title, description = NULL,
-																		package = FALSE, license = NULL, workflow = "drake",
-																		git = TRUE, raw_data_in_git = TRUE, data_in_git = FALSE, output_in_git = FALSE,
-																		github = TRUE, private = TRUE) {
+create_research_project <- function(
+	path, title, description = NULL, package = FALSE, license = NULL,
+	workflow = "targets", git = TRUE, raw_data_in_git = TRUE, data_in_git = FALSE,
+	output_in_git = FALSE, github = TRUE, private = TRUE
+) {
 	if (package) stop('package = TRUE is not supported in this version of cmor.tools')
 
 	# Create new package
@@ -82,7 +83,7 @@ create_research_project <- function(path, title, description = NULL,
 		else if (!is.na(license)) stop("'", license, "' is not a recognised license type")
 	} else if (!is.null(license)) usethis::ui_warn("Ignoring argument {ui_code(license)} for non-package projects")
 
-  if(interactive()) {
+  if (interactive()) {
   	usethis::proj_activate(path)
   	if (rstudioapi::isAvailable()) {
   		writeLines(

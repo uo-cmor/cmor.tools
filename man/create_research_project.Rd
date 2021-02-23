@@ -10,7 +10,7 @@ create_research_project(
   description = NULL,
   package = FALSE,
   license = NULL,
-  workflow = "drake",
+  workflow = "targets",
   git = TRUE,
   raw_data_in_git = TRUE,
   data_in_git = FALSE,

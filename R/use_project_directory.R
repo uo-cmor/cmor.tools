@@ -6,8 +6,8 @@
 #'
 #' @param package Logical (default = \code{FALSE}). Whether the project should
 #'     be created as an R package.
-#' @param workflow Either \code{"drake"} or \code{"make"}, to create
-#'     corresponding workflow template files.
+#' @param workflow Either \code{"targets"}, \code{"drake"}, or \code{"make"}, to
+#'     create corresponding workflow template files.
 #' @param git Logical (default = \code{TRUE}). Whether to create a git
 #'     repository.
 #' @param raw_data_in_git Logical (default = \code{TRUE}). If FALSE, data in the
@@ -20,8 +20,9 @@
 #'     \code{output/} directory will be excluded from the git repository.
 #'
 #' @export
-use_project_directory <- function(package, workflow = "drake", git = TRUE,
-																	raw_data_in_git = TRUE, data_in_git = FALSE, output_in_git = FALSE) {
+use_project_directory <- function(package, workflow = "targets", git = TRUE,
+																	raw_data_in_git = TRUE, data_in_git = FALSE,
+																	output_in_git = FALSE) {
 	# Add required packages to Imports/Suggests
 	#usethis::use_package('pkgname')
 
@@ -35,13 +36,17 @@ use_project_directory <- function(package, workflow = "drake", git = TRUE,
   if (git) {
   	if (package) prefix <- "/inst/" else prefix <- "/"
 
-  	if (!data_in_git) usethis::use_git_ignore(c(paste0(prefix, "derived_data/*"),
-  																							paste0("!", prefix, "derived_data/derived_data")))
-  	if (!raw_data_in_git) usethis::use_git_ignore(c(paste0(prefix, "raw_data/*"),
-  																									paste0("!", prefix, "raw_data/raw_data")))
-  	if (!output_in_git) usethis::use_git_ignore(c(paste0(prefix, "output/*"),
-  																								paste0("!", prefix, "output/output"),
-  																								paste0("!", prefix, "output/figures/figures")))
+  	if (!data_in_git) usethis::use_git_ignore(c(
+  		paste0(prefix, "derived_data/*"),
+  		paste0("!", prefix, "derived_data/derived_data")
+  	))
+  	if (!raw_data_in_git) usethis::use_git_ignore(c(
+  		paste0(prefix, "raw_data/*"), paste0("!", prefix, "raw_data/raw_data")
+  	))
+  	if (!output_in_git) usethis::use_git_ignore(c(
+  		paste0(prefix, "output/*"), paste0("!", prefix, "output/output"),
+  		paste0("!", prefix, "output/figures/figures")
+  	))
 
   	usethis::git_vaccinate()
   }
@@ -65,61 +70,125 @@ add_directories <- function(package) {
 # Add template files
 ## This adds the template files (word-styles-reference-01.docx, vancouver.csl,
 ##     _drake.R, etc) to the appropriate directories.
-add_templates <- function(package, workflow = "drake") {
+add_templates <- function(package, workflow = "targets") {
 	if (package) prefix = "inst/" else prefix = ""
 
-	if (workflow == "drake") {
+	if (workflow == "targets") {
+		# Skeleton _targets & plan files
+		template <- system.file("templates", "targets",
+														package = "cmor.tools", mustWork = TRUE)
+		template_out <- whisker::whisker.render(readLines(template),
+																						list(is_package = package))
+		writeLines(template_out, usethis::proj_path(prefix, "_targets.R"))
+		file.copy(
+			system.file("templates", "targets_plan",
+									package = "cmor.tools", mustWork = TRUE),
+			usethis::proj_path(prefix, "_plan.R")
+		)
+	} else if (workflow == "drake") {
 		# Skeleton _drake & plan files
-		template <- system.file("templates", "drake", package = "cmor.tools", mustWork = TRUE)
-		template_out <- whisker::whisker.render(readLines(template), list(is_package = package))
+		template <- system.file("templates", "drake",
+														package = "cmor.tools", mustWork = TRUE)
+		template_out <- whisker::whisker.render(readLines(template),
+																						list(is_package = package))
 		writeLines(template_out, usethis::proj_path(prefix, "_drake.R"))
-		file.copy(system.file("templates", "plan", package = "cmor.tools", mustWork = TRUE),
-							usethis::proj_path(prefix, "R", "_plan.R"))
+		file.copy(
+			system.file("templates", "plan", package = "cmor.tools", mustWork = TRUE),
+			usethis::proj_path(prefix, "R", "_plan.R")
+		)
 	} else if (workflow == "make") {
 		# Skeleton Makefile
-		template <- system.file("templates", "makefile-template", package = "cmor.tools", mustWork = TRUE)
-		template_out <- whisker::whisker.render(readLines(template), list(is_package = package))
+		template <- system.file("templates", "makefile-template",
+														package = "cmor.tools", mustWork = TRUE)
+		template_out <- whisker::whisker.render(readLines(template),
+																						list(is_package = package))
 		writeLines(template_out, usethis::proj_path(prefix, "Makefile"))
 		if (package) {
-			file.copy(system.file("templates", "Makefile-root", package = "cmor.tools", mustWork = TRUE),
-													 usethis::proj_path("Makefile"))
+			file.copy(
+				system.file("templates", "Makefile-root",
+										package = "cmor.tools", mustWork = TRUE),
+				usethis::proj_path("Makefile")
+			)
 		}
-		file.copy(system.file("templates", "R", package = "cmor.tools", mustWork = TRUE),
-							usethis::proj_path(prefix, "R", "R"))
+		file.copy(
+			system.file("templates", "R", package = "cmor.tools", mustWork = TRUE),
+			usethis::proj_path(prefix, "R", "R")
+		)
 	}
 
 	# Manuscript templates and functions
-  file.copy(system.file("templates", "manuscript.Rmd", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path(prefix, "reports")) # manuscript template - possibly include separate templates for figures/tables outputs as well
-  file.copy(system.file("templates", "references.bib", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path(prefix, "reports")) # example bibtex references file
-  file.copy(system.file("templates", "vancouver.csl", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path(prefix, "reports")) # CSL citation formatting (Vancouver style)
-  file.copy(system.file("templates", "word-styles-reference-01.docx", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path(prefix, "reports")) # Reference .docx styles file
-  file.copy(system.file("templates", "word-styles-reference-med-care.docx", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path(prefix, "reports")) # Reference .docx styles file for Medical Care
+	## manuscript template - possibly include separate templates for
+	## figures/tables outputs as well:
+  file.copy(
+  	system.file("templates", "manuscript.Rmd",
+  							package = "cmor.tools", mustWork = TRUE),
+  	usethis::proj_path(prefix, "reports")
+  )
+  ## example bibtex references file:
+  file.copy(
+  	system.file("templates", "references.bib",
+  							package = "cmor.tools", mustWork = TRUE),
+  	usethis::proj_path(prefix, "reports")
+  )
+  ## CSL citation formatting (Vancouver style):
+  file.copy(
+  	system.file("templates", "vancouver.csl",
+  							package = "cmor.tools", mustWork = TRUE),
+  	usethis::proj_path(prefix, "reports")
+  )
+  ## Reference .docx styles file
+  file.copy(
+  	system.file("templates", "word-styles-reference-01.docx",
+  							package = "cmor.tools", mustWork = TRUE),
+  	usethis::proj_path(prefix, "reports")
+  )
+  ## Reference .docx styles file for Medical Care
+  file.copy(
+  	system.file("templates", "word-styles-reference-med-care.docx",
+  							package = "cmor.tools", mustWork = TRUE),
+  	usethis::proj_path(prefix, "reports")
+  )
 
   # Template 'packages' file to load required packages (for _drake.R)
-  template <- system.file("templates", "packages", package = "cmor.tools", mustWork = TRUE)
-  template_out <- whisker::whisker.render(readLines(template),
-  																				list(is_package = package, package = basename(usethis::proj_path())))
-  writeLines(template_out, usethis::proj_path(prefix, "packages.R"))
+  if (workflow == "drake") {
+	  template <- system.file("templates", "packages",
+	  												package = "cmor.tools", mustWork = TRUE)
+	  template_out <- whisker::whisker.render(
+	  	readLines(template),
+	  	list(is_package = package,
+	  			 package = basename(usethis::proj_path()))
+	  )
+	  writeLines(template_out, usethis::proj_path(prefix, "packages.R"))
+  }
 
   # Template 'parameters' file to define fixed parameters of the analysis
-  template <- system.file("templates", "parameters", package = "cmor.tools", mustWork = TRUE)
-  template_out <- whisker::whisker.render(readLines(template),
-  																				list(is_package = package, package = basename(usethis::proj_path())))
+  template <- system.file("templates", "parameters",
+  												package = "cmor.tools", mustWork = TRUE)
+  template_out <- whisker::whisker.render(
+  	readLines(template),
+  	list(is_package = package, package = basename(usethis::proj_path()))
+  )
   writeLines(template_out, usethis::proj_path(prefix, "parameters.R"))
 
   # Placefolder files in output and data folders (so they are added to Git repo)
-  file.copy(system.file("templates", "output", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path(prefix, "output", "output"))
-  file.copy(system.file("templates", "figures", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path(prefix, "output", "figures", "figures"))
-  file.copy(system.file("templates", "raw_data", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path(prefix, "raw_data", "raw_data"))
-  file.copy(system.file("templates", "derived_data", package = "cmor.tools", mustWork = TRUE),
-  					usethis::proj_path(prefix, "derived_data", "derived_data"))
+  file.copy(
+  	system.file("templates", "output", package = "cmor.tools", mustWork = TRUE),
+  	usethis::proj_path(prefix, "output", "output")
+  )
+  file.copy(
+  	system.file("templates", "figures",
+  							package = "cmor.tools", mustWork = TRUE),
+  	usethis::proj_path(prefix, "output", "figures", "figures")
+  )
+  file.copy(
+  	system.file("templates", "raw_data",
+  							package = "cmor.tools", mustWork = TRUE),
+  	usethis::proj_path(prefix, "raw_data", "raw_data")
+  )
+  file.copy(
+  	system.file("templates", "derived_data",
+  							package = "cmor.tools", mustWork = TRUE),
+  	usethis::proj_path(prefix, "derived_data", "derived_data")
+  )
 }
 

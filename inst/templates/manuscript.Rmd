@@ -35,6 +35,9 @@ source("R/load-packages.R") # Load required packages
 
 ```{r load-data, include=FALSE, echo=FALSE, cache=FALSE}
 # Load the previously stored results
+##Targets:
+#tar_load(figure_1)
+#tar_load(results)
 ##Drake:
 #file_in("output/figure-1.png")
 #loadd(results)

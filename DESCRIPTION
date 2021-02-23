@@ -29,6 +29,8 @@ Imports:
     scales,
     stringi
 Suggests: 
+    targets,
+    tarchetypes,
     drake,
     readxl,
     plyr,

@@ -6,7 +6,7 @@
 \usage{
 use_project_directory(
   package,
-  workflow = "drake",
+  workflow = "targets",
   git = TRUE,
   raw_data_in_git = TRUE,
   data_in_git = FALSE,
@@ -17,8 +17,8 @@ use_project_directory(
 \item{package}{Logical (default = \code{FALSE}). Whether the project should
 be created as an R package.}
 
-\item{workflow}{Either \code{"drake"} or \code{"make"}, to create
-corresponding workflow template files.}
+\item{workflow}{Either \code{"targets"}, \code{"drake"}, or \code{"make"}, to
+create corresponding workflow template files.}
 
 \item{git}{Logical (default = \code{TRUE}). Whether to create a git
 repository.}
