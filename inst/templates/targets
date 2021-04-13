@@ -4,6 +4,7 @@
 
 library(targets)
 library(tarchetypes)
+library(cmor.tools)
 options(tidyverse.quiet = TRUE)
 
 # Define fixed parameters
@@ -14,12 +15,14 @@ R.utils::sourceDirectory("{{#is_package}}inst/{{/is_package}}R")
 
 # Set options
 tar_option_set(
-  packages = c("tidyverse") # add other required packages in here
+  packages = c("tidyverse"), # add other required packages in here
+  format = "qs"
 )
 
-############################################
-### Futures (for tar_make_future() only) ###
-############################################
+###################################################
+### Futures (for tar_make_future() only)        ###
+### (or for parallel processing within targets) ###
+###################################################
 
 if (FALSE) {
 	max_cores <- Inf # change as required

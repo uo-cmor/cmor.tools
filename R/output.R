@@ -19,7 +19,7 @@ render_manuscript <- function(rmd = NULL, out = NULL, reference_docx = NULL, csl
 	if (is.null(csl)) csl <- paste0(prefix, "reports/vancouver.csl")
 	if (is.null(bib)) bib <- paste0(prefix, "reports/references.bib")
 
-	rmarkdown::render(
+	path <- rmarkdown::render(
 		rmd,
 		rmarkdown::word_document(
 			reference_docx = usethis::proj_path(reference_docx),
@@ -27,6 +27,8 @@ render_manuscript <- function(rmd = NULL, out = NULL, reference_docx = NULL, csl
 		),
 		output_file = out, output_dir = dirname(out), knit_root_dir = usethis::proj_path()
 	)
+
+	fs::path_rel(path)
 }
 
 ###################################
