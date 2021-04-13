@@ -1,6 +1,6 @@
 use_git <- function(message = "Initial commit") {
 	if (uses_git()) {
-		return(invisible())
+		return(invisible(NULL))
 	}
 	usethis::ui_done("Initialising Git repo")
 	git2r::init(usethis::proj_get())
@@ -10,12 +10,12 @@ use_git <- function(message = "Initial commit") {
 }
 
 git_ask_commit <- function(message, untracked = FALSE) {
-	if (!interactive() || !uses_git()) return(invisible())
+	if (!interactive() || !uses_git()) return(invisible(NULL))
 	paths <- unlist(
 		git2r::status(untracked = untracked, repo = git2r::repository(usethis::proj_get())),
 		use.names = FALSE
 	)
-	if (length(paths) == 0) return(invisible())
+	if (length(paths) == 0) return(invisible(NULL))
 	paths <- sort(paths)
 	ui_paths <- purrr::map_chr(usethis::proj_path(paths), usethis::ui_path)
 	n <- length(ui_paths)
@@ -28,5 +28,5 @@ git_ask_commit <- function(message, untracked = FALSE) {
 		usethis::ui_done("Commit with message {usethis::ui_value(message)}")
 		git2r::commit(repo, message)
 	}
-	invisible()
+	invisible(NULL)
 }

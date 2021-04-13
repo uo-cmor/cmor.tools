@@ -92,7 +92,7 @@ create_research_project <- function(
   				"cat(crayon::bold('\\nThis project was created by `cmor.tools::create_research_project()`.\\n'))",
   				"cat('\\nTo complete project set-up, you need to:\\n')",
   				if (package) "cat(crayon::red('*'), 'Edit the DESCRIPTION file\\n')",
-  				"cat(crayon::red('*'), 'Run `complete_setup(title = <title>, description = <description>)`\\n')",
+  				"cat(crayon::red('*'), 'Run `complete_setup()`\\n')",
   				"suppressMessages(require(cmor.tools))",
   				paste0("options(cmor.tools.git = ", git, ")"),
   				paste0("options(cmor.tools.git_data = ", data_in_git, ")"),
@@ -100,7 +100,6 @@ create_research_project <- function(
   				paste0("options(cmor.tools.git_output = ", output_in_git, ")"),
   				paste0("options(cmor.tools.github = ", github, ")"),
   				paste0("options(cmor.tools.github_private = ", private, ")"),
-  				"invisible(file.remove('.Rprofile'))",
   				""
   			), usethis::proj_path(".Rprofile")
   		)
@@ -111,7 +110,7 @@ create_research_project <- function(
   		usethis::ui_line("Next you need to:")
   		if (package) usethis::ui_todo("Edit the DESCRIPTION file")
   		usethis::ui_todo(
-  			"Run `complete_setup(title = <title>, description = <description>)` to complete the project set-up"
+  			"Run `complete_setup()` to complete the project set-up"
   		)
   	}
   }
@@ -147,12 +146,14 @@ complete_setup <- function(
 	data_in_git = getOption("cmor.tools.git_data"), output_in_git = getOption("cmor.tools.git_output"),
 	github = getOption("cmor.tools.github"), private = getOption("cmor.tools.github_private")
 ) {
+	invisible(file.remove('.Rprofile'))
+
 	if (git) {
 		# Initialise git repository
 		use_git()
 
 		if (github) {
-			usethis::use_git_credentials(git2r::cred_ssh_key())
+			#usethis::use_git_credentials(git2r::cred_ssh_key())
 			# Connect repository to github
 			usethis::use_github(private = private)
 		}
@@ -165,7 +166,7 @@ complete_setup <- function(
 	)
 	gh_info <- gh::gh("GET /repos/:owner/:repo", owner = github_info()$username,
 										repo = github_info()$repo, .api_url = "https://api.github.com",
-										.token = check_github_token(usethis::github_token(), allow_empty = TRUE))
+										.token = check_github_token(gh::gh_token(), allow_empty = TRUE))
 	if (github) {
 		data <- append(data, github_info(project))
 		data <- append(data, list(url = gh_info$html_url))
@@ -176,6 +177,6 @@ complete_setup <- function(
 
 	if (git) {
 		usethis::ui_todo("A restart of RStudio is required to activate the Git pane")
-		usethis::ui_todo("You can do this by calling `openProject()`")
+		usethis::ui_todo("You can do this by calling `rstudioapi::openProject()`")
 	}
 }

@@ -69,7 +69,7 @@ github_remote_parse <- function(x) {
 	list(username = match[2], repo = match[3], fullname = paste0(match[2], "/", match[3]))
 }
 
-check_github_token <- function (auth_token = usethis::github_token(), allow_empty = FALSE) {
+check_github_token <- function(auth_token = gh::gh_token(), allow_empty = FALSE) {
 	if (allow_empty && isTRUE(auth_token == "")) {
 		return(invisible(auth_token))
 	}
