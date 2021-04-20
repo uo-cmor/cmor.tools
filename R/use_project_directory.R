@@ -136,6 +136,12 @@ add_templates <- function(package, workflow = "targets") {
   							package = "cmor.tools", mustWork = TRUE),
   	usethis::proj_path(prefix, "reports")
   )
+  ## CSL citation formatting (Author-Date (JHE) style):
+  file.copy(
+  	system.file("templates", "journal-of-health-economics.csl",
+  							package = "cmor.tools", mustWork = TRUE),
+  	usethis::proj_path(prefix, "reports")
+  )
   ## Reference .docx styles file
   file.copy(
   	system.file("templates", "word-styles-reference-01.docx",
@@ -145,6 +151,12 @@ add_templates <- function(package, workflow = "targets") {
   ## Reference .docx styles file for Medical Care
   file.copy(
   	system.file("templates", "word-styles-reference-med-care.docx",
+  							package = "cmor.tools", mustWork = TRUE),
+  	usethis::proj_path(prefix, "reports")
+  )
+  ## Reference .docx styles file for Journal of Health Economics
+  file.copy(
+  	system.file("templates", "word-styles-reference-jhe.docx",
   							package = "cmor.tools", mustWork = TRUE),
   	usethis::proj_path(prefix, "reports")
   )
