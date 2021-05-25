@@ -6,14 +6,14 @@
 #'
 #' This function calculates the point estimate and standard error for a linear
 #' combination of regression coefficients (similar to Stata's "lincom"
-#' function). At this stage, only a single combination is calculated, and the
-#' combination must be specified as a numeric vector of weights -- future
-#' updates will extend this to allow multiple combinations and more flexible
-#' methods of specifying coefficient combinations (similar to \code{car}'s
-#' \code{linearHypothesis} function).
+#' function). At this stage the combination must be specified as a numeric
+#' vector (or matrix) of weights -- future updates will extend this to allow
+#' more flexible methods of specifying coefficient combinations (similar to
+#' \code{car}'s \code{linearHypothesis} function).
 #'
 #' @param model A regression model with \code{coef} and \code{vcov} methods.
 #' @param weights A numeric vector of coefficient weights to construct the
+#'     combination, or a matrix in which each row represents one such
 #'     combination. Each element specifies the weight applied to the
 #'     corresponding element of \code{attr(terms(model), "term.labels")}.
 #' @param vcov. (Optional) Either a function for estimating the covariance
@@ -29,8 +29,22 @@ lincom <- function(model, weights, vcov. = NULL) {
 
 	coefs <- coef(model)
 
-	b <- c(crossprod(weights, coefs))
-	var <- tcrossprod(crossprod(weights, vcov), weights)
+	b <- c(weights %*% coefs)
+	V <- weights %*% vcov %*% t(weights)
 
-	list(b = b, se = sqrt(diag(var)))
+	if (length(b) > 1) {
+		df.residual <- df.residual(model)
+    F.test <- Ftest(b, V, df.residual)
+    list(b = b, V = V, F.test = F.test)
+	} else {
+	  list(b = b, se = sqrt(diag(V)))
+	}
+}
+
+Ftest <- function(b, V, df.residual = Inf) {
+	df <- length(b)
+	F.stat <- (t(b) %*% solve(V) %*% b) / df
+	P <- pf(F.stat, df, df.residual, lower.tail = FALSE)
+
+	list(df.residual = df.residual, df = df, F.stat = F.stat, P = P)
 }

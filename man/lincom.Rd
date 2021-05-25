@@ -10,6 +10,7 @@ lincom(model, weights, vcov. = NULL)
 \item{model}{A regression model with \code{coef} and \code{vcov} methods.}
 
 \item{weights}{A numeric vector of coefficient weights to construct the
+combination, or a matrix in which each row represents one such
 combination. Each element specifies the weight applied to the
 corresponding element of \code{attr(terms(model), "term.labels")}.}
 
@@ -20,9 +21,8 @@ If not specified, the default \code{vcov} method is used.}
 \description{
 This function calculates the point estimate and standard error for a linear
 combination of regression coefficients (similar to Stata's "lincom"
-function). At this stage, only a single combination is calculated, and the
-combination must be specified as a numeric vector of weights -- future
-updates will extend this to allow multiple combinations and more flexible
-methods of specifying coefficient combinations (similar to \code{car}'s
-\code{linearHypothesis} function).
+function). At this stage the combination must be specified as a numeric
+vector (or matrix) of weights -- future updates will extend this to allow
+more flexible methods of specifying coefficient combinations (similar to
+\code{car}'s \code{linearHypothesis} function).
 }
