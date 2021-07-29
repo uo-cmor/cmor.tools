@@ -12,20 +12,19 @@
 #'     \code{\link[usethis]{create_package}} for details.
 #'
 #' @export
-use_research_project <- function(path, package, fields = NULL) {
+use_research_project <- function(path, package, fields = NULL, rstudio = rstudioapi::isAvailable(),
+																 open = rlang::is_interactive()) {
 	name <- basename(path)
-
-	if (package) check_package_name(name)
 
 	# Provide welcome message at first start?
 
-	# Create a new package/project
-	if (package) usethis::create_package(path = path, fields = fields, open = FALSE)
-	else {
-		usethis::create_project(path = path, open = FALSE)
-	}
+	# Create the new project
+	usethis::create_project(path = path, rstudio = rstudio, open = open)
 
-	#if(rstudioapi::isAvailable()) rstudioapi::navigateToFile("DESCRIPTION")
+	if (open & !rstudio) {
+		setwd(path)
+		usethis::ui_done("The working directory is now {getwd()}.")
+	}
 
 	invisible(TRUE)
 }

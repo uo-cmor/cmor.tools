@@ -4,7 +4,13 @@
 \alias{use_research_project}
 \title{Create an R package to hold a research project}
 \usage{
-use_research_project(path, package, fields = NULL)
+use_research_project(
+  path,
+  package,
+  fields = NULL,
+  rstudio = rstudioapi::isAvailable(),
+  open = rlang::is_interactive()
+)
 }
 \arguments{
 \item{path}{Path to the new package. The last component of the path will

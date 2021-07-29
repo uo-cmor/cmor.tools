@@ -27,6 +27,9 @@ git_ask_commit <- function(message, untracked = FALSE) {
 		git2r::add(repo, paths)
 		usethis::ui_done("Commit with message {usethis::ui_value(message)}")
 		git2r::commit(repo, message)
+		if (rstudioapi::hasFun("executeCommand")) {
+			rstudioapi::executeCommand("vcsRefresh")
+		}
 	}
 	invisible(NULL)
 }

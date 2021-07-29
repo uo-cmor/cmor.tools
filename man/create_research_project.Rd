@@ -6,23 +6,36 @@
 \usage{
 create_research_project(
   path,
-  title,
-  description = NULL,
-  package = FALSE,
-  license = NULL,
   workflow = "targets",
   git = TRUE,
   raw_data_in_git = TRUE,
-  data_in_git = FALSE,
-  output_in_git = FALSE,
   github = TRUE,
-  private = TRUE
+  private = TRUE,
+  organisation = NULL,
+  rstudio = rstudioapi::isAvailable(),
+  open = rlang::is_interactive()
 )
 }
 \arguments{
 \item{path}{Path to the new project. If `package = TRUE`, the last component
 of the path will be used as the package name, and must follow standard R
 package naming conventions.}
+
+\item{workflow}{Either \code{"drake"} or \code{"make"}, to create
+corresponding workflow template files.}
+
+\item{git}{Logical (default = \code{TRUE}). Whether to create a git
+repository.}
+
+\item{raw_data_in_git}{Logical (default = \code{TRUE}). If FALSE, data in the
+\code{data/raw_data/} directory will be excluded from the git repository.}
+
+\item{github}{Logical. If \code{TRUE} (the default), create a GitHub
+repository and push the initial commit to GitHub.}
+
+\item{private}{Logical. If \code{TRUE} (the default), a private GitHub
+repository will be created; otherwise, the repository will be publicly
+accessible. Ignored if \code{github = FALSE}.}
 
 \item{title}{Title of the research project (used for the DESCRIPTION file).}
 
@@ -34,15 +47,6 @@ be created as an R package.}
 
 \item{license}{The type of license to attach to the package. See details.}
 
-\item{workflow}{Either \code{"drake"} or \code{"make"}, to create
-corresponding workflow template files.}
-
-\item{git}{Logical (default = \code{TRUE}). Whether to create a git
-repository.}
-
-\item{raw_data_in_git}{Logical (default = \code{TRUE}). If FALSE, data in the
-\code{data/raw_data/} directory will be excluded from the git repository.}
-
 \item{data_in_git}{Logical. If \code{FALSE} (the default), data in the
 \code{data/} directory (but not the \code{data/raw_data/} subdirectory,
 unless \code{raw_data_in_git} is also set to \code{FALSE}) will be
@@ -50,13 +54,6 @@ excluded from the git repository.}
 
 \item{output_in_git}{Logical. If \code{FALSE} (the default), data in the
 \code{output/} directory will be excluded from the git repository.}
-
-\item{github}{Logical. If \code{TRUE} (the default), create a GitHub
-repository and push the initial commit to GitHub.}
-
-\item{private}{Logical. If \code{TRUE} (the default), a private GitHub
-repository will be created; otherwise, the repository will be publicly
-accessible. Ignored if \code{github = FALSE}.}
 }
 \description{
 These function creates an R project or package, adds a basic README,
