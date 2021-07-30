@@ -5,8 +5,8 @@
 #'     template files, and creates a git repository with an initial commit.
 #'
 #' @param path Path to the new project.
-#' @param workflow Either \code{"drake"} or \code{"make"}, to create
-#'     corresponding workflow template files.
+#' @param workflow Character string: \code{"targets"}, \code{"drake"} or
+#'     \code{"make"}, to create corresponding workflow template files.
 #' @param git Logical (default = \code{TRUE}). Whether to create a git
 #'     repository.
 #' @param raw_data_in_git Logical (default = \code{TRUE}). If FALSE, data in the
@@ -16,6 +16,12 @@
 #' @param private Logical. If \code{TRUE} (the default), a private GitHub
 #'     repository will be created; otherwise, the repository will be publicly
 #'     accessible. Ignored if \code{github = FALSE}.
+#' @param organisation (Optional) Passed to \code{usethis::use_github()} to
+#'     create the repo under this organisation instead of the login associated
+#'     with the discovered GitHub token.
+#' @param rstudio If \code{TRUE}, makes the new project into an Rtudio Project.
+#' @param open If \code{TRUE}, activates the new project in a new RStudio
+#'     session.
 #'
 #' @export
 create_research_project <- function(
@@ -55,8 +61,16 @@ create_research_project <- function(
 				paste0("cmor.tools::use_project_directory(package = FALSE, ",
 							 "git = ", git, ", raw_data_in_git = ", raw_data_in_git, ")"),
 				if (git) "cmor.tools:::use_git()",
-				if (github) paste0("if (usethis::ui_yeah('Is it OK to push these to GitHub?')) ",
-													 "usethis::use_github(private = ", private, ")"),
+				if (github) {
+					if (!is.null(organisation))
+						paste0("if (usethis::ui_yeah('Is it OK to push these to `",
+									 organisation, "` on GitHub?')) ",
+									 "usethis::use_github(private = ", private,
+									 ", organisation = '", organisation, "')")
+					else
+						paste0("if (usethis::ui_yeah('Is it OK to push these to GitHub?')) ",
+									 "usethis::use_github(private = ", private, ")")
+				},
 				paste0("data <- list(name = fs::path_file('", path, "'), github = ", github,
 							 ", is_package = FALSE)"),
 				if (github) c(
@@ -70,11 +84,22 @@ create_research_project <- function(
 				"cmor.tools::use_cmor_readme(data)",
 
 				## Welcome message
-				usethis::ui_line(),
+				"usethis::ui_line()",
 				paste0("usethis::ui_line(crayon::bold('This project was created by ",
 							 "`cmor.tools::create_research_project()`.'))"),
-				"usethis::ui_line('This welcome message describes the directory structure and workflow')",
-				"invisible(file.remove('.Rprofile'))"
+				paste0("usethis::ui_todo('Edit the README.Rmd file to provide an ",
+							 "introduction to the project')"),
+				paste0("usethis::ui_todo('Remember to render README.Rmd to README.md for ",
+							 "GitHub.')"),
+				paste0("usethis::ui_todo('Put code in `/R`, raw data in `/raw_data`, and ",
+							 "RMarkdown reports in `/reports`.')"),
+				if (workflow == "targets") c(
+					paste0("usethis::ui_todo('Use `_targets.R`, `_plan.R`, and `parameters.R` ",
+								 "to specify the analysis workflow.')"),
+					paste0("usethis::ui_info('(See https://books.ropensci.org/targets/ for more ",
+								 "information on the `targets` package.)')")
+				),
+				".Last <- function() invisible(fs::file_delete('.Rprofile'))"
 			),
 			fileConn
 		)

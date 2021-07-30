@@ -4,7 +4,8 @@ use_git <- function(message = "Initial commit") {
 	}
 	usethis::ui_done("Initialising Git repo")
 	git2r::init(usethis::proj_get())
-	usethis::use_git_ignore(c(".Rhistory", ".RData", ".Rproj.user"))
+	usethis::use_git_ignore(c(".Rhistory", ".RData", ".Rproj.user", ".Rprofile",
+														".httr-oauth", ".DS_Store"))
 	git_ask_commit(message, untracked = TRUE)
 	invisible(TRUE)
 }

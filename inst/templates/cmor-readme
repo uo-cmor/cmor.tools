@@ -10,7 +10,7 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.path = "README-"
 )
-# Please put your project details here to include them in the file below.
+# Put the project citation details here to include them in the file below.
 Title <- "Title of your paper goes here"
 Authors <- "Author list goes here"
 Year <- "Year of publication"
@@ -29,7 +29,7 @@ This repository contains work-in-progress. Please do not cite.
 
 <!-- Update and uncomment this section once the work is citable
 
-Please cite this compendium as:
+Please cite this work as:
 
 > `r Authors`, (`r Year`). _`r Title`_. `Journal`. <https://doi.org/`r DOI`>
 
