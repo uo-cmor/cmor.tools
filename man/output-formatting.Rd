@@ -7,18 +7,22 @@
 \alias{est_ci}
 \title{Results formatting for tables and reports}
 \usage{
-mean_sd(mean, sd, ...)
+mean_sd(mean, sd, ..., .glue = TRUE)
 
-n_percent(n, proportion, ...)
+n_percent(n, proportion, ..., .glue = TRUE)
 
-est_ci(est, low, high, sep = " to ", ...)
+est_ci(est, low, high, ..., .sep = " to ", .glue = TRUE)
 }
 \arguments{
 \item{mean, sd, n, proportion, est, low, high}{Numeric vectors}
 
 \item{...}{Passed to `number()`}
 
-\item{sep}{Separator between lower and upper bounds of the CI; default is \code{' to '}.}
+\item{.glue}{Logical. Should the ouput be \code{'glue'} vector
+(default=\code{TRUE}) or a regular character vector?}
+
+\item{.sep}{Separator between lower and upper bounds of the CI; default is
+\code{' to '}.}
 }
 \description{
 These functions are simple wrappers around `paste()` and `number()` to

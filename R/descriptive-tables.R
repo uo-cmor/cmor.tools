@@ -2,6 +2,9 @@
 ### Functions to create formatted descriptive tables for both continuous and discrete variables ###
 ###################################################################################################
 
+if (getRversion() >= "2.15.1")
+	utils::globalVariables(c(".mean", ".sd", ".n", ".proportion", "Patient characteristic"))
+
 #' Format descriptive statistics tables
 #'
 #' Construct nicely formatted descriptive statistics tables (mean/sd, n/percent).
@@ -25,7 +28,7 @@
 #'     the outcome values for continuous variables. Can refer to
 #'     mean/sd/min/lq/median/uq/max as `.mean`, `.sd`, etc, and the name of the
 #'     variable being formatted as `.variable`. Default is to report mean (SD)
-#'     to one decimanl place.
+#'     to one decimal place.
 #' @param value_discrete (optional) An expression describing how to format the
 #'     outcome values for discrete variables. Can refer to n/proportion as
 #'     `.n`, `.proportion`, and the name of the variable being formatted as
@@ -42,6 +45,15 @@ create_descriptive_table <- function(
 	value_continuous = mean_sd(.mean, .sd, accuracy = 0.1),
 	value_discrete = n_percent(.n, .proportion), total = !is.null(by)
 ) {
+	checkmate::assert_data_frame(df)
+	checkmate::assert_character(continuous, null.ok = TRUE)
+	checkmate::assert_character(discrete, null.ok = TRUE)
+	checkmate::assert_list(multiresponse, types = "character", null.ok = TRUE)
+	checkmate::assert_character(output)
+	checkmate::assert_string(by, null.ok = TRUE)
+	checkmate::assert(checkmate::assert_flag(total),
+										checkmate::assert_string(total))
+
 	value_continuous <- rlang::enquo(value_continuous)
 	value_discrete <- rlang::enquo(value_discrete)
 

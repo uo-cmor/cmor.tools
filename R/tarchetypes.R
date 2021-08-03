@@ -34,6 +34,12 @@ tar_render_manuscript <- function(name, path, output_file,
 																	retrieval = targets::tar_option_get("retrieval"),
 																	cue = targets::tar_option_get("cue"),
 																	quiet = TRUE) {
+	checkmate::assert_file_exists(path)
+	checkmate::assert_path_for_output(output_file, overwrite = TRUE)
+	checkmate::assert(checkmate::assert_null(pandoc_args),
+										checkmate::assert_list(pandoc_args, types = "character"),
+										checkmate::assert_character(pandoc_args))
+	checkmate::assert_list(render_args, types = "character", names = "strict", null.ok = TRUE)
 
 	file_reference_docx <- rlang::enexpr(file_reference_docx)
 	file_csl <- rlang::enexpr(file_csl)
@@ -44,7 +50,7 @@ tar_render_manuscript <- function(name, path, output_file,
 	render_arguments <- rlang::expr(c(
 		!!render_args,
 		list(
-			output_format = word_document(
+			output_format = rmarkdown::word_document(
 				pandoc_args = c(
 					!!pandoc_args,
 					if (!is.null(!!file_reference_docx))

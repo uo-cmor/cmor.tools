@@ -6,7 +6,7 @@
 #'     does not end with a period.
 #'
 #' @param pkgname A character string
-valid_package_name <- function (pkgname) {
+valid_package_name <- function(pkgname) {
 	grepl("^[a-zA-Z][a-zA-Z0-9.]+$", pkgname) && !grepl("\\.$", pkgname)
 }
 
@@ -21,10 +21,10 @@ check_package_name <- function(pkgname) {
 	if (!valid_package_name(pkgname))
 		usethis::ui_stop(
 			c("'{ui_value(pkgname)}' is not a valid package name. It should:",
-				"* Contain only ASCII letters, numbers, and '.'",
-				"* Have at least two characters",
-				"* Start with a letter",
-				"* Not end with '.'")
+				"{cli::symbol$bullet} Contain only ASCII letters, numbers, and '.'",
+				"{cli::symbol$bullet} Have at least two characters",
+				"{cli::symbol$bullet} Start with a letter",
+				"{cli::symbol$bullet} Not end with '.'")
 		)
 }
 

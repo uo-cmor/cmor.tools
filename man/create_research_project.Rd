@@ -17,12 +17,10 @@ create_research_project(
 )
 }
 \arguments{
-\item{path}{Path to the new project. If `package = TRUE`, the last component
-of the path will be used as the package name, and must follow standard R
-package naming conventions.}
+\item{path}{Path to the new project.}
 
-\item{workflow}{Either \code{"drake"} or \code{"make"}, to create
-corresponding workflow template files.}
+\item{workflow}{Character string: \code{"targets"}, \code{"drake"} or
+\code{"make"}, to create corresponding workflow template files.}
 
 \item{git}{Logical (default = \code{TRUE}). Whether to create a git
 repository.}
@@ -37,46 +35,17 @@ repository and push the initial commit to GitHub.}
 repository will be created; otherwise, the repository will be publicly
 accessible. Ignored if \code{github = FALSE}.}
 
-\item{title}{Title of the research project (used for the DESCRIPTION file).}
+\item{organisation}{(Optional) Passed to \code{usethis::use_github()} to
+create the repo under this organisation instead of the login associated
+with the discovered GitHub token.}
 
-\item{description}{Short description of the research project (used for the
-DESCRIPTION file).}
+\item{rstudio}{If \code{TRUE}, makes the new project into an Rtudio Project.}
 
-\item{package}{Logical (default = \code{FALSE}). Whether the project should
-be created as an R package.}
-
-\item{license}{The type of license to attach to the package. See details.}
-
-\item{data_in_git}{Logical. If \code{FALSE} (the default), data in the
-\code{data/} directory (but not the \code{data/raw_data/} subdirectory,
-unless \code{raw_data_in_git} is also set to \code{FALSE}) will be
-excluded from the git repository.}
-
-\item{output_in_git}{Logical. If \code{FALSE} (the default), data in the
-\code{output/} directory will be excluded from the git repository.}
+\item{open}{If \code{TRUE}, activates the new project in a new RStudio
+session.}
 }
 \description{
-These function creates an R project or package, adds a basic README,
+These function creates an R project, adds a basic README,
     initialises our standard research project directory structure and
     template files, and creates a git repository with an initial commit.
 }
-\section{License}{
-
-If \code{package = TRUE}, you can optionally set a license that will be
-    attached to the new package. This should be specified as a character
-    string or function from the following options:
-    \describe{
-      \item{\code{"proprietary"}}{This is the default license, to be used for
-      projects that are not intended to be shared publicly in their working
-      form}
-      \item{\code{"mit"}, \code{"gpl3"}, \code{"lgpl"}, "\code{"apl2"},
-      \code{"cc0"}, \code{"ccby"}}{Open source licenses; will use the
-      corresponding function from the
-      \code{\link[usethis:usethis-package]{usethis}} package,
-      e.g. \code{\link[usethis:licenses]{use_mit_license}}}
-      \item{A function}{Use the provided function to create and attach a
-      license}
-      \item{\code{NA}}{Do not attach any license}
-    }
-}
-

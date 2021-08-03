@@ -22,12 +22,13 @@
 #'
 #' @export
 lincom <- function(model, weights, vcov. = NULL) {
-	if (is.null(vcov.)) vcov <- vcov(model)
+	checkmate::assert(checkmate::assert_numeric(weights))
+	if (is.null(vcov.)) vcov <- stats::vcov(model)
 	else if (is.function(vcov.)) vcov <- vcov.(model)
 	else if (is.matrix(vcov.)) vcov <- vcov.
 	else stop("Invalid 'vcov.' argument")
 
-	coefs <- coef(model)
+	coefs <- stats::coef(model)
 
 	b <- c(weights %*% coefs)
 	V <- weights %*% vcov %*% t(weights)
@@ -44,7 +45,7 @@ lincom <- function(model, weights, vcov. = NULL) {
 Ftest <- function(b, V, df.residual = Inf) {
 	df <- length(b)
 	F.stat <- (t(b) %*% solve(V) %*% b) / df
-	P <- pf(F.stat, df, df.residual, lower.tail = FALSE)
+	P <- stats::pf(F.stat, df, df.residual, lower.tail = FALSE)
 
 	list(df.residual = df.residual, df = df, F.stat = F.stat, P = P)
 }

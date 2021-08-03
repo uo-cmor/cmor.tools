@@ -12,12 +12,24 @@
 #'
 #' @export
 render_manuscript <- function(rmd = NULL, out = NULL, reference_docx = NULL, csl = NULL, bib = NULL) {
+	checkmate::assert_string(rmd, null.ok = TRUE)
+	checkmate::assert_string(out, null.ok = TRUE)
+	checkmate::assert_string(reference_docx, null.ok = TRUE)
+	checkmate::assert_string(csl, null.ok = TRUE)
+	checkmate::assert_string(bib, null.ok = TRUE)
+
 	if (is_package()) prefix <- "inst/" else prefix <- ""
 	if (is.null(rmd)) rmd <- paste0(prefix, "reports/manuscript.Rmd")
 	if (is.null(out)) out <- paste0("output/", basename(rmd))
 	if (is.null(reference_docx)) reference_docx <- paste0(prefix, "reports/word-styles-reference-01.docx")
 	if (is.null(csl)) csl <- paste0(prefix, "reports/vancouver.csl")
 	if (is.null(bib)) bib <- paste0(prefix, "reports/references.bib")
+
+	checkmate::assert_file_exists(rmd)
+	checkmate::assert_path_for_output(out, overwrite = TRUE)
+	checkmate::assert_file_exists(reference_docx)
+	checkmate::assert_file_exists(csl)
+	checkmate::assert_file_exists(bib)
 
 	path <- rmarkdown::render(
 		rmd,
@@ -41,8 +53,11 @@ render_manuscript <- function(rmd = NULL, out = NULL, reference_docx = NULL, csl
 #'     format results for printing.
 #'
 #' @param mean,sd,n,proportion,est,low,high Numeric vectors
-#' @param sep Separator between lower and upper bounds of the CI; default is \code{' to '}.
 #' @param ... Passed to `number()`
+#' @param .sep Separator between lower and upper bounds of the CI; default is
+#'     \code{' to '}.
+#' @param .glue Logical. Should the ouput be \code{'glue'} vector
+#'     (default=\code{TRUE}) or a regular character vector?
 #'
 #' @name output-formatting
 NULL
@@ -50,22 +65,43 @@ NULL
 #' @rdname output-formatting
 #'
 #' @export
-mean_sd <- function(mean, sd, ...) {
-	paste0(number(mean, ...), ' (', number(sd, ...), ')')
+mean_sd <- function(mean, sd, ..., .glue = TRUE) {
+	checkmate::assert_numeric(mean)
+	checkmate::assert_numeric(sd)
+	checkmate::assert_flag(.glue)
+
+	if (.glue) glue::glue("{number(mean, ...)} ({number(sd, ...)})")
+	else paste0(number(mean, ...), ' (', number(sd, ...), ')')
 }
 
 #' @rdname output-formatting
 #'
 #' @export
-n_percent <- function(n, proportion, ...) {
-	paste0(number(n, accuracy = 1), ' (', number(proportion, scale = 100, suffix = '%', ...), ')')
+n_percent <- function(n, proportion, ..., .glue = TRUE) {
+	checkmate::assert_numeric(n)
+	checkmate::assert_numeric(proportion)
+	checkmate::assert_flag(.glue)
+
+	if (.glue) glue::glue("{number(n, accuracy = 1)} ",
+												"({number(proportion, scale = 100, suffix = '%', ...)})")
+	else paste0(number(n, accuracy = 1), ' (',
+							number(proportion, scale = 100, suffix = '%', ...), ')')
 }
 
 #' @rdname output-formatting
 #'
 #' @export
-est_ci <- function(est, low, high, sep = ' to ', ...) {
-	paste0(number(est, ...), ' (', number(low, ...), sep, number(high, ...), ')')
+est_ci <- function(est, low, high, ..., .sep = ' to ', .glue = TRUE) {
+	checkmate::assert_numeric(est)
+	checkmate::assert_numeric(low)
+	checkmate::assert_numeric(high)
+	checkmate::assert_string(.sep)
+	checkmate::assert_flag(.glue)
+
+	if (.glue) glue::glue("{number(est, ...)} ",
+												"({number(low, ...)}{.sep}{number(high, ...)})")
+	else paste0(number(est, ...),
+							' (', number(low, ...), .sep, number(high, ...), ')')
 }
 
 ###################################################################
@@ -90,6 +126,16 @@ NULL
 #' @export
 number <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
 									 big.mark = "< >", decimal.mark = ".", trim = TRUE, html = TRUE, ...) {
+	checkmate::assert_numeric(x)
+	checkmate::assert_number(accuracy)
+	checkmate::assert_number(scale)
+	checkmate::assert_string(prefix)
+	checkmate::assert_string(suffix)
+	checkmate::assert_string(big.mark)
+	checkmate::assert_string(decimal.mark)
+	checkmate::assert_flag(trim)
+	checkmate::assert_flag(html)
+
 	minus <- if (html) "&minus;" else "\u2212"
 	neg <- rep("", length(x))
 	neg[x < 0] <- minus
@@ -110,7 +156,16 @@ number <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
 #' @export
 number_format <- function(accuracy = 1, scale = 1, prefix = "", suffix = "",
 													big.mark = "< >", decimal.mark = ".", trim = TRUE, html = TRUE, ...) {
-	list(accuracy, scale, prefix, suffix, big.mark, decimal.mark, trim, html, ...)
+	checkmate::assert_number(accuracy)
+	checkmate::assert_number(scale)
+	checkmate::assert_string(prefix)
+	checkmate::assert_string(suffix)
+	checkmate::assert_string(big.mark)
+	checkmate::assert_string(decimal.mark)
+	checkmate::assert_flag(trim)
+	checkmate::assert_flag(html)
+
+	list(...)
 
 	function(x) number(x, accuracy = accuracy, scale = scale,
 										 prefix = prefix, suffix = suffix, big.mark = big.mark,
@@ -121,6 +176,16 @@ number_format <- function(accuracy = 1, scale = 1, prefix = "", suffix = "",
 #' @export
 percent <- function(x, accuracy = 1, scale = 100, prefix = "", suffix = "%",
 										big.mark = "< >", decimal.mark = ".", trim = TRUE, html = TRUE, ...) {
+	checkmate::assert_numeric(x)
+	checkmate::assert_number(accuracy)
+	checkmate::assert_number(scale)
+	checkmate::assert_string(prefix)
+	checkmate::assert_string(suffix)
+	checkmate::assert_string(big.mark)
+	checkmate::assert_string(decimal.mark)
+	checkmate::assert_flag(trim)
+	checkmate::assert_flag(html)
+
 	minus <- if (html) "&minus;" else "\u2212"
 	neg <- rep("", length(x))
 	neg[x < 0] <- minus
@@ -141,7 +206,16 @@ percent <- function(x, accuracy = 1, scale = 100, prefix = "", suffix = "%",
 #' @export
 percent_format <- function(accuracy = 1, scale = 100, prefix = "", suffix = "%",
 													 big.mark = "< >", decimal.mark = ".", trim = TRUE, html = TRUE, ...) {
-	list(accuracy, scale, prefix, suffix, big.mark, decimal.mark, trim, html, ...)
+	checkmate::assert_number(accuracy)
+	checkmate::assert_number(scale)
+	checkmate::assert_string(prefix)
+	checkmate::assert_string(suffix)
+	checkmate::assert_string(big.mark)
+	checkmate::assert_string(decimal.mark)
+	checkmate::assert_flag(trim)
+	checkmate::assert_flag(html)
+
+	list(...)
 
 	function(x) percent(x, accuracy = accuracy, scale = scale,
 											prefix = prefix, suffix = suffix, big.mark = big.mark,
@@ -152,6 +226,16 @@ percent_format <- function(accuracy = 1, scale = 100, prefix = "", suffix = "%",
 #' @export
 comma <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
 									big.mark = ",", decimal.mark = ".", trim = TRUE, html = TRUE, ...) {
+	checkmate::assert_numeric(x)
+	checkmate::assert_number(accuracy)
+	checkmate::assert_number(scale)
+	checkmate::assert_string(prefix)
+	checkmate::assert_string(suffix)
+	checkmate::assert_string(big.mark)
+	checkmate::assert_string(decimal.mark)
+	checkmate::assert_flag(trim)
+	checkmate::assert_flag(html)
+
 	minus <- if (html) "&minus;" else "\u2212"
 	neg <- rep("", length(x))
 	neg[x < 0] <- minus
@@ -167,7 +251,16 @@ comma <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
 #' @export
 comma_format <- function(accuracy = 1, scale = 1, prefix = "", suffix = "",
 												 big.mark = ",", decimal.mark = ".", trim = TRUE, html = TRUE, ...) {
-	list(accuracy, scale, prefix, suffix, big.mark, decimal.mark, trim, html, ...)
+	checkmate::assert_number(accuracy)
+	checkmate::assert_number(scale)
+	checkmate::assert_string(prefix)
+	checkmate::assert_string(suffix)
+	checkmate::assert_string(big.mark)
+	checkmate::assert_string(decimal.mark)
+	checkmate::assert_flag(trim)
+	checkmate::assert_flag(html)
+
+	list(...)
 
 	function(x) comma(x, accuracy = accuracy, scale = scale,
 										prefix = prefix, suffix = suffix, big.mark = big.mark,

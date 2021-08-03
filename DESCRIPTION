@@ -27,7 +27,14 @@ Imports:
     dplyr,
     rmarkdown,
     scales,
-    stringi
+    stringi,
+    magrittr,
+    rlang,
+    glue,
+    stats,
+    checkmate,
+    cli,
+    crayon
 Suggests: 
     targets,
     tarchetypes,
@@ -43,6 +50,3 @@ Suggests:
     forcats,
     tibble,
     knitr
-Depends: 
-    magrittr,
-    rlang

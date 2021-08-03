@@ -41,7 +41,7 @@ the sample. Default is to report for the entire sample.}
 the outcome values for continuous variables. Can refer to
 mean/sd/min/lq/median/uq/max as `.mean`, `.sd`, etc, and the name of the
 variable being formatted as `.variable`. Default is to report mean (SD)
-to one decimanl place.}
+to one decimal place.}
 
 \item{value_discrete}{(optional) An expression describing how to format the
 outcome values for discrete variables. Can refer to n/proportion as

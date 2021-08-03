@@ -16,11 +16,8 @@
 #'
 #' @export
 sf6d_profile <- function(..., version = 2, dimension = "list") {
-	if (length(version) != 1 || !(version %in% c(1L, 2L))) stop ("'version' must be 1 or 2")
-	if (length(dimension) != 1 || !(dimension %in% c("list", "PF", "RL", "SF", "PAIN", "MH", "VIT"))) stop(
-		paste0("'dimension' must be 'list' (return all SF-6D dimensions in a list) or one of the SF-6D dimension names ",
-					 "('PF', 'RL', 'SF', 'PAIN', 'MH', 'VIT')")
-	)
+	checkmate::assert_choice(version, 1:2)
+	checkmate::assert_choice(dimension, c("list", "PF", "RL", "SF", "PAIN", "MH", "VIT"))
 
 	sf12_vars <- check_sf12(..., version = version)
 
@@ -56,7 +53,21 @@ sf6d_profile <- function(..., version = 2, dimension = "list") {
 #'
 #' @export
 sf6d_utility <- function(PF, RL, SF, PAIN, MH, VIT, values = "uk") {
-	if (values != "uk") stop ("Only the original Brazier and Roberts (2004) value set is currently implemented")
+	checkmate::assert_integerish(PF, lower = 1, upper = 3)
+	checkmate::assert_integerish(RL, lower = 1, upper = 4)
+	checkmate::assert_integerish(SF, lower = 1, upper = 5)
+	checkmate::assert_integerish(PAIN, lower = 1, upper = 5)
+	checkmate::assert_integerish(MH, lower = 1, upper = 5)
+	checkmate::assert_integerish(VIT, lower = 1, upper = 5)
+	if (!checkmate::test_choice(values, "uk")) {
+		usethis::ui_stop(c(
+			"{usethis::ui_code('values')} must be {usethis::ui_value('uk')}.",
+			glue::glue("{crayon::yellow(cli::symbol$info)} Only the original Brazier ",
+								 "and Roberts (2004) value set is currently implemented."),
+			glue::glue("{crayon::red(cli::symbol$cross)} You've supplied ",
+								 "{usethis::ui_value(values)}.")
+		))
+	}
 
 	1 - (
 		dplyr::recode(PF, 0, 0, 0.045) +
