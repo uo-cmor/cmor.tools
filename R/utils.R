@@ -9,9 +9,15 @@ check_args <- function(...) {
 	vars <- list(...)
 	if (is.null(names(vars))) nm <- paste0("V", 1:(...length()))
 	else nm <- dplyr::coalesce(names(vars), paste0("V", 1:(...length())))
-	miss <- vapply(list(...), is.null, TRUE)
-	if (sum(!miss) == 0) stop(paste0("No non-missing values provided for {", paste(nm, collapse = ", "), "}"))
-	if (sum(!miss) > 1) stop(paste0("More than one value provided for {", paste(nm, collapse = ", "), "}"))
+	miss <- purrr::map_lgl(vars, is.null)
+	if (sum(!miss) == 0)
+		usethis::ui_stop(glue::glue("One of {glue::glue_collapse(usethis::ui_code(nm), ",
+																"sep = ', ', last = ', or ')} must be provided."))
+	if (sum(!miss) > 1) {
+		nm_dup <- nm[!miss]
+		usethis::ui_stop(glue::glue("Only one of {glue::glue_collapse(usethis::ui_code(nm_dup), ",
+																"sep = ', ', last = ', or ')} should be provided."))
+	}
 
 	vars[!miss][[1]]
 }

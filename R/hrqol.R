@@ -19,7 +19,7 @@ sf6d_profile <- function(..., version = 2, dimension = "list") {
 	checkmate::assert_choice(version, 1:2)
 	checkmate::assert_choice(dimension, c("list", "PF", "RL", "SF", "PAIN", "MH", "VIT"))
 
-	sf12_vars <- check_sf12(..., version = version)
+	sf12_vars <- check_sf12(list(...), version = version)
 
 	if (dimension == "PF") return(4 - sf12_vars$Q2)
 	if (dimension == "RL") {
@@ -100,7 +100,7 @@ sf12_scores <- function(..., version = 2, dimension = "list") {
 		paste0("'dimension' must be one of 'list' (return both PCS and MCS values in a list), 'PCS', or 'MCS'")
 	)
 
-	sf12_vars <- check_sf12(..., version = version)
+	sf12_vars <- check_sf12(list(...), version = version)
 
 	if (version == 1) stop("Only version 2 scoring is implemented at this stage")
 
@@ -141,22 +141,22 @@ sf12_scores <- function(..., version = 2, dimension = "list") {
 	}
 }
 
-check_sf12 <- function(..., version = 2) {
-	sf12_vars <- list(...)
+check_sf12 <- function(sf12_vars, version = 2) {
+	checkmate::assert_choice(version, 1:2)
+	checkmate::assert_named(sf12_vars)
 
-	if (length(version) != 1 || !(version %in% c(1L, 2L))) stop("'version' must be 1 or 2")
-
-	if (
-		all((c("Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10", "Q11", "Q12") %in% names(sf12_vars)) |
-				(c("q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8", "q9", "q10", "q11", "q12") %in% names(sf12_vars)))
-	) {
-		if (
-			all((c("Q2a", "Q2b", "Q3a", "Q3b", "Q4a", "Q4b", "Q6a", "Q6b", "Q6c") %in% names(sf12_vars)) |
-					(c("q2a", "q2b", "q3a", "q3b", "q4a", "q4b", "q6a", "q6b", "q6c") %in% names(sf12_vars)) |
-					(c("Q2A", "Q2B", "Q3A", "Q3B", "Q4A", "Q4B", "Q6A", "Q6B", "Q6C") %in% names(sf12_vars)) |
-					(c("q2A", "q2B", "q3A", "q3B", "q4A", "q4B", "q6A", "q6B", "q6C") %in% names(sf12_vars)))
-		)
-			warning("Both {Q1, Q2, ..., Q12} and {Q1, Q2a, ..., Q7} question numbers provided; using {Q1, Q2, ..., Q12}.")
+	names_pattern <- paste0("^(", paste0(names(sf12_vars), collapse = "|"), ")$")
+	qnums <- stringr::str_detect(paste0("q", 1:12), stringr::regex(names_pattern, ignore_case = TRUE))
+	qchrs <- stringr::str_detect(
+		c("q1", "q2a", "q2b", "q3a", "q3b", "q4a", "q4b", "q5", "q6a", "q6b", "q6c", "q7"),
+		stringr::regex(names_pattern, ignore_case = TRUE)
+	)
+	if (all(qnums)) {
+		if (all(qchrs)) usethis::ui_stop(glue::glue(
+			"Either {{usethis::ui_code(c('Q1', 'Q2'))}}, ..., {{usethis::ui_code('Q12')}} or ",
+			"{{usethis::ui_code(c('Q1', 'Q2a'))}}, ..., {{usethis::ui_code('Q7')}} should be provided, ",
+			"not both."
+		))
 		Q1 <- check_args(Q1 = sf12_vars$Q1, q1 = sf12_vars$q1)
 		Q2 <- check_args(Q2 = sf12_vars$Q2, q2 = sf12_vars$q2)
 		Q3 <- check_args(Q3 = sf12_vars$Q3, q3 = sf12_vars$q3)
@@ -169,158 +169,100 @@ check_sf12 <- function(..., version = 2) {
 		Q10 <- check_args(Q10 = sf12_vars$Q10, q10 = sf12_vars$q10)
 		Q11 <- check_args(Q11 = sf12_vars$Q11, q11 = sf12_vars$q11)
 		Q12 <- check_args(Q12 = sf12_vars$Q12, q12 = sf12_vars$q12)
-	} else if (
-		all((c("Q1", "Q2a", "Q2b", "Q3a", "Q3b", "Q4a", "Q4b", "Q5", "Q6a", "Q6b", "Q6c", "Q7") %in% names(sf12_vars)) |
-				(c("q1", "q2a", "q2b", "q3a", "q3b", "q4a", "q4b", "q5", "q6a", "q6b", "q6c", "q7") %in% names(sf12_vars)) |
-				(c("Q1", "Q2A", "Q2B", "Q3A", "Q3B", "Q4A", "Q4B", "Q5", "Q6A", "Q6B", "Q6C", "Q7") %in% names(sf12_vars)) |
-				(c("q1", "q2A", "q2B", "q3A", "q3B", "q4A", "q4B", "q5", "q6A", "q6B", "q6C", "q7") %in% names(sf12_vars)))
-	) {
+	} else if (all(qchrs)) {
 		Q1 <- check_args(Q1 = sf12_vars$Q1, q1 = sf12_vars$q1)
-		Q2 <- check_args(Q2a = sf12_vars$Q2a, q2a = sf12_vars$q2a, Q2A = sf12_vars$Q2A, q2A = sf12_vars$q2A)
-		Q3 <- check_args(Q2b = sf12_vars$Q2b, q2b = sf12_vars$q2b, Q2B = sf12_vars$Q2B, q2B = sf12_vars$q2B)
-		Q4 <- check_args(Q3a = sf12_vars$Q3a, q3a = sf12_vars$q3a, Q3A = sf12_vars$Q3A, q3A = sf12_vars$q3A)
-		Q5 <- check_args(Q3b = sf12_vars$Q3b, q3b = sf12_vars$q3b, Q3B = sf12_vars$Q3B, q3B = sf12_vars$q3B)
-		Q6 <- check_args(Q4a = sf12_vars$Q4a, q4a = sf12_vars$q4a, Q4A = sf12_vars$Q4A, q4A = sf12_vars$q4A)
-		Q7 <- check_args(Q4b = sf12_vars$Q4b, q4b = sf12_vars$q4b, Q4B = sf12_vars$Q4B, q4B = sf12_vars$q4B)
+		Q2 <- check_args(Q2a = sf12_vars$Q2a, q2a = sf12_vars$q2a, Q2A = sf12_vars$Q2A,
+										 q2A = sf12_vars$q2A)
+		Q3 <- check_args(Q2b = sf12_vars$Q2b, q2b = sf12_vars$q2b, Q2B = sf12_vars$Q2B,
+										 q2B = sf12_vars$q2B)
+		Q4 <- check_args(Q3a = sf12_vars$Q3a, q3a = sf12_vars$q3a, Q3A = sf12_vars$Q3A,
+										 q3A = sf12_vars$q3A)
+		Q5 <- check_args(Q3b = sf12_vars$Q3b, q3b = sf12_vars$q3b, Q3B = sf12_vars$Q3B,
+										 q3B = sf12_vars$q3B)
+		Q6 <- check_args(Q4a = sf12_vars$Q4a, q4a = sf12_vars$q4a, Q4A = sf12_vars$Q4A,
+										 q4A = sf12_vars$q4A)
+		Q7 <- check_args(Q4b = sf12_vars$Q4b, q4b = sf12_vars$q4b, Q4B = sf12_vars$Q4B,
+										 q4B = sf12_vars$q4B)
 		Q8 <- check_args(Q5 = sf12_vars$Q5, q5 = sf12_vars$q5)
-		Q9 <- check_args(Q6a = sf12_vars$Q6a, q6a = sf12_vars$q6a, Q6A = sf12_vars$Q6A, q6A = sf12_vars$q6A)
-		Q10 <- check_args(Q6b = sf12_vars$Q6b, q6b = sf12_vars$q6b, Q6B = sf12_vars$Q6B, q6B = sf12_vars$q6B)
-		Q11 <- check_args(Q6c = sf12_vars$Q6c, q6c = sf12_vars$q6c, Q6C = sf12_vars$Q6C, q6C = sf12_vars$q6C)
+		Q9 <- check_args(Q6a = sf12_vars$Q6a, q6a = sf12_vars$q6a, Q6A = sf12_vars$Q6A,
+										 q6A = sf12_vars$q6A)
+		Q10 <- check_args(Q6b = sf12_vars$Q6b, q6b = sf12_vars$q6b, Q6B = sf12_vars$Q6B,
+											q6B = sf12_vars$q6B)
+		Q11 <- check_args(Q6c = sf12_vars$Q6c, q6c = sf12_vars$q6c, Q6C = sf12_vars$Q6C,
+											q6C = sf12_vars$q6C)
 		Q12 <- check_args(Q7 = sf12_vars$Q7, q7 = sf12_vars$q7)
-	} else {
-		stop("Invalid SF-12 question numbers.")
-	}
+	} else usethis::ui_stop("Invalid SF-12 question numbers.")
 
-	num <- vapply(list(Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9, Q10, Q11, Q12), is.numeric, TRUE)
-	if (num[[1]]) if (!all(Q1[!is.na(Q1)] %in% c(1L, 2L, 3L, 4L, 5L))) stop("Numeric Q1 values must be in {1, 2, 3, 4, 5}.")
-	if (num[[2]]) if (!all(Q2[!is.na(Q2)] %in% c(1L, 2L, 3L))) stop("Numeric Q2 values must be in {1, 2, 3}.")
-	if (num[[3]]) if (!all(Q3[!is.na(Q3)] %in% c(1L, 2L, 3L))) stop("Numeric Q3 values must be in {1, 2, 3}.")
-	if (num[[4]]) {
-		if (version == 2) if (!all(Q4[!is.na(Q4)] %in% c(1L, 2L, 3L, 4L, 5L))) stop("Numeric Q4 values must be in {1, 2, 3, 4, 5}.")
-		if (version == 1) if (!all(Q4[!is.na(Q4)] %in% c(1L, 2L))) stop("Numeric Q4 values must be in {1, 2}.")
-	}
-	if (num[[5]]) {
-		if (version == 2) if (!all(Q5[!is.na(Q5)] %in% c(1L, 2L, 3L, 4L, 5L))) stop("Numeric Q5 values must be in {1, 2, 3, 4, 5}.")
-		if (version == 1) if (!all(Q5[!is.na(Q5)] %in% c(1L, 2L))) stop("Numeric Q5 values must be in {1, 2}.")
-	}
-	if (num[[6]]) {
-		if (version == 2) if (!all(Q6[!is.na(Q6)] %in% c(1L, 2L, 3L, 4L, 5L))) stop("Numeric Q6 values must be in {1, 2, 3, 4, 5}.")
-		if (version == 1) if (!all(Q6[!is.na(Q6)] %in% c(1L, 2L))) stop("Numeric Q6 values must be in {1, 2}.")
-	}
-	if (num[[7]]) {
-		if (version == 2) if (!all(Q7[!is.na(Q7)] %in% c(1L, 2L, 3L, 4L, 5L))) stop("Numeric Q7 values must be in {1, 2, 3, 4, 5}.")
-		if (version == 1) if (!all(Q7[!is.na(Q7)] %in% c(1L, 2L))) stop("Numeric Q7 values must be in {1, 2}.")
-	}
-	if (num[[8]]) if (!all(Q8[!is.na(Q8)] %in% c(1L, 2L, 3L, 4L, 5L))) stop("Numeric Q8 values must be in {1, 2, 3, 4, 5}.")
-	if (num[[9]]) {
-		if (version == 2) if (!all(Q9[!is.na(Q9)] %in% c(1L, 2L, 3L, 4L, 5L))) stop("Numeric Q9 values must be in {1, 2, 3, 4, 5}.")
-		if (version == 1) if (!all(Q9[!is.na(Q9)] %in% c(1L, 2L, 3L, 4L, 5L, 6L))) stop("Numeric Q9 values must be in {1, 2, 3, 4, 5, 6}.")
-	}
-	if (num[[10]]) {
-		if (version == 2) if (!all(Q10[!is.na(Q10)] %in% c(1L, 2L, 3L, 4L, 5L))) stop("Numeric Q10 values must be in {1, 2, 3, 4, 5}.")
-		if (version == 1) if (!all(Q10[!is.na(Q10)] %in% c(1L, 2L, 3L, 4L, 5L, 6L))) stop("Numeric Q10 values must be in {1, 2, 3, 4, 5, 6}.")
-	}
-	if (num[[11]]) {
-		if (version == 2) if (!all(Q11[!is.na(Q11)] %in% c(1L, 2L, 3L, 4L, 5L))) stop("Numeric Q11 values must be in {1, 2, 3, 4, 5}.")
-		if (version == 1) if (!all(Q11[!is.na(Q11)] %in% c(1L, 2L, 3L, 4L, 5L, 6L))) stop("Numeric Q11 values must be in {1, 2, 3, 4, 5, 6}.")
-	}
-	if (num[[12]]) {
-		if (version == 2) if (!all(Q12[!is.na(Q12)] %in% c(1L, 2L, 3L, 4L, 5L))) stop("Numeric Q12 values must be in {1, 2, 3, 4, 5}.")
-		if (version == 1) if (!all(Q12[!is.na(Q12)] %in% c(1L, 2L, 3L, 4L, 5L, 6L))) stop("Numeric Q12 values must be in {1, 2, 3, 4, 5, 6}.")
-	}
-	if (any(num)) usethis::ui_info("Numeric SF-12 values provided. Please ensure these are coded with the correct ordering.")
+	vnums <- purrr::map_lgl(list(Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9, Q10, Q11, Q12), is.numeric)
+	vchrs <- purrr::map_lgl(list(Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9, Q10, Q11, Q12), is.character)
+	if (any(vnums) && any(vchrs)) usethis::ui_stop(
+		"SF-12 question responses must be coded as either numeric or character, not a combination."
+	)
+	if (all(vnums)) {
+		out <- test_sf12_response_values(list(Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9, Q10, Q11, Q12),
+																		 format = "numeric", version = version)
+		usethis::ui_info(glue::glue("Numeric SF-12 values provided. Please ensure these are coded ",
+																"with the correct ordering."))
+	} else if (all(vchrs)) {
+		out <- test_sf12_response_values(list(Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9, Q10, Q11, Q12),
+																		 format = "character", version = version)
+	} else usethis::ui_stop("Invalid SF-12 question responses.")
 
-	char <- vapply(list(Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9, Q10, Q11, Q12), is.character, TRUE)
-	if (any(char)) label <- switch(
-		version,
-		list(
-			Q1 = c("Excellent", "Very good", "Good", "Fair", "Poor"),
-			Q2 = c("Yes, limited a lot", "Yes, limited a little", "No, not limited at all"),
-			Q3 = c("Yes, limited a lot", "Yes, limited a little", "No, not limited at all"),
-			Q4 = c("Yes", "No"),
-			Q5 = c("Yes", "No"),
-			Q6 = c("Yes", "No"),
-			Q7 = c("Yes", "No"),
-			Q8 = c("Not at all", "A little bit", "Moderately", "Quite a bit", "Extremely"),
-			Q9 = c("All of the time", "Most of the time", "A good bit of the time", "Some of the time", "A little of the time", "None of the time"),
-			Q10 = c("All of the time", "Most of the time", "A good bit of the time", "Some of the time", "A little of the time", "None of the time"),
-			Q11 = c("All of the time", "Most of the time", "A good bit of the time", "Some of the time", "A little of the time", "None of the time"),
-			Q12 = c("All of the time", "Most of the time", "A good bit of the time", "Some of the time", "A little of the time", "None of the time")
+	out
+}
+
+test_sf12_response_values <- function(questions, format, version = 2) {
+	valid_values <- sf12_response_options(format, version)
+	for (q in seq_along(questions)) {
+		if (!all(questions[[q]][!is.na(questions[[q]])] %in% valid_values[[q]]))
+			usethis::ui_stop("All {format} Q{q} values must be one of {{{glue::glue_collapse(valid_values[q], sep = ', ')}}}.")
+	  questions[[q]] <- switch(
+	  	format,
+	  	numeric = as.integer(questions[[q]]),
+	  	character = as.integer(factor(questions[[q]], levels = valid_values[[q]]))
+	  )
+	}
+	rlang::set_names(questions, paste0("Q", 1:12))
+}
+
+sf12_response_options <- function(format, version = 2) {
+	switch(
+		format,
+		numeric = switch(
+			version,
+			rep(list(1:5, 1:3, 1:2, 1:5, 1:6), c(1, 2, 4, 1, 4)),
+			rep(list(1:5, 1:3, 1:5), c(1, 2, 9))
 		),
-		list(
-			Q1 = c("Excellent", "Very good", "Good", "Fair", "Poor"),
-			Q2 = c("Yes, limited a lot", "Yes, limited a little", "No, not limited at all"),
-			Q3 = c("Yes, limited a lot", "Yes, limited a little", "No, not limited at all"),
-			Q4 = c("All of the time", "Most of the time", "Some of the time", "A little of the time", "None of the time"),
-			Q5 = c("All of the time", "Most of the time", "Some of the time", "A little of the time", "None of the time"),
-			Q6 = c("All of the time", "Most of the time", "Some of the time", "A little of the time", "None of the time"),
-			Q7 = c("All of the time", "Most of the time", "Some of the time", "A little of the time", "None of the time"),
-			Q8 = c("Not at all", "A little bit", "Moderately", "Quite a bit", "Extremely"),
-			Q9 = c("All of the time", "Most of the time", "Some of the time", "A little of the time", "None of the time"),
-			Q10 = c("All of the time", "Most of the time", "Some of the time", "A little of the time", "None of the time"),
-			Q11 = c("All of the time", "Most of the time", "Some of the time", "A little of the time", "None of the time"),
-			Q12 = c("All of the time", "Most of the time", "Some of the time", "A little of the time", "None of the time")
+		character = switch(
+			version,
+			list(
+				Q1 = c("Excellent", "Very good", "Good", "Fair", "Poor"),
+				Q2 = c("Yes, limited a lot", "Yes, limited a little", "No, not limited at all"),
+				Q3 = c("Yes, limited a lot", "Yes, limited a little", "No, not limited at all"),
+				Q4 = c("Yes", "No"),
+				Q5 = c("Yes", "No"),
+				Q6 = c("Yes", "No"),
+				Q7 = c("Yes", "No"),
+				Q8 = c("Not at all", "A little bit", "Moderately", "Quite a bit", "Extremely"),
+				Q9 = c("All of the time", "Most of the time", "A good bit of the time", "Some of the time", "A little of the time", "None of the time"),
+				Q10 = c("All of the time", "Most of the time", "A good bit of the time", "Some of the time", "A little of the time", "None of the time"),
+				Q11 = c("All of the time", "Most of the time", "A good bit of the time", "Some of the time", "A little of the time", "None of the time"),
+				Q12 = c("All of the time", "Most of the time", "A good bit of the time", "Some of the time", "A little of the time", "None of the time")
+			),
+			list(
+				Q1 = c("Excellent", "Very good", "Good", "Fair", "Poor"),
+				Q2 = c("Yes, limited a lot", "Yes, limited a little", "No, not limited at all"),
+				Q3 = c("Yes, limited a lot", "Yes, limited a little", "No, not limited at all"),
+				Q4 = c("All of the time", "Most of the time", "Some of the time", "A little of the time", "None of the time"),
+				Q5 = c("All of the time", "Most of the time", "Some of the time", "A little of the time", "None of the time"),
+				Q6 = c("All of the time", "Most of the time", "Some of the time", "A little of the time", "None of the time"),
+				Q7 = c("All of the time", "Most of the time", "Some of the time", "A little of the time", "None of the time"),
+				Q8 = c("Not at all", "A little bit", "Moderately", "Quite a bit", "Extremely"),
+				Q9 = c("All of the time", "Most of the time", "Some of the time", "A little of the time", "None of the time"),
+				Q10 = c("All of the time", "Most of the time", "Some of the time", "A little of the time", "None of the time"),
+				Q11 = c("All of the time", "Most of the time", "Some of the time", "A little of the time", "None of the time"),
+				Q12 = c("All of the time", "Most of the time", "Some of the time", "A little of the time", "None of the time")
+			)
 		)
 	)
-	if (char[[1]]) {
-		if (!all(Q1[!is.na(Q1)] %in% label$Q1)) stop(paste0("All Q1 values must be in {'", paste(label$Q1, collapse = "', '"), "'}."))
-		Q1 <- as.integer(factor(Q1, levels = label$Q1))
-	}
-	if (char[[2]]) {
-		if (!all(Q2[!is.na(Q2)] %in% label$Q2)) stop(paste0("All Q2 values must be in {'", paste(label$Q2, collapse = "', '"), "'}."))
-		Q2 <- as.integer(factor(Q2, levels = label$Q2))
-	}
-	if (char[[3]]) {
-		if (!all(Q3[!is.na(Q3)] %in% label$Q3)) stop(paste0("All Q3 values must be in {'", paste(label$Q3, collapse = "', '"), "'}."))
-		Q3 <- as.integer(factor(Q3, levels = label$Q3))
-	}
-	if (char[[4]]) {
-		if (!all(Q4[!is.na(Q4)] %in% label$Q4)) stop(paste0("All Q4 values must be in {'", paste(label$Q4, collapse = "', '"), "'}."))
-		Q4 <- as.integer(factor(Q4, levels = label$Q4))
-	}
-	if (char[[5]]) {
-		if (!all(Q5[!is.na(Q5)] %in% label$Q5)) stop(paste0("All Q5 values must be in {'", paste(label$Q5, collapse = "', '"), "'}."))
-		Q5 <- as.integer(factor(Q5, levels = label$Q5))
-	}
-	if (char[[6]]) {
-		if (!all(Q6[!is.na(Q6)] %in% label$Q6)) stop(paste0("All Q6 values must be in {'", paste(label$Q6, collapse = "', '"), "'}."))
-		Q6 <- as.integer(factor(Q6, levels = label$Q6))
-	}
-	if (char[[7]]) {
-		if (!all(Q7[!is.na(Q7)] %in% label$Q7)) stop(paste0("All Q7 values must be in {'", paste(label$Q7, collapse = "', '"), "'}."))
-		Q7 <- as.integer(factor(Q7, levels = label$Q7))
-	}
-	if (char[[8]]) {
-		if (!all(Q8[!is.na(Q8)] %in% label$Q8)) stop(paste0("All Q8 values must be in {'", paste(label$Q8, collapse = "', '"), "'}."))
-		Q8 <- as.integer(factor(Q8, levels = label$Q8))
-	}
-	if (char[[9]]) {
-		if (!all(Q9[!is.na(Q9)] %in% label$Q9)) stop(paste0("All Q9 values must be in {'", paste(label$Q9, collapse = "', '"), "'}."))
-		Q9 <- as.integer(factor(Q9, levels = label$Q9))
-	}
-	if (char[[10]]) {
-		if (!all(Q10[!is.na(Q10)] %in% label$Q10)) stop(paste0("All Q10 values must be in {'", paste(label$Q10, collapse = "', '"), "'}."))
-		Q10 <- as.integer(factor(Q10, levels = label$Q10))
-	}
-	if (char[[11]]) {
-		if (!all(Q11[!is.na(Q11)] %in% label$Q11)) stop(paste0("All Q11 values must be in {'", paste(label$Q11, collapse = "', '"), "'}."))
-		Q11 <- as.integer(factor(Q11, levels = label$Q11))
-	}
-	if (char[[12]]) {
-		if (!all(Q12[!is.na(Q12)] %in% label$Q12)) stop(paste0("All Q12 values must be in {'", paste(label$Q12, collapse = "', '"), "'}."))
-		Q12 <- as.integer(factor(Q12, levels = label$Q12))
-	}
-
-	list(Q1 = as.integer(Q1),
-			 Q2 = as.integer(Q2),
-			 Q3 = as.integer(Q3),
-			 Q4 = as.integer(Q4),
-			 Q5 = as.integer(Q5),
-			 Q6 = as.integer(Q6),
-			 Q7 = as.integer(Q7),
-			 Q8 = as.integer(Q8),
-			 Q9 = as.integer(Q9),
-			 Q10 = as.integer(Q10),
-			 Q11 = as.integer(Q11),
-			 Q12 = as.integer(Q12))
 }

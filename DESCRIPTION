@@ -34,14 +34,14 @@ Imports:
     stats,
     checkmate,
     cli,
-    crayon
+    crayon,
+    stringr
 Suggests: 
     targets,
     tarchetypes,
     drake,
     readxl,
     plyr,
-    stringr,
     purrr,
     R.utils,
     tidyr,
