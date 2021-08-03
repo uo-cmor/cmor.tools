@@ -36,9 +36,9 @@ tar_render_manuscript <- function(name, path, output_file,
 																	quiet = TRUE) {
 	checkmate::assert_file_exists(path)
 	checkmate::assert_path_for_output(output_file, overwrite = TRUE)
-	checkmate::assert(checkmate::assert_null(pandoc_args),
-										checkmate::assert_list(pandoc_args, types = "character"),
-										checkmate::assert_character(pandoc_args))
+	checkmate::assert(checkmate::check_null(pandoc_args),
+										checkmate::check_list(pandoc_args, types = "character"),
+										checkmate::check_character(pandoc_args))
 	checkmate::assert_list(render_args, types = "character", names = "strict", null.ok = TRUE)
 
 	file_reference_docx <- rlang::enexpr(file_reference_docx)

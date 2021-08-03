@@ -51,8 +51,8 @@ create_descriptive_table <- function(
 	checkmate::assert_list(multiresponse, types = "character", null.ok = TRUE)
 	checkmate::assert_character(output)
 	checkmate::assert_string(by, null.ok = TRUE)
-	checkmate::assert(checkmate::assert_flag(total),
-										checkmate::assert_string(total))
+	checkmate::assert(checkmate::check_flag(total),
+										checkmate::check_string(total))
 
 	value_continuous <- rlang::enquo(value_continuous)
 	value_discrete <- rlang::enquo(value_discrete)
