@@ -49,4 +49,6 @@ Suggests:
     ggplot2,
     forcats,
     tibble,
-    knitr
+    knitr,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
