@@ -41,7 +41,7 @@ uq <- function(x, ...) quantile(x, probs = 0.75, ...)
 #'
 #' @export
 calculate_ci <- function(conf.level = 0.95) {
-	stopifnot(is.numeric(conf.level), length(conf.level) == 1, conf.level > 0 & conf.level < 1)
+	checkmate::assert_number(conf.level, lower = 0, upper = 1)
 
 	c((1 - conf.level) / 2, 1 - (1 - conf.level) / 2)
 }
@@ -54,6 +54,7 @@ calculate_ci <- function(conf.level = 0.95) {
 #'
 #' @export
 has_names <- function(x) {
+	checkmate::assert_vector(x, null.ok = TRUE)
 	nms <- names(x)
 	if (rlang::is_null(nms)) return(FALSE)
 	if (all(nms == "" | is.na(nms))) return(FALSE)

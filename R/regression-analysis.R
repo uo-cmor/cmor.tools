@@ -22,7 +22,10 @@
 #'
 #' @export
 lincom <- function(model, weights, vcov. = NULL) {
-	checkmate::assert(checkmate::assert_numeric(weights))
+	checkmate::assert_numeric(weights)
+
+	if (!checkmate::test_matrix(weights)) weights <- matrix(weights, nrow = 1)
+
 	if (is.null(vcov.)) vcov <- stats::vcov(model)
 	else if (is.function(vcov.)) vcov <- vcov.(model)
 	else if (is.matrix(vcov.)) vcov <- vcov.
