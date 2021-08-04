@@ -9,7 +9,7 @@ create_descriptive_table(
   continuous = NULL,
   discrete = NULL,
   multiresponse = NULL,
-  output = c(names(continuous), names(discrete)),
+  output = c(names(continuous), names(discrete), names(multiresponse)),
   by = NULL,
   value_continuous = mean_sd(.mean, .sd, accuracy = 0.1),
   value_discrete = n_percent(.n, .proportion),

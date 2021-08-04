@@ -11,19 +11,19 @@
 #' @param bib Path the the BibTex bibliography file
 #'
 #' @export
-render_manuscript <- function(rmd = NULL, out = NULL, reference_docx = NULL, csl = NULL, bib = NULL) {
+render_manuscript <- function(rmd = NULL, out = NULL,
+															reference_docx = NULL, csl = NULL, bib = NULL) {
 	checkmate::assert_string(rmd, null.ok = TRUE)
 	checkmate::assert_string(out, null.ok = TRUE)
 	checkmate::assert_string(reference_docx, null.ok = TRUE)
 	checkmate::assert_string(csl, null.ok = TRUE)
 	checkmate::assert_string(bib, null.ok = TRUE)
 
-	if (is_package()) prefix <- "inst/" else prefix <- ""
-	if (is.null(rmd)) rmd <- paste0(prefix, "reports/manuscript.Rmd")
+	if (is.null(rmd)) rmd <- "reports/manuscript.Rmd"
 	if (is.null(out)) out <- paste0("output/", basename(rmd))
-	if (is.null(reference_docx)) reference_docx <- paste0(prefix, "reports/word-styles-reference-01.docx")
-	if (is.null(csl)) csl <- paste0(prefix, "reports/vancouver.csl")
-	if (is.null(bib)) bib <- paste0(prefix, "reports/references.bib")
+	if (is.null(reference_docx)) reference_docx <- "reports/word-styles-reference-01.docx"
+	if (is.null(csl)) csl <- "reports/vancouver.csl"
+	if (is.null(bib)) bib <- "reports/references.bib"
 
 	checkmate::assert_file_exists(rmd)
 	checkmate::assert_path_for_output(out, overwrite = TRUE)
