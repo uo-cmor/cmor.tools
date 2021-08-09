@@ -1,4 +1,5 @@
 test_that("sf6d_profile works with numeric values", {
+	withr::local_options(lifecycle_verbosity = "quiet")
 	expect_message(
 		sf6d_profile(Q1 = 1:3, Q2 = 1:3, Q3 = 1:3, Q4 = 1:3, Q5 = 3:5, Q6 = 5:3, Q7 = 1:3, Q8 = 1:3,
 								 Q9 = 1:3, Q10 = 1:3, Q11 = 1:3, Q12 = 1:3),
@@ -17,6 +18,7 @@ test_that("sf6d_profile works with numeric values", {
 })
 
 test_that("sf6d_profile works with character strings", {
+	withr::local_options(lifecycle_verbosity = "quiet")
 	expect_silent(
 		sf6d_profile(Q1 = c("Excellent", "Very good", "Good"),
 								 Q2 = c("Yes, limited a lot", "Yes, limited a little", "No, not limited at all"),
@@ -63,12 +65,24 @@ test_that("sf6d_profile works with character strings", {
 	)
 })
 
+test_that("sf6d_profile is deprecated", {
+	expect_snapshot(sf6d_profile(Q1 = 1:3, Q2 = 1:3, Q3 = 1:3, Q4 = 1:3, Q5 = 3:5, Q6 = 5:3,
+															 Q7 = 1:3, Q8 = 1:3, Q9 = 1:3, Q10 = 1:3, Q11 = 1:3, Q12 = 1:3))
+})
+
+
 test_that("sf6d_utility gives error with invalid 'values' argument", {
+	withr::local_options(lifecycle_verbosity = "quiet")
 	expect_error(sf6d_utility(1, 1, 1, 1, 1, 1, values = "x"))
 })
 
 test_that("sf6d_utility works", {
+	withr::local_options(lifecycle_verbosity = "quiet")
 	expect_equal(sf6d_utility(1:3, 1:3, 1:3, 1:3, 1:3, 1:3), c(1, 0.737, 0.570))
+})
+
+test_that("sf6d_utility is deprecated", {
+	expect_snapshot(sf6d_utility(1:3, 1:3, 1:3, 1:3, 1:3, 1:3))
 })
 
 test_that("sf12_scores works", {

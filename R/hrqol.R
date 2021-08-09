@@ -3,7 +3,12 @@
 
 #' SF-6D profile (SF-12 version)
 #'
-#' Construct SF-6D profile from SF-12 question-level responses
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' This function is deprecated in favour of [SF6Dvalues::sf6d_profile()].
+#'
+#' Construct SF-6D profile from SF-12 question-level responses.
 #'
 #' @param ... Vectors containing SF-12 question reponses; should be named as
 #'     \code{\{Q1, Q2, ..., Q12\}}, \code{\{Q1, Q2a, ..., Q7\}}, or lower case
@@ -14,8 +19,12 @@
 #'     scores, or \code{"list"} (the default) to return a list with all
 #'     dimension scores.
 #'
+#' @keywords internal
+#'
 #' @export
 sf6d_profile <- function(..., version = 2, dimension = "list") {
+	lifecycle::deprecate_warn("0.3.0", "sf6d_profile()", "SF6Dvalues::sf6d_profile()")
+
 	checkmate::assert_choice(version, 1:2)
 	checkmate::assert_choice(dimension, c("list", "PF", "RL", "SF", "PAIN", "MH", "VIT"))
 
@@ -46,6 +55,12 @@ sf6d_profile <- function(..., version = 2, dimension = "list") {
 
 #' SF-6D utility values
 #'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' This function is deprecated in favour of [SF6Dvalues::utility()] (and
+#'     [SF6Dvalues::sf6d_utility()]).
+#'
 #' Calculate SF-6D (SF-12) utility values using Brazier & Roberts (2004) algorithm
 #'
 #' @param PF,RL,SF,PAIN,MH,VIT SF-6D profile
@@ -53,6 +68,14 @@ sf6d_profile <- function(..., version = 2, dimension = "list") {
 #'
 #' @export
 sf6d_utility <- function(PF, RL, SF, PAIN, MH, VIT, values = "uk") {
+	lifecycle::deprecate_warn(
+		"0.3.0", "sf6d_utility()", "SF6Dvalues::SF6D()",
+		details = c(
+			i = paste("You can also use SF6Dvalues::sf6d_profile() to calculate",
+								"utility values directly from SF-12 responses")
+		)
+	)
+
 	checkmate::assert_integerish(PF, lower = 1, upper = 3)
 	checkmate::assert_integerish(RL, lower = 1, upper = 4)
 	checkmate::assert_integerish(SF, lower = 1, upper = 5)

@@ -12,5 +12,10 @@ sf6d_utility(PF, RL, SF, PAIN, MH, VIT, values = "uk")
 \item{values}{Not used}
 }
 \description{
+`r lifecycle::badge("deprecated")`
+
+This function is deprecated in favour of [SF6Dvalues::utility()] (and
+    [SF6Dvalues::sf6d_utility()]).
+
 Calculate SF-6D (SF-12) utility values using Brazier & Roberts (2004) algorithm
 }

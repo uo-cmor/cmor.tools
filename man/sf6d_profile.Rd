@@ -19,5 +19,10 @@ scores, or \code{"list"} (the default) to return a list with all
 dimension scores.}
 }
 \description{
-Construct SF-6D profile from SF-12 question-level responses
+`r lifecycle::badge("deprecated")`
+
+This function is deprecated in favour of [SF6Dvalues::sf6d_profile()].
+
+Construct SF-6D profile from SF-12 question-level responses.
 }
+\keyword{internal}
