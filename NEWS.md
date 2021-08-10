@@ -1,3 +1,5 @@
+# cmor.tools 0.4.0.9000
+
 # cmor.tools 0.4.0
 
 * New `scale_colour_cmor()`, and friends provide standard colour schemes.
