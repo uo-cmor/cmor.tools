@@ -1,6 +1,6 @@
 Package: cmor.tools
 Title: Tools for Conducting CMOR Research Projects
-Version: 0.3.0.9000
+Version: 0.4.0
 Authors@R:
     person(given = "Ross",
            family = "Wilson",
@@ -36,7 +36,8 @@ Imports:
     cli,
     crayon,
     stringr,
-    lifecycle
+    lifecycle,
+    ggplot2
 Suggests: 
     targets,
     tarchetypes,
@@ -47,7 +48,6 @@ Suggests:
     R.utils,
     tidyr,
     future,
-    ggplot2,
     forcats,
     tibble,
     knitr,
