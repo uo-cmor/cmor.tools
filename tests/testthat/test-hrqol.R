@@ -15,6 +15,12 @@ test_that("sf6d_profile works with numeric values", {
 																	Q4b = 1:3, Q5 = 1:3, Q6a = 1:3, Q6b = 1:3, Q6c = 1:3, Q7 = 1:3)),
 		list(PF = 3:1, RL = c(2, 4, 3), SF = 5:3, PAIN = 1:3, MH = 5:3, VIT = 1:3)
 	)
+	expect_equal(
+		suppressMessages(sf6d_profile(Q1 = 1:3, Q2a = 1:3, Q2b = 1:3, Q3a = 1:3, Q3b = 3:5, Q4a = 5:3,
+																	Q4b = 1:3, Q5 = 1:3, Q6a = 1:3, Q6b = 1:3, Q6c = 1:3, Q7 = 1:3,
+																	dimension = "RL")),
+		c(2, 4, 3)
+	)
 })
 
 test_that("sf6d_profile works with character strings", {

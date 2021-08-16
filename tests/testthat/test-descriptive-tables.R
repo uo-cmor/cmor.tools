@@ -75,3 +75,7 @@ test_that("create_descriptive_table works", {
 		)
 	)
 })
+
+test_that("make_header_row works", {
+	expect_equal(make_header_row("A"), tibble::tibble(`Patient characteristic` = "A"))
+})

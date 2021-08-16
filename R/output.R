@@ -1,47 +1,47 @@
-#' Render Rmd manuscript to docx
-#'
-#' This function renders an Rmarkdown report to Word .docx file, in the
-#'     appropriate directory and with reference, csl, and bib files as
-#'     specified.
-#'
-#' @param rmd Path to the Rmarkdown file (relative to project root)
-#' @param out Path to the output docx file to be created
-#' @param reference_docx Path to the reference docx (styles) file
-#' @param csl Path to the CSL styles file
-#' @param bib Path the the BibTex bibliography file
-#'
-#' @export
-render_manuscript <- function(rmd = NULL, out = NULL,
-															reference_docx = NULL, csl = NULL, bib = NULL) {
-	checkmate::assert_string(rmd, null.ok = TRUE)
-	checkmate::assert_string(out, null.ok = TRUE)
-	checkmate::assert_string(reference_docx, null.ok = TRUE)
-	checkmate::assert_string(csl, null.ok = TRUE)
-	checkmate::assert_string(bib, null.ok = TRUE)
-
-	if (is.null(rmd)) rmd <- "reports/manuscript.Rmd"
-	if (is.null(out)) out <- paste0("output/", basename(rmd))
-	if (is.null(reference_docx)) reference_docx <- "reports/word-styles-reference-01.docx"
-	if (is.null(csl)) csl <- "reports/vancouver.csl"
-	if (is.null(bib)) bib <- "reports/references.bib"
-
-	checkmate::assert_file_exists(rmd)
-	checkmate::assert_path_for_output(out, overwrite = TRUE)
-	checkmate::assert_file_exists(reference_docx)
-	checkmate::assert_file_exists(csl)
-	checkmate::assert_file_exists(bib)
-
-	path <- rmarkdown::render(
-		rmd,
-		rmarkdown::word_document(
-			reference_docx = usethis::proj_path(reference_docx),
-			pandoc_args = list("--csl", usethis::proj_path(csl), "--bibliography", usethis::proj_path(bib))
-		),
-		output_file = out, output_dir = dirname(out), knit_root_dir = usethis::proj_path()
-	)
-
-	fs::path_rel(path)
-}
+# #' Render Rmd manuscript to docx
+# #'
+# #' This function renders an Rmarkdown report to Word .docx file, in the
+# #'     appropriate directory and with reference, csl, and bib files as
+# #'     specified.
+# #'
+# #' @param rmd Path to the Rmarkdown file (relative to project root)
+# #' @param out Path to the output docx file to be created
+# #' @param reference_docx Path to the reference docx (styles) file
+# #' @param csl Path to the CSL styles file
+# #' @param bib Path the the BibTex bibliography file
+# #'
+# #' @export
+# render_manuscript <- function(rmd = NULL, out = NULL,
+# 															reference_docx = NULL, csl = NULL, bib = NULL) {
+# 	checkmate::assert_string(rmd, null.ok = TRUE)
+# 	checkmate::assert_string(out, null.ok = TRUE)
+# 	checkmate::assert_string(reference_docx, null.ok = TRUE)
+# 	checkmate::assert_string(csl, null.ok = TRUE)
+# 	checkmate::assert_string(bib, null.ok = TRUE)
+#
+# 	if (is.null(rmd)) rmd <- "reports/manuscript.Rmd"
+# 	if (is.null(out)) out <- paste0("output/", basename(rmd))
+# 	if (is.null(reference_docx)) reference_docx <- "reports/word-styles-reference-01.docx"
+# 	if (is.null(csl)) csl <- "reports/vancouver.csl"
+# 	if (is.null(bib)) bib <- "reports/references.bib"
+#
+# 	checkmate::assert_file_exists(rmd)
+# 	checkmate::assert_path_for_output(out, overwrite = TRUE)
+# 	checkmate::assert_file_exists(reference_docx)
+# 	checkmate::assert_file_exists(csl)
+# 	checkmate::assert_file_exists(bib)
+#
+# 	path <- rmarkdown::render(
+# 		rmd,
+# 		rmarkdown::word_document(
+# 			reference_docx = usethis::proj_path(reference_docx),
+# 			pandoc_args = list("--csl", usethis::proj_path(csl), "--bibliography", usethis::proj_path(bib))
+# 		),
+# 		output_file = out, output_dir = dirname(out), knit_root_dir = usethis::proj_path()
+# 	)
+#
+# 	fs::path_rel(path)
+# }
 
 ###################################
 ### Output formatting functions ###
