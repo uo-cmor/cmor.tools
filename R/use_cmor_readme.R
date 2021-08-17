@@ -5,9 +5,10 @@
 #'     be automatically added to \code{.Rbuildignore}.
 #'
 #' @param data List of variables used by \code{cmor-readme} template.
+#' @param open Whether to open the new README.Rmd file for editing.
 #'
 #' @export
-use_cmor_readme <- function(data) {
+use_cmor_readme <- function(data, open = rlang::is_interactive()) {
 	template <- system.file("templates", "cmor-readme", package = "cmor.tools", mustWork = TRUE)
 
 	template_out <- whisker::whisker.render(readLines(template), data)

@@ -34,3 +34,11 @@ git_ask_commit <- function(message, untracked = FALSE) {
 	}
 	invisible(NULL)
 }
+
+uses_git <- function() {
+	repo <- tryCatch(
+		gert::git_find(usethis::proj_get()),
+		error = function(e) NULL
+	)
+	!is.null(repo)
+}

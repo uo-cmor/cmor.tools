@@ -39,7 +39,8 @@ accessible. Ignored if \code{github = FALSE}.}
 create the repo under this organisation instead of the login associated
 with the discovered GitHub token.}
 
-\item{rstudio}{If \code{TRUE}, makes the new project into an Rtudio Project.}
+\item{rstudio}{If \code{TRUE}, makes the new project into an RStudio
+Project.}
 
 \item{open}{If \code{TRUE}, activates the new project in a new RStudio
 session.}

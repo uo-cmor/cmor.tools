@@ -20,7 +20,7 @@
 #'     \code{output/} directory will be excluded from the git repository.
 #'
 #' @export
-use_project_directory <- function(package, workflow = "targets", git = TRUE,
+use_project_directory <- function(package = FALSE, workflow = "targets", git = TRUE,
 																	raw_data_in_git = TRUE, data_in_git = FALSE,
 																	output_in_git = FALSE) {
 	# Add required packages to Imports/Suggests

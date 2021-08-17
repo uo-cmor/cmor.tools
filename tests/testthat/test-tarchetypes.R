@@ -17,8 +17,8 @@ tar_test("tar_render_manuscript works", {
 	suppressWarnings(tar_make(callr_function = NULL))
 	expect_equal(fs::path_abs(tar_read(manuscript)[[1]]),
 							 fs::path_real(fs::path_wd("output", output_file)))
-	expect_equal(fs::path_abs(tar_read(manuscript)[[2]]),
-							 fs::path_real(rmd_file))
+	expect_equal(fs::path_file(tar_read(manuscript)[[2]]),
+							 fs::path_file(rmd_file))
 	# Everything should be up to date.
 	expect_equal(tar_outdated(callr_function = NULL), character(0))
 })

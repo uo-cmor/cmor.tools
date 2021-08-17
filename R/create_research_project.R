@@ -19,7 +19,8 @@
 #' @param organisation (Optional) Passed to \code{usethis::use_github()} to
 #'     create the repo under this organisation instead of the login associated
 #'     with the discovered GitHub token.
-#' @param rstudio If \code{TRUE}, makes the new project into an Rtudio Project.
+#' @param rstudio If \code{TRUE}, makes the new project into an RStudio
+#'     Project.
 #' @param open If \code{TRUE}, activates the new project in a new RStudio
 #'     session.
 #'

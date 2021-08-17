@@ -5,7 +5,7 @@
 \title{Create the directory structure for a CMOR research project}
 \usage{
 use_project_directory(
-  package,
+  package = FALSE,
   workflow = "targets",
   git = TRUE,
   raw_data_in_git = TRUE,

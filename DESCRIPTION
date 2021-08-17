@@ -37,7 +37,8 @@ Imports:
     crayon,
     stringr,
     lifecycle,
-    ggplot2
+    ggplot2,
+    gert
 Suggests: 
     targets,
     tarchetypes,
