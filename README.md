@@ -8,7 +8,7 @@
 
 The goal of cmor.tools is to provide standardised tools to initialise a
 research project folder, undertake analysis, and generate output reports
-(journal manuscripts, etc.) for research projects undertken at CMOR.
+(journal manuscripts, etc.) for research projects undertaken at CMOR.
 
 ## Installation
 

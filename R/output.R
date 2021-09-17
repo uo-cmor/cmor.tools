@@ -70,8 +70,8 @@ mean_sd <- function(mean, sd, ..., .glue = TRUE) {
 	checkmate::assert_numeric(sd)
 	checkmate::assert_flag(.glue)
 
-	if (.glue) glue::glue("{number(mean, ...)} ({number(sd, ...)})")
-	else paste0(number(mean, ...), ' (', number(sd, ...), ')')
+	if (.glue) glue::glue("{formattr::nmbr(mean, ...)} ({formattr::nmbr(sd, ...)})")
+	else paste0(formattr::nmbr(mean, ...), ' (', formattr::nmbr(sd, ...), ')')
 }
 
 #' @rdname output-formatting
@@ -82,10 +82,10 @@ n_percent <- function(n, proportion, ..., .glue = TRUE) {
 	checkmate::assert_numeric(proportion)
 	checkmate::assert_flag(.glue)
 
-	if (.glue) glue::glue("{number(n, accuracy = 1)} ",
-												"({number(proportion, scale = 100, suffix = '%', ...)})")
-	else paste0(number(n, accuracy = 1), ' (',
-							number(proportion, scale = 100, suffix = '%', ...), ')')
+	if (.glue) glue::glue("{formattr::nmbr(n, accuracy = 1)} ",
+												"({formattr::nmbr(proportion, scale = 100, suffix = '%', ...)})")
+	else paste0(formattr::nmbr(n, accuracy = 1), ' (',
+							formattr::nmbr(proportion, scale = 100, suffix = '%', ...), ')')
 }
 
 #' @rdname output-formatting
@@ -98,10 +98,10 @@ est_ci <- function(est, low, high, ..., .sep = ' to ', .glue = TRUE) {
 	checkmate::assert_string(.sep)
 	checkmate::assert_flag(.glue)
 
-	if (.glue) glue::glue("{number(est, ...)} ",
-												"({number(low, ...)}{.sep}{number(high, ...)})")
-	else paste0(number(est, ...),
-							' (', number(low, ...), .sep, number(high, ...), ')')
+	if (.glue) glue::glue("{formattr::nmbr(est, ...)} ",
+												"({formattr::nmbr(low, ...)}{.sep}{formattr::nmbr(high, ...)})")
+	else paste0(formattr::nmbr(est, ...),
+							' (', formattr::nmbr(low, ...), .sep, formattr::nmbr(high, ...), ')')
 }
 
 ###################################################################
@@ -109,6 +109,11 @@ est_ci <- function(est, low, high, ..., .sep = ' to ', .glue = TRUE) {
 ###################################################################
 
 #' Format numbers using `scales::number()`-type functions
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' These functions are deprecated in favour of \code{\link[formattr]{nmbr}}.
 #'
 #' These functions replace/extend the `scales::number()-type` formatting
 #'     functions.
@@ -126,6 +131,8 @@ NULL
 #' @export
 number <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
 									 big.mark = "< >", decimal.mark = ".", trim = TRUE, html = TRUE, ...) {
+	lifecycle::deprecate_warn("0.5.0", "number()", "formattr::nmbr()")
+
 	checkmate::assert_numeric(x)
 	checkmate::assert_number(accuracy)
 	checkmate::assert_number(scale)

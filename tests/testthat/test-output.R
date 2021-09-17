@@ -1,5 +1,5 @@
 test_that("est_ci works as expected", {
-  expect_equal(est_ci(c(1, 2), c(0.5, 1), c(1.4, 3.1), accuracy = 0.1, .sep = " to ", .glue = TRUE),
+	expect_equal(est_ci(c(1, 2), c(0.5, 1), c(1.4, 3.1), accuracy = 0.1, .sep = " to ", .glue = TRUE),
   						 glue::glue("{c('1.0 (0.5 to 1.4)', '2.0 (1.0 to 3.1)')}"))
 	expect_equal(est_ci(c(1, 2), c(0.5, 1), c(1.4, 3.1), accuracy = 0.1, .sep = " to ", .glue = FALSE),
 							 c('1.0 (0.5 to 1.4)', '2.0 (1.0 to 3.1)'))
@@ -14,6 +14,8 @@ test_that("est_ci gives appropriate errors", {
 })
 
 test_that("number_format works as expected", {
+	withr::local_options(lifecycle_verbosity = "quiet")
+
 	fn <- number_format()
 	expect_type(fn, "closure")
 	expect_equal(fn(3.21), "3")
@@ -25,6 +27,8 @@ test_that("number_format works as expected", {
 })
 
 test_that("number_format gives appropriate errors", {
+	withr::local_options(lifecycle_verbosity = "quiet")
+
 	expect_error(number_format(accuracy = "1"))
 	expect_error(number_format(scale =  "1"))
 	expect_error(number_format(prefix = 1))
@@ -33,6 +37,10 @@ test_that("number_format gives appropriate errors", {
 	expect_error(number_format(decimal.mark = 1))
 	expect_error(number_format(trim = 1))
 	expect_error(number_format(html = 1))
+})
+
+test_that("number is deprecated", {
+	expect_snapshot(number(0.123456))
 })
 
 test_that("percent works as expected", {

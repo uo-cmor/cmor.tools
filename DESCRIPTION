@@ -38,7 +38,8 @@ Imports:
     stringr,
     lifecycle,
     ggplot2,
-    gert
+    gert,
+    formattr (>= 0.0.0.9000)
 Suggests: 
     targets,
     tarchetypes,
@@ -55,3 +56,5 @@ Suggests:
     testthat (>= 3.0.0),
     withr
 Config/testthat/edition: 3
+Remotes:  
+    uo-cmor/formattr

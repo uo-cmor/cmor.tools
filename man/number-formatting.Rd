@@ -95,6 +95,10 @@ comma_format(
 signs) as HTML strings (the default) or unicode.}
 }
 \description{
+`r lifecycle::badge("deprecated")`
+
+These functions are deprecated in favour of \code{\link[formattr]{nmbr}}.
+
 These functions replace/extend the `scales::number()-type` formatting
     functions.
 }

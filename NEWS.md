@@ -1,5 +1,7 @@
 # cmor.tools 0.4.0.9000
 
+* Deprecated `number()` in faour of the `formattr` package.
+
 * New unit tests for several functions.
 
 # cmor.tools 0.4.0
