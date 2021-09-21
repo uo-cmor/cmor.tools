@@ -39,7 +39,7 @@ Imports:
     lifecycle,
     ggplot2,
     gert,
-    formattr (>= 0.0.0.9000)
+    formattr (>= 0.1.0)
 Suggests: 
     targets,
     tarchetypes,

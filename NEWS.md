@@ -1,6 +1,6 @@
 # cmor.tools 0.5.0
 
-* Deprecated output formatting functions `number()` etc. in faour of the
+* Deprecated output formatting functions `number()` etc. in favour of the
   `formattr` package.
 
 * New unit tests for several functions.
