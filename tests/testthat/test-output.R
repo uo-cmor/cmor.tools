@@ -1,4 +1,6 @@
 test_that("est_ci works as expected", {
+	withr::local_options(lifecycle_verbosity = "quiet")
+
 	expect_equal(est_ci(c(1, 2), c(0.5, 1), c(1.4, 3.1), accuracy = 0.1, .sep = " to ", .glue = TRUE),
   						 glue::glue("{c('1.0 (0.5 to 1.4)', '2.0 (1.0 to 3.1)')}"))
 	expect_equal(est_ci(c(1, 2), c(0.5, 1), c(1.4, 3.1), accuracy = 0.1, .sep = " to ", .glue = FALSE),
@@ -6,6 +8,8 @@ test_that("est_ci works as expected", {
 })
 
 test_that("est_ci gives appropriate errors", {
+	withr::local_options(lifecycle_verbosity = "quiet")
+
 	expect_error(est_ci("1"))
 	expect_error(est_ci(1, "1"))
 	expect_error(est_ci(1, 0.5, "1"))
@@ -39,17 +43,33 @@ test_that("number_format gives appropriate errors", {
 	expect_error(number_format(html = 1))
 })
 
+test_that("est_ci is deprecated", {
+	expect_snapshot(est_ci(c(1, 2), c(0.5, 1), c(1.4, 3.1)))
+})
+
 test_that("number is deprecated", {
 	expect_snapshot(number(0.123456))
 })
 
+test_that("percent is deprecated", {
+	expect_snapshot(percent(0.123456))
+})
+
+test_that("comma is deprecated", {
+	expect_snapshot(comma(0.123456))
+})
+
 test_that("percent works as expected", {
+	withr::local_options(lifecycle_verbosity = "quiet")
+
 	expect_equal(percent(0.123456), "12%")
 	expect_equal(percent(-0.123456, accuracy = 0.001), "&minus;12.346%")
 	expect_equal(percent(-12.3456, accuracy = 0.1, html = FALSE), "\u22121\u202F234.6%")
 })
 
 test_that("percent gives appropriate errors", {
+	withr::local_options(lifecycle_verbosity = "quiet")
+
 	expect_error(percent("1"))
 	expect_error(percent(0.12345, accuracy = "1"))
 	expect_error(percent(0.12345, scale =  "1"))
@@ -62,6 +82,8 @@ test_that("percent gives appropriate errors", {
 })
 
 test_that("percent_format works as expected", {
+	withr::local_options(lifecycle_verbosity = "quiet")
+
 	fn <- percent_format(accuracy = 0.001)
 	expect_type(fn, "closure")
 	expect_equal(fn(0.123456), "12.346%")
@@ -69,6 +91,8 @@ test_that("percent_format works as expected", {
 })
 
 test_that("percent_format gives appropriate errors", {
+	withr::local_options(lifecycle_verbosity = "quiet")
+
 	expect_error(percent_format(accuracy = "1"))
 	expect_error(percent_format(scale =  "1"))
 	expect_error(percent_format(prefix = 1))
@@ -80,12 +104,16 @@ test_that("percent_format gives appropriate errors", {
 })
 
 test_that("comma works as expected", {
+	withr::local_options(lifecycle_verbosity = "quiet")
+
 	expect_equal(comma(123456), "123,456")
 	expect_equal(comma(-12345.6, accuracy = 0.1), "&minus;12,345.6")
 	expect_equal(comma(-9876, accuracy = 10, html = FALSE), "\u22129,880")
 })
 
 test_that("comma gives appropriate errors", {
+	withr::local_options(lifecycle_verbosity = "quiet")
+
 	expect_error(comma("12345"))
 	expect_error(comma(12345, accuracy = "1"))
 	expect_error(comma(12345, scale =  "1"))
@@ -98,6 +126,8 @@ test_that("comma gives appropriate errors", {
 })
 
 test_that("comma_format works as expected", {
+	withr::local_options(lifecycle_verbosity = "quiet")
+
 	fn <- comma_format()
 	expect_type(fn, "closure")
 	expect_equal(fn(123456), "123,456")
@@ -105,6 +135,8 @@ test_that("comma_format works as expected", {
 })
 
 test_that("comma_format gives appropriate errors", {
+	withr::local_options(lifecycle_verbosity = "quiet")
+
 	expect_error(comma_format(accuracy = "1"))
 	expect_error(comma_format(scale =  "1"))
 	expect_error(comma_format(prefix = 1))

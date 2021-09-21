@@ -49,6 +49,12 @@
 
 #' Results formatting for tables and reports
 #'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' These functions are deprecated in favour of the functions in
+#'     \code{\link[formattr]{output-formatting}}.
+#'
 #' These functions are simple wrappers around `paste()` and `number()` to
 #'     format results for printing.
 #'
@@ -66,6 +72,8 @@ NULL
 #'
 #' @export
 mean_sd <- function(mean, sd, ..., .glue = TRUE) {
+	lifecycle::deprecate_warn("0.5.0", "mean_sd()", "formattr::mean_sd()")
+
 	checkmate::assert_numeric(mean)
 	checkmate::assert_numeric(sd)
 	checkmate::assert_flag(.glue)
@@ -78,6 +86,8 @@ mean_sd <- function(mean, sd, ..., .glue = TRUE) {
 #'
 #' @export
 n_percent <- function(n, proportion, ..., .glue = TRUE) {
+	lifecycle::deprecate_warn("0.5.0", "n_percent()", "formattr::n_percent()")
+
 	checkmate::assert_numeric(n)
 	checkmate::assert_numeric(proportion)
 	checkmate::assert_flag(.glue)
@@ -92,6 +102,8 @@ n_percent <- function(n, proportion, ..., .glue = TRUE) {
 #'
 #' @export
 est_ci <- function(est, low, high, ..., .sep = ' to ', .glue = TRUE) {
+	lifecycle::deprecate_warn("0.5.0", "est_ci()", "formattr::est_ci()")
+
 	checkmate::assert_numeric(est)
 	checkmate::assert_numeric(low)
 	checkmate::assert_numeric(high)
@@ -163,6 +175,8 @@ number <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
 #' @export
 number_format <- function(accuracy = 1, scale = 1, prefix = "", suffix = "",
 													big.mark = "< >", decimal.mark = ".", trim = TRUE, html = TRUE, ...) {
+	lifecycle::deprecate_warn("0.5.0", "number_format()", "formattr::nmbr()")
+
 	checkmate::assert_number(accuracy)
 	checkmate::assert_number(scale)
 	checkmate::assert_string(prefix)
@@ -183,6 +197,8 @@ number_format <- function(accuracy = 1, scale = 1, prefix = "", suffix = "",
 #' @export
 percent <- function(x, accuracy = 1, scale = 100, prefix = "", suffix = "%",
 										big.mark = "< >", decimal.mark = ".", trim = TRUE, html = TRUE, ...) {
+	lifecycle::deprecate_warn("0.5.0", "percent()", "formattr::prct()")
+
 	checkmate::assert_numeric(x)
 	checkmate::assert_number(accuracy)
 	checkmate::assert_number(scale)
@@ -213,6 +229,8 @@ percent <- function(x, accuracy = 1, scale = 100, prefix = "", suffix = "%",
 #' @export
 percent_format <- function(accuracy = 1, scale = 100, prefix = "", suffix = "%",
 													 big.mark = "< >", decimal.mark = ".", trim = TRUE, html = TRUE, ...) {
+	lifecycle::deprecate_warn("0.5.0", "percent_format()", "formattr::prct()")
+
 	checkmate::assert_number(accuracy)
 	checkmate::assert_number(scale)
 	checkmate::assert_string(prefix)
@@ -233,6 +251,8 @@ percent_format <- function(accuracy = 1, scale = 100, prefix = "", suffix = "%",
 #' @export
 comma <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
 									big.mark = ",", decimal.mark = ".", trim = TRUE, html = TRUE, ...) {
+	lifecycle::deprecate_warn("0.5.0", "comma()", "formattr::cmma()")
+
 	checkmate::assert_numeric(x)
 	checkmate::assert_number(accuracy)
 	checkmate::assert_number(scale)
@@ -258,6 +278,8 @@ comma <- function(x, accuracy = 1, scale = 1, prefix = "", suffix = "",
 #' @export
 comma_format <- function(accuracy = 1, scale = 1, prefix = "", suffix = "",
 												 big.mark = ",", decimal.mark = ".", trim = TRUE, html = TRUE, ...) {
+	lifecycle::deprecate_warn("0.5.0", "comma_format()", "formattr::cmma()")
+
 	checkmate::assert_number(accuracy)
 	checkmate::assert_number(scale)
 	checkmate::assert_string(prefix)

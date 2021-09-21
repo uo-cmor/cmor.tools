@@ -25,6 +25,11 @@ est_ci(est, low, high, ..., .sep = " to ", .glue = TRUE)
 \code{' to '}.}
 }
 \description{
+`r lifecycle::badge("deprecated")`
+
+These functions are deprecated in favour of the functions in
+    \code{\link[formattr]{output-formatting}}.
+
 These functions are simple wrappers around `paste()` and `number()` to
     format results for printing.
 }

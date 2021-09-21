@@ -42,8 +42,8 @@ if (getRversion() >= "2.15.1")
 create_descriptive_table <- function(
 	df, continuous = NULL, discrete = NULL, multiresponse = NULL,
 	output = c(names(continuous), names(discrete), names(multiresponse)), by = NULL,
-	value_continuous = mean_sd(.mean, .sd, accuracy = 0.1),
-	value_discrete = n_percent(.n, .proportion), total = !is.null(by)
+	value_continuous = formattr::mean_sd(.mean, .sd, accuracy = 0.1),
+	value_discrete = formattr::n_percent(.n, .proportion), total = !is.null(by)
 ) {
 	checkmate::assert_data_frame(df)
 	checkmate::assert_character(continuous, null.ok = TRUE)
