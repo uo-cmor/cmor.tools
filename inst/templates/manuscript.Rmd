@@ -29,22 +29,19 @@ knitr::opts_chunk$set(
 options(knitr.kable.NA = "")
 
 # Load required libraries
-#source("R/load-packages.R") # Load required packages
-#sourceDirectory("R") # import required functions - for Makefile only
+library(targets)
+#library(knitr) # Uncomment if knitr::kable used to print tables
+#library(fs) # Uncomment if fs::path_wd() used to generate path to figure files
+#library(formattr) # Pretty number formatting
+#library(tidyverse) # For manipulating analysis objects if required
 ```
 
 ```{r load-data, include=FALSE, echo=FALSE, cache=FALSE}
 # Load the previously stored results
-##Targets:
 #tar_load(figure_1)
 #tar_load(results)
-##Drake:
-#file_in("output/figure-1.png")
-#loadd(results)
-##Make:
-#load("inst/derived_data/results.Rdata")
 
-# Any other variables to be loaded/defined in here
+# Any other variables to be loaded/defined in here; extract data from analysis objects if required
 ```
 
 # Introduction
@@ -64,7 +61,7 @@ options(knitr.kable.NA = "")
 
 <br>
 
-<!-- ![Figure 1: Figure caption](../../output/figure-1.png) -->
+<!-- ![Figure 1: Figure caption](`r path_wd(figure_1)`) -->
 
 > Figure notes
 
@@ -77,8 +74,6 @@ options(knitr.kable.NA = "")
 # Funding
 
 # Conflicts of Interest
-
-None to declare.
 
 # References
 <!-- The following line ensures the references appear here for the MS Word or HTML output files, rather than right at the end of the document (this will not work for PDF files):  -->
