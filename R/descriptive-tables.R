@@ -45,6 +45,9 @@ create_descriptive_table <- function(
 	value_continuous = formattr::mean_sd(.mean, .sd, accuracy = 0.1),
 	value_discrete = formattr::n_percent(.n, .proportion), total = !is.null(by)
 ) {
+	lifecycle::deprecate_warn("0.6.0", "create_descriptive_table()",
+														"formattr::create_descriptive_table()")
+
 	checkmate::assert_data_frame(df)
 	checkmate::assert_character(continuous, null.ok = TRUE)
 	checkmate::assert_character(discrete, null.ok = TRUE)

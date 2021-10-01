@@ -52,7 +52,15 @@ test_that("multiresponse_characteristics_table works", {
 	)
 })
 
+test_that("create_descriptive_table is deprecated", {
+	expect_snapshot(
+		create_descriptive_table(df, c(A = "a"), c(B = "b"), list(C = c(C1 = "c1", C2 = "c2")))
+	)
+})
+
 test_that("create_descriptive_table works", {
+	withr::local_options(lifecycle_verbosity = "quiet")
+
 	expect_equal(
 		create_descriptive_table(df, c(A = "a"), c(B = "b"), list(C = c(C1 = "c1", C2 = "c2"))),
 		tibble::tibble(
