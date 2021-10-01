@@ -56,7 +56,7 @@ tar_render_manuscript <- function(name, path, output_file,
 					if (!is.null(!!file_reference_docx))
 						list("--reference-doc", fs::path_wd(!!file_reference_docx)),
 					if (!is.null(!!file_csl)) list("--csl", fs::path_wd(!!file_csl)),
-					if (!is.null(!!file_bib)) list("--bibliography", fs::path_wd(!!file_bib))
+					if (!is.null(!!file_bib)) list("--citeproc", "--bibliography", fs::path_wd(!!file_bib))
 				)
 			),
 			output_file = !!output_file, output_dir = "output"

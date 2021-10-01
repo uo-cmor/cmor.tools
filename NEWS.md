@@ -1,3 +1,11 @@
+# cmor.tools 0.5.0.9000
+
+* `tar_render_manuscript()` now correctly uses Pandoc's --citeproc option.
+
+* Updated `manuscript.Rmd` template.
+
+* Updated initial project setup with `create_research_project()`
+
 # cmor.tools 0.5.0
 
 * Deprecated output formatting functions `number()` etc. in favour of the

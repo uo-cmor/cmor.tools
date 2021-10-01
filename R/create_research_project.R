@@ -66,8 +66,10 @@ create_research_project <- function(
 		fileConn <- file(fs::path(path, ".Rprofile"))
 		writeLines(
 			c(
-				## Copy previous Rprofile so we can continue working immediately
+				## Copy user Rprofile so we can start working with usual user settings
 				readLines(fs::path_home_r(".Rprofile")),
+				## Remove this temporary Rprofile once it's done what it needs to do
+				".First <- function() invisible(fs::file_delete('.Rprofile'))",
 				## Continue project setup
 				"",
 				"usethis::ui_line(crayon::bold('Initial project setup:'))",
@@ -76,23 +78,21 @@ create_research_project <- function(
 				if (git) "cmor.tools:::use_git()",
 				if (github) {
 					if (!is.null(organisation))
-						paste0("if (usethis::ui_yeah('Is it OK to push these to `",
+						paste0("if (github <- usethis::ui_yeah('Is it OK to push these to `",
 									 organisation, "` on GitHub?')) ",
 									 "usethis::use_github(private = ", private,
 									 ", organisation = '", organisation, "')")
 					else
-						paste0("if (usethis::ui_yeah('Is it OK to push these to GitHub?')) ",
-									 "usethis::use_github(private = ", private, ")")
-				},
-				paste0("data <- list(name = fs::path_file('", path, "'), github = ", github,
+						paste0("if (github <- usethis::ui_yeah('Is it OK to push these to GitHub?')) ",
+									 "usethis::use_github(private = ", private, ") ")
+				} else "github <- FALSE",
+				paste0("data <- list(name = fs::path_file('", path, "'), github = github",
 							 ", is_package = FALSE)"),
-				if (github) c(
-					paste0("data <- append(data, gh::gh_tree_remote('", path, "'))"),
-					paste0(
-						"data <- append(data, ",
-						"list(url = gh::gh('GET /repos/:owner/:repo', ",
-						"owner = gh::gh_tree_remote()$username, repo = gh::gh_tree_remote()$repo)$html_url))"
-					)
+				paste0("if (github) data <- append(data, gh::gh_tree_remote('", path, "'))"),
+				paste0(
+					"if (github) data <- append(data, ",
+					"list(url = gh::gh('GET /repos/:owner/:repo', ",
+					"owner = gh::gh_tree_remote()$username, repo = gh::gh_tree_remote()$repo)$html_url))"
 				),
 				"cmor.tools::use_cmor_readme(data)",
 				"rm(list = 'data')",
@@ -104,8 +104,9 @@ create_research_project <- function(
 							 "`cmor.tools::create_research_project()`.'))"),
 				paste0("usethis::ui_todo('Edit the README.Rmd file to provide an ",
 							 "introduction to the project')"),
-				paste0("usethis::ui_todo('Remember to render README.Rmd to README.md for ",
+				paste0("if (github) usethis::ui_todo('Remember to render README.Rmd to README.md for ",
 							 "GitHub.')"),
+				"rm('github')",
 				paste0("usethis::ui_todo('Put code in `/R`, raw data in `/raw_data`, and ",
 							 "RMarkdown reports in `/reports`.')"),
 				if (workflow == "targets") c(
@@ -113,8 +114,7 @@ create_research_project <- function(
 								 "to specify the analysis workflow.')"),
 					paste0("usethis::ui_info('(See https://books.ropensci.org/targets/ for more ",
 								 "information on the `targets` package.)')")
-				),
-				".Last <- function() invisible(fs::file_delete('.Rprofile'))"
+				)
 			),
 			fileConn
 		)
