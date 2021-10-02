@@ -1,5 +1,7 @@
 # cmor.tools 0.5.0.9000
 
+* Deprecate `create_descriptive_table()` in favour of `formattr` package.
+
 * `tar_render_manuscript()` now correctly uses Pandoc's --citeproc option.
 
 * Updated `manuscript.Rmd` template.
