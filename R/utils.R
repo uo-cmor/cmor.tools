@@ -28,7 +28,7 @@ NULL
 #' @importFrom stats median quantile sd setNames
 NULL
 
-#' @importFrom rlang :=
+#' @importFrom rlang := .data
 NULL
 
 lq <- function(x, ...) quantile(x, probs = 0.25, ...)

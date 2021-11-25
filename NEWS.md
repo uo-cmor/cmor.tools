@@ -1,5 +1,8 @@
 # cmor.tools 0.6.0.9000
 
+* New `plot_cmor_colours()` plots the available colour schemes for
+  `scale_colour_cmor()` etc.
+
 # cmor.tools 0.6.0
 
 * Deprecate `create_descriptive_table()` in favour of `formattr` package.
@@ -19,7 +22,7 @@
 
 # cmor.tools 0.4.0
 
-* New `scale_colour_cmor()`, and friends provide standard colour schemes.
+* New `scale_colour_cmor()` and friends provide standard colour schemes.
 
 * Preliminary new `theme_cmor()` will provide a standard plot theme. Currently
   only calls `ggplot2::theme_classic()`.
