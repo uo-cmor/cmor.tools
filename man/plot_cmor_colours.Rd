@@ -2,9 +2,12 @@
 % Please edit documentation in R/figures.R
 \name{plot_cmor_colours}
 \alias{plot_cmor_colours}
+\alias{plot_cmor_colors}
 \title{Show available CMOR colour palettes}
 \usage{
 plot_cmor_colours(palettes)
+
+plot_cmor_colors(palettes)
 }
 \arguments{
 \item{palettes}{Optional character vector of palettes to include in the
