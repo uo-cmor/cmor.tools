@@ -1,4 +1,6 @@
-# cmor.tools 0.5.0.9000
+# cmor.tools 0.6.0.9000
+
+# cmor.tools 0.6.0
 
 * Deprecate `create_descriptive_table()` in favour of `formattr` package.
 
