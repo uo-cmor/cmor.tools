@@ -61,7 +61,7 @@ library(targets)
 
 <br>
 
-<!-- ![Figure 1: Figure caption](`r path_wd(figure_1)`) -->
+<!-- ![Figure 1: Figure caption](`r #path_wd(figure_1)`) -->
 
 > Figure notes
 

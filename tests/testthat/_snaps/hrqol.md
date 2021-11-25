@@ -6,7 +6,7 @@
     Warning <lifecycle_warning_deprecated>
       `sf6d_profile()` was deprecated in cmor.tools 0.3.0.
       Please use `SF6Dvalues::sf6d_profile()` instead.
-    Message <rlang_message>
+    Message <message>
       i Numeric SF-12 values provided. Please ensure these are coded with the correct ordering.
     Output
       $PF
