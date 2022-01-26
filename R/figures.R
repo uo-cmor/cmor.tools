@@ -112,7 +112,7 @@ cmor_pal <- function(palette = "CUD", direction = 1, grey = FALSE) {
 		if (grey) n <- n - 1
 		ret <- cmor_palettes[[pal]][seq_len(n)]
 		if (direction == -1) ret <- rev(ret)
-		if (grey) ret <- c(ret, cmor_palette_greys[pal])
+		if (grey) ret <- c(ret, cmor_palette_greys[[pal]])
 		ret
 	}
 }
