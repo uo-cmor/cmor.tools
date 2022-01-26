@@ -129,7 +129,7 @@ cmor_pal_name <- function(palette) {
 }
 
 max_pal_n <- function(pal) {
-	length(cmor_palettes[pal])
+	length(cmor_palettes[[pal]])
 }
 
 check_pal_n <- function(n, max_n, pal) {

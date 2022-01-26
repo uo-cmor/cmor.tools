@@ -3,6 +3,8 @@
 * New `plot_cmor_colours()` plots the available colour schemes for
   `scale_colour_cmor()` etc.
 
+* Correct extraction of CMOR colour palettes.
+
 # cmor.tools 0.6.0
 
 * Deprecate `create_descriptive_table()` in favour of `formattr` package.
