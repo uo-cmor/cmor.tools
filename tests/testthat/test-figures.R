@@ -9,15 +9,24 @@ test_that("cmor_pal works", {
 	}
 })
 
+test_that("scale_colour_cmor & friends are deprecated", {
+	expect_snapshot(scale_colour_cmor())
+	expect_snapshot(scale_color_cmor())
+	expect_snapshot(scale_fill_cmor())
+})
+
 test_that("scale_colour_cmor equals scale_color_cmor", {
+	withr::local_options(lifecycle_verbosity = "quiet")
 	expect_true(all.equal(scale_color_cmor(), scale_colour_cmor()))
 })
 
 test_that("scale_colour_cmor works", {
+	withr::local_options(lifecycle_verbosity = "quiet")
 	expect_s3_class(scale_colour_cmor(), "ScaleDiscrete")
 })
 
 test_that("scale_fill_cmor works", {
+	withr::local_options(lifecycle_verbosity = "quiet")
 	expect_s3_class(scale_fill_cmor(), "ScaleDiscrete")
 })
 

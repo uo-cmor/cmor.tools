@@ -1,4 +1,6 @@
-# cmor.tools 0.6.0.9000
+# cmor.tools 0.7.0
+
+* Deprecate plot themes and colour palettes in favour of `CMORplots` package.
 
 * New `plot_cmor_colours()` plots the available colour schemes for
   `scale_colour_cmor()` etc.

@@ -14,5 +14,10 @@ plot_cmor_colors(palettes)
 plot. Default is to include all available colour palettes.}
 }
 \description{
+`r lifecycle::badge("deprecated")`
+
+These functions are deprecated in favour of the functions in
+    \code{\link[CMORplots]{plot_cmor_colours}}.
+
 Plot the currently available CMOR colour palettes.
 }

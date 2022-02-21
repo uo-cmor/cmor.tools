@@ -1,5 +1,13 @@
 #' CMOR standard colour scales
 #'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' These functions are deprecated in favour of the functions in
+#'     \code{\link[CMORplots]{scale_colour_cmor}}.
+#'
+#' @keywords internal
+#'
 #' Several standard colour schemes for CMOR outputs. Only qualitative
 #'     (including paired) scales are currently implemented (sequential,
 #'     diverging, and continuous scales are planned).
@@ -39,6 +47,8 @@ NULL
 #' @export
 scale_colour_cmor <- function(..., palette = 1, direction = 1, grey = FALSE,
 															aesthetics = "colour") {
+	lifecycle::deprecate_warn("0.7.0", "scale_colour_cmor()", "CMORplots::scale_colour_cmor()")
+
 	ggplot2::discrete_scale(aesthetics, "cmor", cmor_pal(palette, direction, grey), ...)
 }
 
@@ -46,6 +56,8 @@ scale_colour_cmor <- function(..., palette = 1, direction = 1, grey = FALSE,
 #' @export
 scale_color_cmor <- function(..., palette = 1, direction = 1, grey = FALSE,
 														 aesthetics = "colour") {
+	lifecycle::deprecate_warn("0.7.0", "scale_color_cmor()", "CMORplots::scale_color_cmor()")
+
 	ggplot2::discrete_scale(aesthetics, "cmor", cmor_pal(palette, direction, grey), ...)
 }
 
@@ -53,10 +65,18 @@ scale_color_cmor <- function(..., palette = 1, direction = 1, grey = FALSE,
 #' @export
 scale_fill_cmor <- function(..., palette = 1, direction = 1, grey = FALSE,
 														aesthetics = "fill") {
+	lifecycle::deprecate_warn("0.7.0", "scale_fill_cmor()", "CMORplots::scale_fill_cmor()")
+
 	ggplot2::discrete_scale(aesthetics, "cmor", cmor_pal(palette, direction, grey), ...)
 }
 
 #' Show available CMOR colour palettes
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' These functions are deprecated in favour of the functions in
+#'     \code{\link[CMORplots]{plot_cmor_colours}}.
 #'
 #' Plot the currently available CMOR colour palettes.
 #'
@@ -65,7 +85,9 @@ scale_fill_cmor <- function(..., palette = 1, direction = 1, grey = FALSE,
 #'
 #' @export
 plot_cmor_colours <- function(palettes) {
-	if (!missing(palettes)) {
+	lifecycle::deprecate_warn("0.7.0", "plot_cmor_colours()", "CMORplots::plot_cmor_colours()")
+
+		if (!missing(palettes)) {
 		pal <- cmor_pal_name(palettes)
 		pal <- cmor_palettes[pal]
 	} else pal <- cmor_palettes
@@ -86,9 +108,19 @@ plot_cmor_colours <- function(palettes) {
 
 #' @rdname plot_cmor_colours
 #' @export
-plot_cmor_colors <- function(palettes) plot_cmor_colours(palettes)
+plot_cmor_colors <- function(palettes) {
+	lifecycle::deprecate_warn("0.7.0", "plot_cmor_colors()", "CMORplots::plot_cmor_colors()")
+
+	plot_cmor_colours(palettes)
+}
 
 #' Standard `ggplot` Theme for CMOR Outputs
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' This function is deprecated in favour of
+#'     \code{\link[CMORplots]{theme_cmor_classic}}.
 #'
 #' This is a preliminary draft of a standard CMOR ggplot theme (just directly
 #'     calls `theme_classic()` for now).
@@ -98,6 +130,8 @@ plot_cmor_colors <- function(palettes) plot_cmor_colours(palettes)
 #'
 #' @export
 theme_cmor <- function(base_size = 11, base_family = "") {
+	lifecycle::deprecate_warn("0.7.0", "theme_cmor()", "CMORplots::theme_cmor_classic()")
+
 	ggplot2::theme_classic(base_size = base_size, base_family = base_family)
 }
 
