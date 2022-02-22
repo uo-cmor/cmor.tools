@@ -1,3 +1,10 @@
+# cmor.tools 0.9.0
+
+* Restructure `cmor.tools` to install and load the CMOR tools ecosystem.
+
+* Move project workflow tools to `CMORprojects` and regression analysis tools
+  to `regtools`.
+
 # cmor.tools 0.8.0
 
 * Hard deprecate defunct functions and remove unneeded dependencies.
