@@ -29,7 +29,19 @@ est_ci(est, low, high, ..., .sep = " to ", .glue = TRUE)
 
 These functions are deprecated in favour of the functions in
     \code{\link[formattr]{output-formatting}}.
-
-These functions are simple wrappers around `paste()` and `number()` to
-    format results for printing.
 }
+\keyword{These}
+\keyword{`number()`}
+\keyword{`paste()`}
+\keyword{and}
+\keyword{are}
+\keyword{around}
+\keyword{for}
+\keyword{format}
+\keyword{functions}
+\keyword{internal}
+\keyword{printing.}
+\keyword{results}
+\keyword{simple}
+\keyword{to}
+\keyword{wrappers}

@@ -1,3 +1,7 @@
+# cmor.tools 0.8.0
+
+* Hard deprecate defunct functions and remove unneeded dependencies.
+
 # cmor.tools 0.7.0
 
 * Deprecate plot themes and colour palettes in favour of `CMORplots` package.

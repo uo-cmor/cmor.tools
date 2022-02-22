@@ -16,7 +16,7 @@ use_cmor_readme <- function(data, open = rlang::is_interactive()) {
 
 	if (data$is_package) usethis::use_build_ignore("README.Rmd")
 
-	usethis::ui_done("Basic README file created")
+	cli::cli_alert_success("Basic README file created")
 
 	if (rstudioapi::isAvailable()) rstudioapi::navigateToFile("README.Rmd")
 

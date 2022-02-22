@@ -22,9 +22,9 @@
 #'
 #' @export
 lincom <- function(model, weights, vcov. = NULL) {
-	checkmate::assert_numeric(weights)
-
-	if (!checkmate::test_matrix(weights)) weights <- matrix(weights, nrow = 1)
+	if (!rlang::is_bare_numeric(weights) || length(dim(weights)) > 2)
+		stop_not_numeric("weights", matrix = TRUE)
+	if (length(dim(weights)) != 2) weights <- matrix(weights, nrow = 1)
 
 	if (is.null(vcov.)) vcov <- stats::vcov(model)
 	else if (is.function(vcov.)) vcov <- vcov.(model)
@@ -51,4 +51,16 @@ Ftest <- function(b, V, df.residual = Inf) {
 	P <- stats::pf(F.stat, df, df.residual, lower.tail = FALSE)
 
 	list(df.residual = df.residual, df = df, F.stat = F.stat, P = P)
+}
+
+#' Compute confidence interval bounds from confidence level
+#'
+#' @param conf.level Confidence level, expressed as a proportion in (0, 1); default is 0.95.
+#'
+#' @export
+calculate_ci <- function(conf.level = 0.95) {
+	if (!rlang::is_scalar_double(conf.level)) stop_not_number("conf.level")
+	if (!(conf.level > 0 && conf.level < 1)) stop_invalid_ci(conf.level)
+
+	c((1 - conf.level) / 2, 1 - (1 - conf.level) / 2)
 }

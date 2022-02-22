@@ -1,6 +1,6 @@
 Package: cmor.tools
 Title: Tools for Conducting CMOR Research Projects
-Version: 0.7.0
+Version: 0.8.0
 Authors@R:
     person(given = "Ross",
            family = "Wilson",
@@ -21,40 +21,28 @@ Imports:
     fs,
     gh,
     whisker,
-    desc,
     git2r,
-    rprojroot,
-    dplyr,
     rmarkdown,
-    scales,
-    stringi,
-    magrittr,
     rlang,
-    glue,
     stats,
-    checkmate,
     cli,
-    crayon,
-    stringr,
     lifecycle,
-    ggplot2,
-    gert,
-    formattr (>= 0.1.0)
-Suggests: 
     targets,
     tarchetypes,
-    drake,
-    readxl,
-    plyr,
-    purrr,
+    gert
+Suggests: 
+    formattr (>= 0.1.0),
+    SF6Dvalues,
+    CMORplots,
     R.utils,
-    tidyr,
     future,
-    forcats,
-    tibble,
     knitr,
+    tibble,
+    rprojroot,
     testthat (>= 3.0.0),
     withr
 Config/testthat/edition: 3
 Remotes: 
     uo-cmor/formattr
+    uo-cmor/SF6Dvalues
+    uo-cmor/CMORplots

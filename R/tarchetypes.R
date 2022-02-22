@@ -34,12 +34,24 @@ tar_render_manuscript <- function(name, path, output_file,
 																	retrieval = targets::tar_option_get("retrieval"),
 																	cue = targets::tar_option_get("cue"),
 																	quiet = TRUE) {
-	checkmate::assert_file_exists(path)
-	checkmate::assert_path_for_output(output_file, overwrite = TRUE)
-	checkmate::assert(checkmate::check_null(pandoc_args),
-										checkmate::check_list(pandoc_args, types = "character"),
-										checkmate::check_character(pandoc_args))
-	checkmate::assert_list(render_args, types = "character", names = "strict", null.ok = TRUE)
+	if (!rlang::is_scalar_character(path)) stop_not_string("path")
+	if (!fs::file_exists(path)) stop_file_not_found("RMarkdown source file", path)
+	if (!rlang::is_scalar_character(output_file)) stop_not_string("output_file")
+	if (!fs::dir_exists(dirname(output_file)))
+		stop_file_not_found("Valid output file directory", dirname(output_file))
+	if (fs::file_exists(output_file) && !fs::file_access(output_file, "write"))
+		stop_not_writable("Output file", output_file)
+	if (!(
+		is.null(pandoc_args) ||
+		rlang::is_bare_character(pandoc_args) ||
+		(rlang::is_bare_list(pandoc_args) &&
+		 all(vapply(pandoc_args, rlang::is_bare_character, logical(1))))
+	)) stop_invalid_pandoc_args()
+	if (
+		!is.null(render_args) &&
+		(!rlang::is_bare_list(render_args) ||
+		 !valid_varnames(names(render_args)))
+	) stop_invalid_render_args()
 
 	file_reference_docx <- rlang::enexpr(file_reference_docx)
 	file_csl <- rlang::enexpr(file_csl)
@@ -66,4 +78,14 @@ tar_render_manuscript <- function(name, path, output_file,
 	tarchetypes::tar_render_raw(rlang::as_name(rlang::ensym(name)), path, packages,
 															library, error, deployment, priority, resources, retrieval, cue,
 															quiet, render_arguments)
+}
+
+valid_varnames <- function(x) {
+	nm <- names(x)
+	if (
+		is.null(nm) || anyNA(nm) || any(nm == "") || # missing names
+		!identical(unique(nm), nm) || # non-unique names
+		!all(grepl("^[.]*[a-zA-Z]+[a-zA-Z0-9._]*$", nm)) # invalid R variable names
+	) return(FALSE)
+	TRUE
 }

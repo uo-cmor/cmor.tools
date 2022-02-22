@@ -29,37 +29,28 @@ create_research_project <- function(
 	path, workflow = "targets", git = TRUE, raw_data_in_git = TRUE, github = TRUE, private = TRUE,
 	organisation = NULL, rstudio = rstudioapi::isAvailable(), open = rlang::is_interactive()
 ) {
-	checkmate::assert_string(path)
-	checkmate::assert_choice(workflow, c("targets", "drake", "make"))
-	checkmate::assert_flag(git)
-	checkmate::assert_flag(raw_data_in_git)
-	checkmate::assert_flag(github)
-	checkmate::assert_flag(private)
-	checkmate::assert_string(organisation, null.ok = TRUE)
-	checkmate::assert_flag(rstudio)
-	checkmate::assert_flag(open)
+	if (!rlang::is_scalar_character(path)) stop_not_string("path")
+	if (!rlang::is_scalar_character(workflow)) stop_not_string("workflow")
+	if (!rlang::is_string(workflow, c("targets", "drake", "make"))) stop_unknown_workflow(workflow)
+	if (!rlang::is_bool(git)) stop_not_boolean("git")
+	if (!rlang::is_bool(raw_data_in_git)) stop_not_boolean("raw_data_in_git")
+	if (!rlang::is_bool(github)) stop_not_boolean("github")
+	if (!rlang::is_bool(private)) stop_not_boolean("private")
+	if (!is.null(organisation) && !rlang::is_scalar_character(organisation))
+		stop_not_string("organisation", null = TRUE)
+	if (!rlang::is_bool(rstudio)) stop_not_boolean("rstudio")
+	if (!rlang::is_bool(open)) stop_not_boolean("open")
 
 	path <- fs::path_expand(path)
 	if (!fs::dir_exists(path)) {
 		fs::dir_create(path)
-		usethis::ui_done("The project directory {usethis::ui_path(path)} has been created.")
-	} else {
-		usethis::ui_stop(c(
-			"The directory {usethis::ui_path(path)} already exists.",
-			glue::glue("{crayon::red(cli::symbol$cross)} ",
-								 "{usethis::ui_code('create_research_project()')} ",
-								 "will not overwrite an existing directory.")
-		))
-	}
+		cli::cli_alert_success("The project directory {.file {path}} has been created.")
+	} else stop_path_exists(path)
 
 	if (!git & github) {
 		github <- FALSE
 		github_warn <- TRUE
-		usethis::ui_warn(glue::glue(
-			"Argument {usethis::ui_code('github')} was set to {usethis::ui_code('TRUE')}, ",
-			"but {usethis::ui_code('git')} is {usethis::ui_code('FALSE')}."
-		))
-		usethis::ui_info("Setting {usethis::ui_code('github')} to {usethis::ui_code(FALSE)}.")
+		warn_github_incompatible()
 	} else github_warn <- FALSE
 
 	if (rstudio & open) {
@@ -72,7 +63,7 @@ create_research_project <- function(
 				".First <- function() invisible(fs::file_delete('.Rprofile'))",
 				## Continue project setup
 				"",
-				"usethis::ui_line(crayon::bold('Initial project setup:'))",
+				"cli::cli_text('{.strong Initial project setup:}')",
 				paste0("cmor.tools::use_project_directory(package = FALSE, ",
 							 "git = ", git, ", raw_data_in_git = ", raw_data_in_git, ")"),
 				if (git) "cmor.tools:::use_git()",
@@ -99,21 +90,20 @@ create_research_project <- function(
 				"",
 
 				## Welcome message
-				"usethis::ui_line()",
-				paste0("usethis::ui_line(crayon::bold('This project was created by ",
-							 "`cmor.tools::create_research_project()`.'))"),
-				paste0("usethis::ui_todo('Edit the README.Rmd file to provide an ",
-							 "introduction to the project')"),
-				paste0("if (github) usethis::ui_todo('Remember to render README.Rmd to README.md for ",
-							 "GitHub.')"),
+				"cli::cli_text()",
+				paste0("cli::cli_text('{.strong This project was created by ",
+							 "{.code cmor.tools::create_research_project()}.}')"),
+				"cli::cli_ul('Edit {.file README.Rmd} to provide an introduction to the project')",
+				paste0("if (github) cli::cli_ul('Remember to render {.file README.Rmd} to ",
+							 "{.file README.md} for GitHub.')"),
 				"rm('github')",
-				paste0("usethis::ui_todo('Put code in `/R`, raw data in `/raw_data`, and ",
-							 "RMarkdown reports in `/reports`.')"),
+				paste0("cli::cli_ul('Put code in {.path /R}, raw data in {.path /raw_data}, and RMarkdown ",
+							 "reports in {.path /reports}.')"),
 				if (workflow == "targets") c(
-					paste0("usethis::ui_todo('Use `_targets.R`, `_plan.R`, and `parameters.R` ",
+					paste0("cli::cli_ul('Use {.file _targets.R}, {.file _plan.R}, and {.file parameters.R} ",
 								 "to specify the analysis workflow.')"),
-					paste0("usethis::ui_info('(See https://books.ropensci.org/targets/ for more ",
-								 "information on the `targets` package.)')")
+					paste0("cli::cli_alert_info('(See {.url https://books.ropensci.org/targets/} for more ",
+								 "information on the {.pkg targets} package.)')")
 				)
 			),
 			fileConn
@@ -126,6 +116,6 @@ create_research_project <- function(
 
 		setwd(path)
 
-		usethis::ui_done("The working directory is now {getwd()}")
+		cli::cli_alert_success("The working directory is now {.path {getwd()}}")
 	}
 }

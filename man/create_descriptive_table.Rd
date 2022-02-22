@@ -11,8 +11,8 @@ create_descriptive_table(
   multiresponse = NULL,
   output = c(names(continuous), names(discrete), names(multiresponse)),
   by = NULL,
-  value_continuous = formattr::mean_sd(.mean, .sd, accuracy = 0.1),
-  value_discrete = formattr::n_percent(.n, .proportion),
+  value_continuous,
+  value_discrete,
   total = !is.null(by)
 )
 }
@@ -54,5 +54,17 @@ Can also be a character string giving the column name to use for the
 total column (default is 'Entire sample').}
 }
 \description{
-Construct nicely formatted descriptive statistics tables (mean/sd, n/percent).
+`r lifecycle::badge("deprecated")`
+
+These functions are deprecated in favour of the functions in
+    \code{\link[formattr]{create_descriptive_table}}.
 }
+\keyword{(mean/sd,}
+\keyword{Construct}
+\keyword{descriptive}
+\keyword{formatted}
+\keyword{internal}
+\keyword{n/percent).}
+\keyword{nicely}
+\keyword{statistics}
+\keyword{tables}

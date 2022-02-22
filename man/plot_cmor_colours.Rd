@@ -18,6 +18,12 @@ plot. Default is to include all available colour palettes.}
 
 These functions are deprecated in favour of the functions in
     \code{\link[CMORplots]{plot_cmor_colours}}.
-
-Plot the currently available CMOR colour palettes.
 }
+\keyword{CMOR}
+\keyword{Plot}
+\keyword{available}
+\keyword{colour}
+\keyword{currently}
+\keyword{internal}
+\keyword{palettes.}
+\keyword{the}

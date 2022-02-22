@@ -18,6 +18,11 @@ corresponding score, or \code{"list"} (the default) to return a list
 with both elements.}
 }
 \description{
+`r lifecycle::badge("deprecated")`
+
+This function is deprecated in favour of [SF6Dvalues::sf12_PCS()] and
+    [SF6Dvalues::sf12_MCS()].
+
 Calculate SF-12 PCS and MCS component summary scores from SF-12
     question-level responses
 }

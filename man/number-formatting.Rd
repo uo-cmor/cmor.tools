@@ -98,7 +98,12 @@ signs) as HTML strings (the default) or unicode.}
 `r lifecycle::badge("deprecated")`
 
 These functions are deprecated in favour of \code{\link[formattr]{nmbr}}.
-
-These functions replace/extend the `scales::number()-type` formatting
-    functions.
 }
+\keyword{These}
+\keyword{`scales::number()-type`}
+\keyword{formatting}
+\keyword{functions}
+\keyword{functions.}
+\keyword{internal}
+\keyword{replace/extend}
+\keyword{the}

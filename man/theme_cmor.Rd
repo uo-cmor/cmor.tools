@@ -16,7 +16,21 @@ theme_cmor(base_size = 11, base_family = "")
 
 This function is deprecated in favour of
     \code{\link[CMORplots]{theme_cmor_classic}}.
-
-This is a preliminary draft of a standard CMOR ggplot theme (just directly
-    calls `theme_classic()` for now).
 }
+\keyword{(just}
+\keyword{CMOR}
+\keyword{This}
+\keyword{`theme_classic()`}
+\keyword{a}
+\keyword{calls}
+\keyword{directly}
+\keyword{draft}
+\keyword{for}
+\keyword{ggplot}
+\keyword{internal}
+\keyword{is}
+\keyword{now).}
+\keyword{of}
+\keyword{preliminary}
+\keyword{standard}
+\keyword{theme}
