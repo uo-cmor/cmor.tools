@@ -17,7 +17,6 @@ attach_pkgs <- function() {
 	to_load <- unloaded()
 	if (length(to_load) != 0) {
 		for (i in seq_along(to_load)) {
-			conflicted::conflict_prefer_all(to_load[[i]], "cmor.tools", quiet = TRUE)
 			same_library(to_load[[i]])
 		}
 	}

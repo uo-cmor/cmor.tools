@@ -6,9 +6,11 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of cmor.tools is to provide standardised tools to initialise a
-research project folder, undertake analysis, and generate output reports
-(journal manuscripts, etc.) for research projects undertaken at CMOR.
+The goal of the CMOR Tools ecosystem is to provide standardised tools to
+initialise a research project folder, undertake analysis, and generate
+output reports (journal manuscripts, etc.) for research projects
+undertaken at CMOR. This package installs and loads all packages in the
+ecosystem.
 
 ## Installation
 
@@ -16,18 +18,22 @@ You can install cmor.tools from [GitHub](https://github.com) with:
 
 ``` r
 #install.packages("remotes")
-remotes::install_github("nek-rwl/cmor.tools")
+remotes::install_github("uo-cmor/cmor.tools")
 ```
 
-## Components
+## Packages
 
-This section will describe the various main components included in the
-package.
+`library(cmor.tools)` will load the CMOR Tools packages:
 
--   **create\_research\_project** This function (and related
-    sub-routines) set up an R package, directory structure, and template
-    files to hold the data, code, and output from a research project.
-    This work is closely based on Ben Marwick’s `rrtools` package.
-
--   **tar\_render\_manuscript** This function is used in `targets` plans
-    to generate rendered `.docx` output from a `.Rmd` file.
+-   [`formattr`](https://github.com/uo-cmor/formattr): Format numbers &
+    descriptive statistics nicely for output reports;
+-   [`CMORprojects`](https://github.com/uo-cmor/CMORprojects): Data
+    analysis project workflow tools;
+-   [`regtools`](https://github.com/uo-cmor/regtools): Functions for the
+    analysis of regression models;
+-   [`CMORplots`](https://github.com/uo-cmor/CMORplots): `ggplot` themes
+    and colour palettes for figure formatting;
+-   [`SF6Dvalues`](https://github.com/uo-cmor/SF6Dvalues): Calculate
+    SF-6D health utility values from SF-12/SF-36 questionnaires;
+-   [`cea`](https://github.com/uo-cmor/cea): Tools for trial-based
+    cost-effectiveness analyses.

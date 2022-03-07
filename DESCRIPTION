@@ -1,12 +1,12 @@
 Package: cmor.tools
 Title: Tools for Conducting CMOR Research Projects
-Version: 0.9.0
+Version: 1.0.0
 Authors@R:
     person(given = "Ross",
            family = "Wilson",
            role = c("aut", "cre"),
            email = "ross.wilson@otago.ac.nz")
-Description: The 'CMOR.tools' ecosystem is a set of packages to assist in data
+Description: The 'CMOR Tools' ecosystem is a set of packages to assist in data
     analysis for research projects at CMOR. This package makes it easy to
     install and load these packages.
 License: GPL-3
@@ -25,10 +25,10 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Remotes: 
-    uo-cmor/formattr
-    uo-cmor/CMORprojects
-    uo-cmor/regtools
-    uo-cmor/CMORplots
-    uo-cmor/SF6Dvalues
+    uo-cmor/formattr,
+    uo-cmor/CMORprojects,
+    uo-cmor/regtools,
+    uo-cmor/CMORplots,
+    uo-cmor/SF6Dvalues,
     uo-cmor/cea
 Roxygen: list(markdown = TRUE)

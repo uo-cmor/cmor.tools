@@ -1,3 +1,9 @@
+# cmor.tools 1.0.0
+
+* Remove defunct functions and provide links to their new locations.
+
+* Update DESCRIPTION & README to describe the new package structure.
+
 # cmor.tools 0.9.0
 
 * Restructure `cmor.tools` to install and load the CMOR tools ecosystem.
