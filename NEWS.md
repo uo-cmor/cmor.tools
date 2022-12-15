@@ -1,3 +1,7 @@
+# cmor.tools 1.1.0
+
+* Update `formattr` to version 0.3.0
+
 # cmor.tools 1.0.0
 
 * Remove defunct functions and provide links to their new locations.
