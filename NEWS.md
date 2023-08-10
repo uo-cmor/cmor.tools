@@ -1,3 +1,7 @@
+# cmor.tools 1.2.1
+
+* Update `CMORprojects` tp version 0.3.1
+
 # cmor.tools 1.2.0
 
 * Update `CMORprojects` to version 0.3.0
