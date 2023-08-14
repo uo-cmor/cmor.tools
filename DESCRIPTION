@@ -1,6 +1,6 @@
 Package: cmor.tools
 Title: Tools for Conducting CMOR Research Projects
-Version: 1.2.1
+Version: 1.2.2
 Authors@R:
     person(given = "Ross",
            family = "Wilson",
