@@ -1,10 +1,16 @@
+# cmor.tools 1.2.3
+
+* Update `CMORprojects` to version 0.3.3
+
+* Update `formattr` to version 0.3.1
+
 # cmor.tools 1.2.2
 
-* Update `CMORprojects` tp version 0.3.2
+* Update `CMORprojects` to version 0.3.2
 
 # cmor.tools 1.2.1
 
-* Update `CMORprojects` tp version 0.3.1
+* Update `CMORprojects` to version 0.3.1
 
 # cmor.tools 1.2.0
 
