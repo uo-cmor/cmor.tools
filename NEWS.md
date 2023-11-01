@@ -1,3 +1,7 @@
+# cmor.tools 1.3.0
+
+* Update `SF6Dvalues` to version 0.6.0
+
 # cmor.tools 1.2.5
 
 * Update `CMORprojects` to version 0.3.5
