@@ -19,7 +19,7 @@ Imports:
     CMORprojects (>= 0.3.4),
     regtools (>= 0.1.0),
     CMORplots (>= 0.1.0),
-    SF6Dvalues (>= 0.5.1),
+    SF6Dvalues (>= 0.6.1),
     cea
 Suggests: 
     testthat (>= 3.0.0)

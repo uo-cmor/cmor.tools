@@ -1,3 +1,7 @@
+# cmor.tools 1.3.1
+
+* Update `SF6Dvalues` to version 0.6.1
+
 # cmor.tools 1.3.0
 
 * Update `SF6Dvalues` to version 0.6.0
