@@ -1,3 +1,9 @@
+# cmor.tools 1.5
+
+* Add `ttables` version 0.1
+
+* Update `CMORprojects` to version 0.5
+
 # cmor.tools 1.4
 
 * Update `CMORprojects` to version 0.4

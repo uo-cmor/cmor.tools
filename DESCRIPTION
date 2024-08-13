@@ -1,6 +1,6 @@
 Package: cmor.tools
 Title: Tools for Conducting CMOR Research Projects
-Version: 1.4
+Version: 1.5
 Authors@R:
     person(given = "Ross",
            family = "Wilson",
@@ -13,14 +13,15 @@ License: GPL-3
 URL: https://github.com/uo-cmor/cmor.tools
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Imports: 
     formattr (>= 0.3.1),
-    CMORprojects (>= 0.4),
+    CMORprojects (>= 0.5),
     regtools (>= 0.1.0),
     CMORplots (>= 0.1.0),
     SF6Dvalues (>= 0.6.1),
-    cea
+    cea,
+    ttables (>= 0.1)
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
@@ -30,5 +31,6 @@ Remotes:
     uo-cmor/regtools,
     uo-cmor/CMORplots,
     uo-cmor/SF6Dvalues,
-    uo-cmor/cea
+    uo-cmor/cea,
+    uo-cmor/ttables
 Roxygen: list(markdown = TRUE)
