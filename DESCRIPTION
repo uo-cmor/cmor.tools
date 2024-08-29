@@ -1,6 +1,6 @@
 Package: cmor.tools
 Title: Tools for Conducting CMOR Research Projects
-Version: 1.5
+Version: 1.6
 Authors@R:
     person(given = "Ross",
            family = "Wilson",
@@ -16,12 +16,12 @@ LazyData: true
 RoxygenNote: 7.3.1
 Imports: 
     formattr (>= 0.3.1),
-    CMORprojects (>= 0.5),
+    CMORprojects (>= 0.7),
     regtools (>= 0.1.0),
     CMORplots (>= 0.1.0),
     SF6Dvalues (>= 0.6.1),
     cea,
-    ttables (>= 0.1)
+    ttables (>= 0.3)
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
