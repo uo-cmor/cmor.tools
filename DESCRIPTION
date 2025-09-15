@@ -1,6 +1,6 @@
 Package: cmor.tools
 Title: Tools for Conducting CMOR Research Projects
-Version: 1.6.1
+Version: 1.7.0
 Authors@R:
     person(given = "Ross",
            family = "Wilson",
@@ -19,7 +19,6 @@ Imports:
     CMORprojects (>= 0.7.1),
     regtools (>= 0.1.0),
     CMORplots (>= 0.1.0),
-    SF6Dvalues (>= 0.6.1),
     cea,
     ttables (>= 0.3)
 Suggests: 
@@ -30,7 +29,6 @@ Remotes:
     uo-cmor/CMORprojects,
     uo-cmor/regtools,
     uo-cmor/CMORplots,
-    uo-cmor/SF6Dvalues,
     uo-cmor/cea,
     uo-cmor/ttables
 Roxygen: list(markdown = TRUE)
