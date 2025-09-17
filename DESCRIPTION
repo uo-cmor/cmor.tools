@@ -1,14 +1,14 @@
 Package: cmor.tools
 Title: Tools for Conducting CMOR Research Projects
-Version: 1.7.0
+Version: 1.8.0
 Authors@R:
     person(given = "Ross",
            family = "Wilson",
            role = c("aut", "cre"),
            email = "ross.wilson@otago.ac.nz")
 Description: The 'CMOR Tools' ecosystem is a set of packages to assist in data
-    analysis for research projects at CMOR. This package makes it easy to
-    install and load these packages.
+    analysis for research projects at CMOR. This umbrella package makes it easy
+    to install and load these packages.
 License: GPL-3
 URL: https://github.com/uo-cmor/cmor.tools
 Encoding: UTF-8
@@ -18,7 +18,7 @@ Imports:
     formattr (>= 0.3.1),
     CMORprojects (>= 0.7.1),
     regtools (>= 0.1.0),
-    CMORplots (>= 0.1.0),
+    CMORplots (>= 0.2.0),
     cea,
     ttables (>= 0.3)
 Suggests: 
